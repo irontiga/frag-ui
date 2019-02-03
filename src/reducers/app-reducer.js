@@ -1,4 +1,4 @@
-// Loading state, login state, isNavDrawOpen state etc.
+// Loading state, login state, isNavDrawOpen state etc. None of this needs to be saved to localstorage.
 import { LOG_IN, LOG_OUT } from '../actions/app-actions.js'
 
 const INITIAL_STATE = {

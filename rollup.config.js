@@ -1,9 +1,11 @@
 import resolve from 'rollup-plugin-node-resolve'
 import builtins from 'rollup-plugin-node-builtins'
 import globals from 'rollup-plugin-node-globals'
+import postcss from 'rollup-plugin-postcss'
 
 export default [
     {
+        context: 'window',
         input: 'src/main.js',
         output: [
             {
@@ -12,9 +14,14 @@ export default [
             }
         ],
         plugins: [
-            resolve({ modulesOnly: true }),
+            resolve(
+                // { modulesOnly: true }
+            ),
             globals(),
-            builtins()
+            builtins(),
+            postcss({
+                plugins: []
+            })
         ]
     }
     // ,// ES6 in browser route...skip 4 now
