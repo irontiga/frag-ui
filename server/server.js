@@ -6,8 +6,8 @@ const pluginRoutes = require('./routes/pluginRoutes.js')
 // const QORA_CONFIG = require("../config.js")
 const config = require('../config/config-loader.js')
 
-console.log(config.primary.host)
-const primaryServer = new ServerFactory(primaryRoutes, config.primary.host, config.primary.port, config.tls.enabled ? config.tls.options : void 0)
+console.log(config.server.primary.host)
+const primaryServer = new ServerFactory(primaryRoutes, config.server.primary.host, config.server.primary.port, config.tls.enabled ? config.tls.options : void 0)
 
 primaryServer.startServer()
     .then(server => {
@@ -17,7 +17,7 @@ primaryServer.startServer()
         console.error(e)
     })
 
-const pluginServer = new ServerFactory(pluginRoutes, config.plugins.host, config.plugins.port, config.tls.enabled ? config.tls.options : void 0)
+const pluginServer = new ServerFactory(pluginRoutes, config.server.plugins.host, config.server.plugins.port, config.tls.enabled ? config.tls.options : void 0)
 
 pluginServer.startServer()
     .then(server => {

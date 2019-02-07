@@ -2,7 +2,8 @@
 import { LOG_IN, LOG_OUT } from '../actions/app-actions.js'
 
 const INITIAL_STATE = {
-    loggedIn: false
+    loggedIn: false,
+    drawerOpen: false
 }
 
 export default (state = INITIAL_STATE, action) => {

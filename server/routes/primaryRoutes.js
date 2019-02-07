@@ -22,6 +22,14 @@ routes.push(
     },
     {
         method: 'GET',
+        path: '/favicon.ico',
+        handler: {
+            file: path.join(__dirname, '../../favicon.ico')
+            // file: path.join(__dirname, "../../build/src/index.html") // Production
+        }
+    },
+    {
+        method: 'GET',
         path: '/getPlugins',
         handler: (request, h) => {
             // pluginLoader.loadPlugins()

@@ -1,27 +1,33 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+            html, body {
+                margin: 0;
+                padding:0;
+                background: #eee;
+            }
+        </style>
+    </head>
 
-<head>
+    <body>
+        <main>
+            <noscript>
+                You need to enable JavaScript to run this app.
+            </noscript>
 
-</head>
-
-<body>
-    <main>
-        <noscript>
-            You need to enable JavaScript to run this app.
-        </noscript>
-
-        <main-app></main-app>
-    </main>
+            <main-app></main-app>
+        </main>
 
 
-    <!-- for every browser... -->
-    <script src="/build/main.bundle.iife.js"></script>
-    <!-- <script src="build/main.bundle.iife.js" nomodule></script> -->
+        <!-- for every browser... -->
+        <script src="/build/main.bundle.iife.js"></script>
+        <!-- <script src="build/main.bundle.iife.js" nomodule></script> -->
 
-    <!-- for ES6 browsers...cbb implementing right now -->
-    <!-- <script type="module" src="/some/path/lit-element.js"></script>
-    <script type="module" src="src/main.js"></script> -->
-</body>
+        <!-- for ES6 browsers...cbb implementing right now -->
+        <!-- <script type="module" src="/some/path/lit-element.js"></script>
+        <script type="module" src="src/main.js"></script> -->
+    </body>
 
 </html>

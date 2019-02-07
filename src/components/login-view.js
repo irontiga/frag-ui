@@ -30,7 +30,6 @@ class LoginView extends connect(store)(LitElement) {
         return html`
             <div>
                 <mwc-button>WEOW</mwc-button>
-                hello :)
             </div>
         `
     }

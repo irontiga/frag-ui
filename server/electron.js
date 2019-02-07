@@ -18,7 +18,7 @@ function createWindow () {
         height: 600,
         webPreferences: {
             nodeIntegration: false,
-            partition: 'persist:karma'
+            partition: `persist:${config.coin.name}`
         },
         icon: Path.join(__dirname, '../', config.icon),
         autoHideMenuBar: true
