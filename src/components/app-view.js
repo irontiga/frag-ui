@@ -2,7 +2,12 @@ import { LitElement, html, css } from 'lit-element'
 import { connect } from 'pwa-helpers'
 import { store } from '../store.js'
 
+// import '@material/mwc-icon'
+import '@polymer/paper-icon-button/paper-icon-button.js'
+import '@polymer/iron-icons/iron-icons.js'
+
 import './login-view.js'
+import './show-plugin.js'
 
 import '@polymer/app-layout/app-layout.js'
 /* Should probably only import the parts I need
@@ -14,7 +19,6 @@ import './app-header/app-header.js';
 import './app-header-layout/app-header-layout.js';
 import './app-toolbar/app-toolbar.js';
 import './app-box/app-box.js';
-
 */
 
 class AppView extends connect(store)(LitElement) {
@@ -27,6 +31,15 @@ class AppView extends connect(store)(LitElement) {
     static get styles () {
         return [
             css`
+
+                :host {
+                  --app-drawer-width: 240px;;
+                }
+
+                /* #login-wrapper {
+                    position
+                } */
+
                 .ripple-wrapper {
                     position:fixed;
                     top:0;
@@ -67,11 +80,19 @@ class AppView extends connect(store)(LitElement) {
 
     render () {
         return html`
+            <style>
+                @media only screen and (min-width: ${getComputedStyle(document.body).getPropertyValue('--layout-breakpoint-desktop')}) {
+                    .menu-toggle-button {
+                        display:none;
+                    }
+                }
+
+                /* Nah we'll just make the login button animate with a big outwards ripple and fade out. Then logging out can just be a fade out to the login page */
+                /* Not moving smooth cause top and left dont animate. instead use a wrapper and the translate on it*/
+                /* Make an animation... at 50% it's mostly shrunk but hardly moved... by 100% it's done shrinking and moving */
+            </style>
             <!-- Layout goes here. We'll make components for the side nav menu and the show-plugin etc.-->
-
-
-
-            <app-drawer-layout fullbleed>
+            <app-drawer-layout responsive-width='${getComputedStyle(document.body).getPropertyValue('--layout-breakpoint-desktop')}' fullbleed>
                 <app-drawer swipe-open slot="drawer" id="appdrawer">
                     <app-header-layout has-scrolling-region>
                         <div id="accountDrawer" style$="background-color: {{selectedAddress.color}}; color: {{textColor(selectedAddress.textColor)}};">
@@ -85,7 +106,7 @@ class AppView extends connect(store)(LitElement) {
                                     </template>
                                     
                                     <template is="dom-if" if="{{selectedAddress.hasName}}">
-                                        <span>{{selectedAddress.name}}</span>
+                                        <span>Address name</span>
                                     </template>
                                 </div>
                             
@@ -95,7 +116,7 @@ class AppView extends connect(store)(LitElement) {
                                     <!--                                <paper-icon-button noink icon="account-circle"></paper-icon-button>-->
                                     <div style="max-width:auto !important; padding:8px; text-overflow: ellipsis; overflow:hidden; font-size:16px; white-space: nowrap; color: {{textColor(selectedAddress.textColor)}};">
                                         <iron-icon icon="icons:arrow-drop-down"></iron-icon>
-                                        {{selectedAddress.address}}
+                                        Selected Address
                                     </div>
                                     <paper-ripple></paper-ripple>
                                 </div>
@@ -148,14 +169,15 @@ class AppView extends connect(store)(LitElement) {
 
                     <app-header slot="header">
                         <app-toolbar>
-                            
-                            <!-- on-tap="_toggleDrawer" -->
-                            <button icon="menu" drawer-toggle class="show-only-mobile">tog</button>
+
+                            <paper-icon-button class="menu-toggle-button" drawer-toggle icon="menu"></paper-icon-button>
                             
                             <div main-title>
                                 <span class="qora-title">
-                                    <!-- Qora |  -->
-                                </span> {{activeUrl.title}} <small>
+                                    &nbsp;Frag 
+                                </span>
+                                
+                                <small>
                                     <!-- <i>{{route.path}}#{{hashRoute.path}}</i> -->
                                 </small>
                             </div>
@@ -167,8 +189,9 @@ class AppView extends connect(store)(LitElement) {
                             <div style="display:inline">
                                 <!-- <paper-icon-button icon="icons:settings" on-tap="openSettings"></paper-icon-button> -->
                                 <paper-button on-tap="_openBackupSeedDialog" style="font-size:14px;">Backup account</paper-button>
-                                <paper-tooltip position="top">Logout</paper-tooltip>
-                                <paper-icon-button icon="power-settings-new" on-tap="logOut"></paper-icon-button>
+                                <!-- <paper-tooltip position="top">Logout</paper-tooltip> -->
+                                <paper-icon-button icon="lock-outline" style="background:#fff; border-radius:50%;" on-tap="logOut"></paper-icon-button>
+                                
                             </div>
                         </app-toolbar>
                     </app-header>
@@ -177,6 +200,28 @@ class AppView extends connect(store)(LitElement) {
 
                 </app-header-layout>
             </app-drawer-layout>
+
+            
+            
+            
+            
+            <!-- Will have to set the "origin" of the ripple based on finding the position of the login button. Perhaps set it to shrink to the middle and move to the origin at the same time...My imagination says that'd look perfect. Probably need to modify the cubic bezier thing to make it perfect. -->
+            <div id="login-wrapper" class="${this.loggedIn ? 'shrink' : ' '}">
+                <div class="ripple-wrapper" style="height:100vh; width:100vw; background:#fff;">
+                    <div class="ripple">
+                    
+                        <login-view></login-view>
+                        <div id="login-ripple"></div>
+                    
+                    </div>
+                </div>
+            </div>
+
+            <!-- 
+                .ripple-wrapper
+                    .ripple // Overflow is hidden
+                        .content-wrapper // Never changes size, so nothing moves as it shrinks
+            -->
 
         `
     }

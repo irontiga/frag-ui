@@ -19,33 +19,40 @@ const config = {
         language: 'english', // default...english
         theme: 'light' // maybe could become dark
     },
-    theme: {
-        colors: {
-            primary: '#1a237e', /* Sets the text color to the theme primary color. */
-            primaryBg: '#e8eaf6', /* Sets the background color to the theme primary color. */
-            onPrimary: '#fff', /* Sets the text color to the color configured for text on the primary color. */
-
-            secondary: '#f06292', /* Sets the text color to the theme secondary color. */
-            secondaryBg: '#fce4ec', /* Sets the background color to the theme secondary color. */
-            onSecondary: '#000000', /* Sets the text color to the color configured for text on the secondary color. */
-
-            surface: '#fff', /* Sets the background color to the surface background color. */
-            onSurface: '#333', /* Sets the text color to the color configured for text on the surface color. */
-            background: '#efefe'/* Sets the background color to the theme background color. */
+    styles: {
+        breakpoints: {
+            tablet: "",
+            desktop: "",
+            mobile: ""
         },
+        theme: {
+            colors: {
+                primary: '#1a237e', /* Sets the text color to the theme primary color. */
+                primaryBg: '#e8eaf6', /* Sets the background color to the theme primary color. */
+                onPrimary: '#fff', /* Sets the text color to the color configured for text on the primary color. */
 
-        addressColors: [
-            '#256480',
-            '#002530',
-            '#02564e',
-            '#d32f2f',
-            '#795548',
-            '#004d40',
-            '#006064',
-            '#9c27b0',
-            '#2196f3',
-            '#d81b60'
-        ]
+                secondary: '#f06292', /* Sets the text color to the theme secondary color. */
+                secondaryBg: '#fce4ec', /* Sets the background color to the theme secondary color. */
+                onSecondary: '#000000', /* Sets the text color to the color configured for text on the secondary color. */
+
+                surface: '#fff', /* Sets the background color to the surface background color. */
+                onSurface: '#333', /* Sets the text color to the color configured for text on the surface color. */
+                background: '#efefe'/* Sets the background color to the theme background color. */
+            },
+
+            addressColors: [
+                '#256480',
+                '#002530',
+                '#02564e',
+                '#d32f2f',
+                '#795548',
+                '#004d40',
+                '#006064',
+                '#9c27b0',
+                '#2196f3',
+                '#d81b60'
+            ]
+        }
     },
     server: {
         primary: {
@@ -53,7 +60,8 @@ const config = {
             port: 9086, // Port to access the Qora UI from
             directory: './src/', // Core Qora-lite code.,
             page404: './src/404.html',
-            host: '0.0.0.0' // This probably shouldn't be the default...
+            host: '0.0.0.0', // This probably shouldn't be the default...
+            baseURL: 'frag'
         },
         plugins: {
             domain: '127.0.0.1',

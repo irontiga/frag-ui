@@ -33,13 +33,19 @@ class AppTheme extends connect(store)(LitElement) {
                     --mdc-theme-surface: ${this.theme.colors.surface}; /* Sets the background color to the surface background color. */
                     --mdc-theme-on-surface: ${this.theme.colors.onSurface};/* Sets the text color to the color configured for text on the surface color. */
                     --mdc-theme-background: ${this.theme.colors.background};/* Sets the background color to the theme background color. */
+
+                    --layout-breakpoint-tablet: ${this.styles.breakpoints.tablet};
+                    --layout-breakpoint-desktop: ${this.styles.breakpoints.desktop};
+                    --layout-breakpoint-mobile: ${this.styles.breakpoints.mobile};
                 }
+                
             </style>
         `
     }
 
     stateChanged (state) {
-        this.theme = state.config.theme
+        this.styles = state.config.styles
+        this.theme = this.styles.theme
     }
 }
 

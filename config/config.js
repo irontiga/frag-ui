@@ -4,7 +4,8 @@
 const config = {
     server: {
         primary: {
-            domain: '192.168.178.35'
+            domain: '192.168.178.35',
+            baseURL: 'qora'
         },
         plugins: {
             domain: '192.168.178.35'

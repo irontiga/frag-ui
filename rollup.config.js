@@ -1,7 +1,11 @@
 import resolve from 'rollup-plugin-node-resolve'
 import builtins from 'rollup-plugin-node-builtins'
 import globals from 'rollup-plugin-node-globals'
-import postcss from 'rollup-plugin-postcss'
+// import scss from 'rollup-plugin-scss'
+import sass from 'rollup-plugin-sass'
+import autoprefixer from 'autoprefixer'
+// import postcss from 'rollup-plugin-postcss'
+import postcss from 'postcss'
 
 export default [
     {
@@ -14,13 +18,24 @@ export default [
             }
         ],
         plugins: [
-            resolve(
+            resolve({
+                module: true
+            }
                 // { modulesOnly: true }
             ),
             globals(),
             builtins(),
-            postcss({
-                plugins: []
+            // sass({
+            //     // output: 'bundle.css',
+            //     processor: css => postcss([autoprefixer])
+            //         .process(css)
+            //         .then(result => result.css)
+            // })
+            sass({
+                output: 'build/styles.bundle.css',
+                processor: css => postcss([autoprefixer])
+                    .process(css)
+                    .then(result => result.css)
             })
         ]
     }

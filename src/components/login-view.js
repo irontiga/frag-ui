@@ -19,17 +19,33 @@ class LoginView extends connect(store)(LitElement) {
     static get styles () {
         return [
             css`
-                html, * {
-                    color: var(--color, red);
-                }
+                /* html, * {
+                    color: var(--color, #333);
+                } */
             `
         ]
     }
 
     render () {
         return html`
-            <div>
-                <mwc-button>WEOW</mwc-button>
+            <div class="mdc-layout-grid">
+                <div class="mdc-layout-grid__inner">
+                    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--align-middle" style="width:400px;">
+                        <mwc-button>Login</mwc-button>
+                        <mwc-button>Create account</mwc-button>
+                        <h1 class="pinko">
+                            PINKO
+                        </h1>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="ripple">
+                <!-- Ripple and spin on login click... can shrink back down and shake if there's an error
+                or just fade out if there's success    
+            -->
+                <div id="spinner"></div>
             </div>
         `
     }

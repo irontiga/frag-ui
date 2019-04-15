@@ -3,18 +3,20 @@ const path = require('path')
 const routes = require('./commonRoutes.js')
 const getPluginDirs = require('../getPluginDirs.js')
 
+const config = require('../../config/config-loader.js')
+
 routes.push(
     {
         method: 'GET',
         path: '/',
         handler: (request, h) => {
             console.log(request.params)
-            return h.redirect('/karma/wallet')
+            return h.redirect(`/${config.server.primary.baseURL}/wallet`)
         }
     },
     {
         method: 'GET',
-        path: '/karma/{path*}',
+        path: `/${config.server.primary.baseURL}/{path*}`,
         handler: {
             file: path.join(__dirname, '../../index.html')
             // file: path.join(__dirname, "../../build/src/index.html") // Production

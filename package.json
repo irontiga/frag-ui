@@ -9,23 +9,31 @@
   "scripts": {
     "build": "rollup -c",
     "watch": "rollup -c --watch",
-    "server": "node server/server.js"
+    "server": "node server/server.js",
+    "lint": "eslint src"
   },
   "dependencies": {
-    "@material/mwc-button": "^0.3.5",
+    "@material/layout-grid": "^0.41.0",
+    "@material/mwc-button": "^0.5.0",
+    "@material/mwc-icon": "^0.5.0",
     "@polymer/app-layout": "^3.0.2",
+    "@polymer/iron-icons": "^3.0.1",
+    "@polymer/paper-icon-button": "^3.0.2",
+    "autoprefixer": "^9.5.1",
     "electron": "^4.0.4",
-    "epml": "^0.0.1",
+    "epml": "^0.1.2",
     "h2o2": "^8.1.2",
     "hapi": "^18.0.0",
     "inert": "^5.1.2",
     "lit-element": "^2.0.0-rc.5",
+    "postcss": "^7.0.14",
     "pwa-helpers": "^0.9.0",
+    "random-sentence-generator": "^0.0.0",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
-    "eslint": "^5.12.1",
+    "eslint": "^5.14.1",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.15.0",
     "eslint-plugin-node": "^8.0.1",
@@ -35,6 +43,8 @@
     "rollup-plugin-node-builtins": "^2.1.2",
     "rollup-plugin-node-globals": "^1.4.0",
     "rollup-plugin-node-resolve": "^4.0.0",
-    "rollup-plugin-postcss": "^2.0.1"
+    "rollup-plugin-postcss": "^2.0.1",
+    "rollup-plugin-sass": "^1.2.2",
+    "rollup-plugin-scss": "^1.0.0"
   }
 }
