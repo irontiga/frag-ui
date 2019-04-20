@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="Description" content="Cryptocurrency wallet">
+
         <style>
             html, body {
                 margin: 0;
@@ -10,6 +12,26 @@
             }
         </style>
         <link rel="stylesheet" href="/build/styles.bundle.css">
+        <title>Frag's UI</title>
+
+        <script>
+            // Let's not spend time on this right now. Initial load is quick, just be happy with that for now
+            // Check that service workers are registered
+            // if ('serviceWorker' in navigator) {
+            //     console.log('let\'s register')
+            //     // Use the window load event to keep the page load performant
+            //     window.addEventListener('load', () => {
+            //         navigator.serviceWorker.register('/src/service-worker.js');
+            //     });
+            // }
+        </script>
+
+        <!-- Trash browser polyfills -->
+        <script>
+            if (typeof Promise === 'undefined') document.write('<script src="/node_modules/bluebird/js/browser/bluebird.core.js"><\/script>');
+            if (typeof fetch === 'undefined') document.write('<script src="/node_modules/whatwg-fetch/dist/fetch.umd.js"><\/script>');
+        </script>
+        <script nomodule src="/node_modules/systemjs/dist/s.js"></script>
     </head>
 
     <body>
@@ -21,14 +43,22 @@
             <main-app></main-app>
         </main>
 
+        <!-- Polyfill stuff -->
+        <script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 
-        <!-- for every browser... -->
-        <script src="/build/main.bundle.iife.js"></script>
-        <!-- <script src="build/main.bundle.iife.js" nomodule></script> -->
+        <!-- Dynamic import polyfill, for lazy loading -->
+        <!-- <script type="module" src="https://unpkg.com/dimport?module" data-main="/build/es6/main.js"></script> -->
+        <!-- Too many issues...let's just use systemjs everywhere...it works well anyway -->
+        <script type="module" src="/build/es6/main.js"></script>
+        
+        <!-- for every crap browser... -->
+        <script nomodule>
+            // nvm the warning, it's being used for every browser
+            // console.warn('Your browser does not support modules. Loading through SystemJS.')
+            System.import('/build/es5/main.js')
+        </script>
 
-        <!-- for ES6 browsers...cbb implementing right now -->
-        <!-- <script type="module" src="/some/path/lit-element.js"></script>
-        <script type="module" src="src/main.js"></script> -->
+
     </body>
 
 </html>

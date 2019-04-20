@@ -1,2 +1,5 @@
+// import '@babel/polyfill'
+import 'core-js/modules/es.promise.js'
+import 'core-js/modules/es.array.iterator'
 import './components/main-app.js'
 import './persistState.js'

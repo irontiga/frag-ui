@@ -8,8 +8,10 @@ import { LOAD_CONFIG_FROM_API } from '../../actions/config-actions.js'
 import { loadConfigFromAPI } from './loadConfigFromAPI.js'
 
 const DEFAULT_INITIAL_STATE = {
-    theme: {
-        color: 'green'
+    styles: {
+        theme: {
+            color: 'green'
+        }
     },
     user: {
         language: 'english',

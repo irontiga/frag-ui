@@ -6,7 +6,6 @@ import { store } from '../store.js'
 import '@polymer/paper-icon-button/paper-icon-button.js'
 import '@polymer/iron-icons/iron-icons.js'
 
-import './login-view.js'
 import './show-plugin.js'
 
 import '@polymer/app-layout/app-layout.js'
@@ -206,7 +205,7 @@ class AppView extends connect(store)(LitElement) {
             
             
             <!-- Will have to set the "origin" of the ripple based on finding the position of the login button. Perhaps set it to shrink to the middle and move to the origin at the same time...My imagination says that'd look perfect. Probably need to modify the cubic bezier thing to make it perfect. -->
-            <div id="login-wrapper" class="${this.loggedIn ? 'shrink' : ' '}">
+            <!-- <div id="login-wrapper" class="${this.loggedIn ? 'shrink' : ' '}">
                 <div class="ripple-wrapper" style="height:100vh; width:100vw; background:#fff;">
                     <div class="ripple">
                     
@@ -215,7 +214,7 @@ class AppView extends connect(store)(LitElement) {
                     
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- 
                 .ripple-wrapper

@@ -33,11 +33,37 @@ class AppStyles extends LitElement {
 
                 * {
                     font-family: "Roboto", sans-serif;
-                    color: #333;
+                    color: var(--mdc-theme-on-surface);
+                    --window-height: ${this.windowHeight};
                 }
             </style>
             <app-theme></app-theme>
         `
+    }
+
+    constructor () {
+        super()
+        this.windowHeight = html`100vh`
+        window.addEventListener('resize', () => this._windowResized())
+        this._windowResized()
+    }
+
+    // For mobile chrome's address bar
+    _windowResized () {
+        const ua = navigator.userAgent
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(ua)
+        console.log(isMobile, "MOBILE")
+        const isChrome = /Chrome/i.test(ua)
+
+        if (isMobile && isChrome) {
+            this.windowHeight = html`calc(100vh - 56px)`
+            // document.body.style.setProperty('--window-height', 'calc(100vh - 56px)')
+            console.log('not same')
+        } else {
+            this.windowHeight = html`100vh`
+            // document.body.style.setProperty('--window-height', '100vh')
+            console.log('same')
+        }
     }
 }
 
