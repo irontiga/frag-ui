@@ -12,7 +12,7 @@ const config = {
         }
     },
     coin: {
-        name: 'Qora',
+        name: 'Karma',
         addressCount: 1, // Default amount of addresses to generate with an account.
         node: {
             explorer: {

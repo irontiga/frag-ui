@@ -1,4 +1,5 @@
 const config = {
+    version: process.env.npm_package_version,
     coin: {
         name: 'Frag',
         addressCount: 1,

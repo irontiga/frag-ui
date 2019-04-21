@@ -8,9 +8,10 @@ import '@material/mwc-button'
 import '@material/mwc-checkbox'
 import '@material/mwc-icon'
 import '@material/mwc-formfield'
+import '@polymer/paper-input/paper-input-container.js'
 import '@polymer/paper-input/paper-input.js'
-
 import 'random-sentence-generator'
+// import '@polymer/paper-spinner/paper-spinner-lite.js'
 // import '@polymer/iron-flex-layout/iron-flex-layout-classes.js'
 
 // import '@polymer/iron-pages'
@@ -24,14 +25,18 @@ class CreateAccountSection extends connect(store)(LitElement) {
             tosAccepted: { type: Boolean },
             selectedPage: { type: String },
             error: { type: Boolean },
-            errorMessage: { type: String }
+            errorMessage: { type: String },
+            nextButtonText: { type: String },
+            saveAccount: { type: Boolean },
+            createAccountLoading: { type: Boolean },
+            loginFunction: { type: Object }
         }
     }
 
     static get styles () {
         return [
             css`
-                
+
             `
         ]
     }
@@ -40,10 +45,14 @@ class CreateAccountSection extends connect(store)(LitElement) {
         super()
         this.selectedPage = 'tos'
         this.tosAccepted = false
+        this.nextButtonText = 'Next'
+        this.saveAccount = true
+        this.createAccountLoading = false
+        this.loginFunction = () => {}
 
         this.pages = {
             tos: {
-                next: () => {
+                next: e => {
                     console.log('to info, from tos')
 
                     this.error = false
@@ -56,18 +65,26 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     // }
                     this.selectPage('info')
                 },
-                prev: ''
+                prev: () => {}
             },
             info: {
-                next: () => {
+                next: e => {
                     console.log('to something from info')
                     this.error = false
                     this.errorMessage = ''
-                    const dob = this.shadowRoot.getElementById('dobInput').value
-                    const dobValid = /^([0-9]{2})-([0-9]{2})-([0-9]{4})$/.test(dob)
-                    if (!dobValid) {
+                    // const dob = this.shadowRoot.getElementById('dobInput').value
+                    // console.log(dob)
+                    // const dobValid = /^([0-9]{4})-([0-9]{2})-([0-9]{2})$/.test(dob)
+                    // if (!dobValid) {
+                    //     this.error = true
+                    //     this.errorMessage = 'Please enter a valid date of birth (dd/mm/yyyy)'
+                    //     return
+                    // }
+                    const birthMonth = this.shadowRoot.getElementById('birthMonth').value
+                    console.log(birthMonth, this.shadowRoot.getElementById('birthMonth'))
+                    if (!(!isNaN(birthMonth) && birthMonth > 0 && birthMonth <= 12)) {
                         this.error = true
-                        this.errorMessage = 'Please enter a valid date of birth (dd/mm/yyyy)'
+                        this.errorMessage = 'Please enter a valid birth month'
                         return
                     }
                     const pin = this.shadowRoot.getElementById('createPin').value
@@ -84,14 +101,32 @@ class CreateAccountSection extends connect(store)(LitElement) {
                         this.errorMessage = 'Seed phrase does not match the generated one'
                         return
                     }
-                    console.log('yay')
+
+                    this.nextButtonText = 'Create'
+                    this.selectPage('save')
                 },
-                prev: 'tos'
+                prev: () => this.selectPage('tos')
+            },
+            save: {
+                next: e => {
+                    // Create account and login :)
+                    this.createAccountLoading = true
+                    console.dir(e)
+                    this.loginFunction({
+                        x: e.clientX,
+                        y: e.clientY
+                    })
+                },
+                prev: () => {
+                    this.nextButtonText = 'Next'
+                    this.selectPage('info')
+                }
             }
         }
         this.pageIndexes = {
             'tos': 0,
-            'info': 1
+            'info': 1,
+            'save': 2
         }
 
         this.nextEnabled = false
@@ -150,7 +185,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     }
                     /* #tosContent { */
                     .section-content {
-                        padding:8px;
+                        padding:12px;
                         max-height:calc(var(--window-height) - 178px);
 
                     }
@@ -227,7 +262,10 @@ class CreateAccountSection extends connect(store)(LitElement) {
                         <div style="text-align:right; padding-right:8px; height:40px;">
                             <p style="vertical-align: top; line-height: 40px; margin:0;">
                                 <label for="tosCheckbox" @click=${() => this.shadowRoot.getElementById('tosCheckbox').click()}>I agree to these terms of service</label>
-                                <mwc-checkbox id="tosCheckbox" style="margin-bottom:-12px;" @input=${e => { this.tosAccepted = !e.target.checked }} ?checked="${this.tosAccepted}"></mwc-checkbox>
+                                <mwc-checkbox id="tosCheckbox" style="margin-bottom:-12px;" @click=${e => {
+                                    this.tosAccepted = !e.target.checked
+                                    console.log(e)
+                                }} ?checked="${this.tosAccepted}"></mwc-checkbox>
                             </p>
                         </div>
                         
@@ -235,7 +273,19 @@ class CreateAccountSection extends connect(store)(LitElement) {
 
                     <div page="info">
                         <div id="infoContent" class="section-content">
-                            <paper-input always-float-labell id="dobInput" label="Date of birth (needed to login again)" type="date"></paper-input>
+                            <!-- <paper-input always-float-labell id="dobInput" label="Date of birth (needed to login again)" type="date"></paper-input> -->
+
+                            <paper-input-container always-float-label="true">
+                                <label slot="label">Birth month</label>
+                                <iron-input slot="input">
+                                    <select id="birthMonth" style="width:100px;">
+                                        ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(num => html`
+                                            <option value="${num}">${num}</option>
+                                        `)}
+                                    </select>
+                                </iron-input>
+                            </paper-input-container>
+                            
                             <paper-input always-float-labell label="Pin" id="createPin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input>
                             
                             <p style="margin-bottom:0;">
@@ -254,6 +304,19 @@ class CreateAccountSection extends connect(store)(LitElement) {
                             <paper-input id="seedPhrase" always-float-labell label="Repeat seed phrase"></paper-input>
                         </div>
                     </div>
+
+                    <div page="save">
+                        <div id="saveContent" class="section-content">
+                            <p>Your account is now ready to be created. It will be saved in this browser. If you do not want your new account to be saved in your browser you can uncheck the box below. You will still be able to login with your new account(after logging out), you'll just have to retype your seedphrase.</p>
+                            
+                            <div style="text-align:right; padding-right:8px; min-height:40px;">
+                                <p style="vertical-align: top; line-height: 40px; margin:0;">
+                                    <label for="tosCheckbox" @click=${() => this.shadowRoot.getElementById('saveCheckbox').click()}>I want my account to be saved in this browser</label>
+                                    <mwc-checkbox id="saveCheckbox" style="margin-bottom:-12px;" @click=${e => { this.saveAccount = !e.target.checked }} ?checked="${this.saveAccount}"></mwc-checkbox>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </iron-pages>
                 <div id="errorMessage" style="height:24px; line-height:24px; vertical-align:top; color:red; text-align:right; padding: 0 16px; padding-bottom:6px;">
                    
@@ -266,15 +329,15 @@ class CreateAccountSection extends connect(store)(LitElement) {
                 <div id="nav">
                     <mwc-button 
                         ?disabled=${this.selectedPage === 'tos'}
-                        @click=${() => this.selectPage(this.pages[this.selectedPage].prev)}
+                        @click=${() => this.pages[this.selectedPage].prev()}
                         style="margin: 0 0 12px 12px;">
                         <mwc-icon>keyboard_arrow_left</mwc-icon> Back 
                     </mwc-button>
                     <mwc-button 
                         ?disabled=${!this.tosAccepted}
-                        @click=${() => this.pages[this.selectedPage].next()}
+                        @click=${e => this.pages[this.selectedPage].next(e)}
                         style="margin: 0 12px 12px 0; float:right;">
-                        Next <mwc-icon>keyboard_arrow_right</mwc-icon>
+                        ${this.nextButtonText} <mwc-icon>keyboard_arrow_right</mwc-icon>
                     </mwc-button>
                 </div>
             </div>

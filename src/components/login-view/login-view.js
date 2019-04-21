@@ -9,6 +9,8 @@ import '@material/mwc-icon'
 
 import '@polymer/iron-pages'
 import '@polymer/paper-icon-button/paper-icon-button.js'
+import '@polymer/paper-spinner/paper-spinner-lite.js'
+
 import './create-account-section.js'
 import './login-section.js'
 
@@ -20,16 +22,92 @@ class LoginView extends connect(store)(LitElement) {
         return {
             loggedIn: { type: 'Boolean' },
             selectedPage: { type: 'String' },
-            pages: { type: Object }
+            pages: { type: Object },
+            rippleIsOpen: { type: Boolean },
+            config: { type: Object },
+            rippleLoadingMessage: { type: String }
         }
     }
 
     static get styles () {
         return [
             css`
-                /* html, * {
-                    color: var(--color, #333);
-                } */
+                * {
+                    --paper-spinner-color: var(--mdc-theme-secondary);
+                }
+                #rippleWrapper{
+                    position:fixed;
+                    top:0;
+                    left:0;
+                    bottom:0;
+                    right:0;
+                    height:0;
+                    width:0;
+                    z-index:999;
+                    overflow: visible;
+                    --ripple-activating-transition: transform 0.4s cubic-bezier(0.6, 0.0, 1, 1), opacity 0.6s cubic-bezier(0.6, 0.0, 1, 1);
+                    --ripple-disable-transition: opacity 0.375s ease;
+                }
+                #ripple{
+                    border-radius:50%;
+                    border-width:0;
+                    //transition:all 0.5s ease;
+                    /* height:0;
+                    width:0;
+                    margin:0; */
+                    /* margin-top: -300vh; */
+                    /* margin-left:-300vh; */
+                    margin-left:-100vmax;
+                    margin-top: -100vmax;
+                    height:200vmax;
+                    width:200vmax;
+                    overflow:hidden;
+                    /* border:300vh solid var(--mdc-theme-secondary); */
+                    /* border:0 solid rgba(85,85,85,1); */
+                    /* background:transparent; */
+                    background: var(--mdc-theme-secondary);
+                    transform: scale(0);
+                }
+                #rippleShader {
+                    background: var(--mdc-theme-surface);
+                    opacity:0;
+                    height:100%;
+                    width:100%;
+                }
+                #ripple.activating{
+                    transition: var(--ripple-activating-transition);
+                     /* 200vh... */
+                    /* border:300vh solid rgba(34,34,34,1);
+                    margin-top: -300vh;
+                    margin-left:-300vh;  */
+                    transform: scale(1)
+                }
+                .activating #rippleShader {
+                    transition: var(--ripple-activating-transition);
+                    opacity: 1;
+                }
+                #ripple.disabling{
+                    transition: var(--ripple-disable-transition);
+                    opacity: 0;
+                }
+                #rippleContentWrapper {
+                    position: absolute;
+                    top:100vmax;
+                    left:100vmax;
+                    height:var(--window-height);
+                    width:100vw;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                #rippleContent {
+                    opacity: 0;
+                    text-align:center;
+                }
+                .activating-done #rippleContent {
+                    opacity: 1;
+                    transition: var(--ripple-activating-transition);
+                }
             `
         ]
     }
@@ -38,11 +116,17 @@ class LoginView extends connect(store)(LitElement) {
         super()
 
         this.selectedPage = 'welcome'
+        this.rippleIsOpen = false
         this.pages = {
             'welcome': 0,
             'create-account': 1,
             'login': 2
         }
+        this.rippleLoadingMessage = 'Getting information'
+    }
+
+    firstUpdated () {
+        this.shadowRoot.getElementById('createAccountSection').loginFunction = (...args) => this.login(...args)
     }
 
     render () {
@@ -148,7 +232,7 @@ class LoginView extends connect(store)(LitElement) {
                     <div class="login-card">
                         <iron-pages selected="${this.selectedPage}" attr-for-selected="page" id="loginContainerPages">
                             <div page="welcome">
-                                <i style="float:right; padding:24px;">Karmship Alpha 2.0</i>
+                                <i style="float:right; padding:24px;">${this.config.coin.name} ${this.config.version}</i>
                                 <br>
                                 <br>
                                 <h1>Karma</h1>
@@ -177,7 +261,7 @@ class LoginView extends connect(store)(LitElement) {
                                     @click=${() => this.selectPage('welcome')}
                                 ><mwc-icon>keyboard_arrow_left</mwc-icon> Login</mwc-button>
                                 <br>
-                                <create-account-section></create-account-section>
+                                <create-account-section id="createAccountSection"></create-account-section>
                             </div>
                             
                             <div page="login">
@@ -193,11 +277,17 @@ class LoginView extends connect(store)(LitElement) {
                     </div>
                 </div>
             </div>
-            <div id="ripple">
-                <!-- Ripple and spin on login click... can shrink back down and shake if there's an error
-                or just fade out if there's success    
-            -->
-                <div id="spinner"></div>
+            <div id="rippleWrapper">
+                <div id="ripple">
+                    <div id="rippleShader"></div>
+                    <div id="rippleContentWrapper">
+                        <div id="rippleContent">
+                            <h1>Welcome to ${this.config.coin.name}</h1>
+                            <paper-spinner-lite active></paper-spinner-lite>
+                            <p>${this.rippleLoadingMessage}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         `
     }
@@ -236,6 +326,37 @@ class LoginView extends connect(store)(LitElement) {
 
     stateChanged (state) {
         this.loggedIn = state.app.loggedIn
+        this.config = state.config
+    }
+
+    login (rippleOrigin) {
+        const rippleWrapper = this.shadowRoot.getElementById('rippleWrapper')
+        const ripple = this.shadowRoot.getElementById('ripple')
+        const rippleContentWrapper = this.shadowRoot.getElementById('rippleContentWrapper')
+
+        // Position the center of the ripple
+        console.dir(rippleWrapper)
+        console.log(rippleOrigin)
+        rippleWrapper.style.top = rippleOrigin.y + 'px'
+        rippleWrapper.style.left = rippleOrigin.x + 'px'
+        rippleContentWrapper.style.marginTop = -rippleOrigin.y + 'px'
+        rippleContentWrapper.style.marginLeft = -rippleOrigin.x + 'px'
+
+        ripple.classList.add('activating')
+
+        this.rippleIsOpen = false
+        const transitionedEvent = () => {
+            // First time
+            if (!this.rippleIsOpen) {
+                ripple.classList.add('activating-done')
+            }
+            this.rippleIsOpen = true
+        }
+
+        ripple.addEventListener('transitionend', transitionedEvent)
+        ripple.addEventListener('webkitTransitionEnd', transitionedEvent)
+        ripple.addEventListener('oTransitionEnd', transitionedEvent)
+        ripple.addEventListener('MSTransitionEnd', transitionedEvent)
     }
 }
 

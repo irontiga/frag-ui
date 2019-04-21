@@ -1,7 +1,7 @@
 import { createStore, compose, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 
-import reducers from './reducers'
+import reducers from './reducers/reducers.js'
 
 import { doLoadConfigFromAPI } from './actions/config-actions.js'
 
