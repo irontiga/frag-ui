@@ -14,8 +14,6 @@ import './login-view/login-view.js'
 // import('./app-view.js') // Async
 import './app-view.js' // Screw em then, let's make ff work
 
-console.log('PENIS')
-
 // console.log('==============')
 // console.log(styles)
 // console.log('==============')

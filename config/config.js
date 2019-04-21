@@ -14,6 +14,7 @@ const config = {
     coin: {
         name: 'Karma',
         addressCount: 1, // Default amount of addresses to generate with an account.
+        addressVersion: 46, // K for Karma
         node: {
             explorer: {
                 // url: "http://127.0.0.1:9090", // Qora

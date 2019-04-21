@@ -3,6 +3,7 @@ const config = {
     coin: {
         name: 'Frag',
         addressCount: 1,
+        addressVersion: 58, // Q for Qora
         node: {
             explorer: {
                 // url: "http://127.0.0.1:9090", // Qora
@@ -14,7 +15,8 @@ const config = {
                 url: 'http://127.0.0.1:4930', // Karma
                 tail: '/'
             }
-        }
+        },
+        decimals: 100000000
     },
     user: {
         language: 'english', // default...english
@@ -74,7 +76,6 @@ const config = {
     },
 
     icon: './src/img/icon.png',
-    pollingInterval: 3000, // How long between checking for new unconfirmed transactions and new blocks (in milliseconds).
     // Might be better increased over a weaker or metered connection, or perhaps lowered when using a local node4
     tls: {
         enabled: false,
@@ -82,6 +83,16 @@ const config = {
             key: '',
             cert: ''
         }
+    },
+    constants: {
+        pollingInterval: 3000, // How long between checking for new unconfirmed transactions and new blocks (in milliseconds).
+        proxyURL: '/proxy/',
+    },
+    crypto: {
+        kdfThreads: 16,
+        staticSalt: '4ghkVQExoneGqZqHTMMhhFfxXsVg2A75QeS1HCM5KAih', // Base58 encoded
+        bcryptRounds: 10,
+        staticBcryptSalt: '$IxVE941tXVUD4cW0TNVm.O' // Will have version/rounds pre-pended
     }
 }
 

@@ -13,6 +13,13 @@ class AppTheme extends connect(store)(LitElement) {
     //     ]
     // }
 
+    static get properties () {
+        return {
+            styles: { type: Object },
+            theme: { type: Object }
+        }
+    }
+
     /* Disable shady css, so that the styles DO bleed */
     createRenderRoot () {
         return this

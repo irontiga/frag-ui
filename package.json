@@ -34,7 +34,7 @@
     "@webcomponents/webcomponentsjs": "^2.2.9",
     "autoprefixer": "^9.5.1",
     "bluebird": "^3.5.4",
-    "core-js": "3.0.1",
+    "core-js": "^3.0.1",
     "dimport": "^1.0.0",
     "electron": "^4.0.4",
     "epml": "^0.1.2",

@@ -2,7 +2,7 @@ import { LitElement, html, css } from 'lit-element'
 import { connect } from 'pwa-helpers'
 import { store } from '../../store.js'
 
-import { logIn } from '../../actions/app-actions.js'
+// import { logIn } from '../../actions/app-actions.js'
 
 import '@material/mwc-button'
 import '@material/mwc-icon'
@@ -320,9 +320,9 @@ class LoginView extends connect(store)(LitElement) {
         this.selectedPage = 'welcome'
     }
 
-    _loginClick (e) {
-        logIn()
-    }
+    // _loginClick (e) {
+    //     logIn()
+    // }
 
     stateChanged (state) {
         this.loggedIn = state.app.loggedIn

@@ -20,6 +20,6 @@ export const saveStateToLocalStorage = (key, state) => {
         const stateJSON = JSON.stringify(state)
         localStorage.setItem(key, stateJSON)
     } catch (e) {
-        console.log(e)
+        console.log(e, 'e')
     }
 }

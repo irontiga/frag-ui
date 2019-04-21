@@ -1,9 +1,8 @@
-export const loadConfigFromAPI = (state, action) => {
+export const login = (state, action) => {
     switch (action.status) {
         case 'success':
-            console.log('success!!!', action)
             return {
-                ...action.payload, // This is the new initial state
+                ...action.payload, // This is the initial state as loaded from the api
                 loaded: true,
                 loading: false
             }
@@ -11,8 +10,7 @@ export const loadConfigFromAPI = (state, action) => {
             return {
                 ...state,
                 loaded: false,
-                loading: false,
-                loadingError: action.payload
+                loading: false
             }
         default:
             return {
