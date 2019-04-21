@@ -25,6 +25,17 @@ const routes = [
     },
     {
         method: 'GET',
+        path: '/img/{param*}',
+        handler: {
+            directory: {
+                path: './img',
+                redirectToSlash: true,
+                index: true
+            }
+        }
+    },
+    {
+        method: 'GET',
         path: '/node_modules/{param*}',
         handler: {
             directory: {

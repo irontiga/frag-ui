@@ -11,9 +11,9 @@ import nacl from "./deps/nacl-fast.js"
 import utils from "./deps/utils.js"
 import { ADDRESS_VERSION } from "./constants.js"
 
-// Just for a quick debug
-window.utils = utils
-window.RIPEMD160 = RIPEMD160
+// // Just for a quick debug
+// window.utils = utils
+// window.RIPEMD160 = RIPEMD160
 
 export default class PhraseWallet {
     constructor(seed, walletVersion) {

@@ -2,6 +2,10 @@ import { LitElement, html, css } from 'lit-element'
 import { connect } from 'pwa-helpers'
 import { store } from '../../store.js'
 
+import { createWallet } from '../../qora/createWallet.js'
+import { generateSaveSeedData } from '../../qora/storeWallet.js'
+import { doLogin } from '../../actions/app-actions/app-actions.js'
+
 // import { logIn } from '../../actions/app-actions.js'
 
 import '@material/mwc-button'
@@ -46,7 +50,8 @@ class LoginView extends connect(store)(LitElement) {
                     z-index:999;
                     overflow: visible;
                     --ripple-activating-transition: transform 0.4s cubic-bezier(0.6, 0.0, 1, 1), opacity 0.6s cubic-bezier(0.6, 0.0, 1, 1);
-                    --ripple-disable-transition: opacity 0.375s ease;
+                    /* --ripple-disable-transition: opacity 0.375s ease; */
+                    --ripple-disable-transition: opacity 0.5s ease;
                 }
                 #ripple{
                     border-radius:50%;
@@ -163,7 +168,7 @@ class LoginView extends connect(store)(LitElement) {
                 }
                 .login-card p {
                     margin-top: 0;
-                    font-size:1rem;
+                    font-size: 1rem;
                     font-style: italic;
                 }
                 .login-card h1{
@@ -227,16 +232,17 @@ class LoginView extends connect(store)(LitElement) {
                 }
             </style>
             
-            <div class="login-page">
+            <div class="login-page" ?hidden=${this.loggedIn}>
                 <div class="login-card-container">
                     <div class="login-card">
                         <iron-pages selected="${this.selectedPage}" attr-for-selected="page" id="loginContainerPages">
                             <div page="welcome">
-                                <i style="float:right; padding:24px;">${this.config.coin.name} ${this.config.version}</i>
+                                <i style="visibility: hidden; float:right; padding:24px;">${this.config.coin.name} ${this.config.version}</i>
                                 <br>
                                 <br>
-                                <h1>Karma</h1>
-                                <p>Enter the Karmaconomy</p>
+                                <!-- <h1>Karma</h1> -->
+                                <img src="/img/karma/logo/KARMASHIP_LOGO_COLOR_WEB_MED.png" style="max-width: 300px; width:60%;">
+                                <!-- <p>Enter the Karmaconomy</p> -->
                                 <br><br><br>
                                 <mwc-button
                                     @click=${() => this.selectPage('create-account')}
@@ -249,6 +255,11 @@ class LoginView extends connect(store)(LitElement) {
                                 >
                                     Login
                                 </mwc-button>
+                                <div style="text-align: right; padding:12px;">
+                                    <br><br>
+                                    <p style="margin:0; font-size: 0.9rem">Karmaship, LLC [alpha build v2.0]</p>
+                                    <p style="font-size: 0.9rem"><i><small>Rewarding real life experiences</small></i></p>
+                                </div>
                                 <!-- <login-welcome-page selected-page="{{selectedPage}}"></login-welcome-page> -->
                             </div>
                             
@@ -329,7 +340,7 @@ class LoginView extends connect(store)(LitElement) {
         this.config = state.config
     }
 
-    login (rippleOrigin) {
+    loginAnimation (rippleOrigin) {
         const rippleWrapper = this.shadowRoot.getElementById('rippleWrapper')
         const ripple = this.shadowRoot.getElementById('ripple')
         const rippleContentWrapper = this.shadowRoot.getElementById('rippleContentWrapper')
@@ -344,19 +355,56 @@ class LoginView extends connect(store)(LitElement) {
 
         ripple.classList.add('activating')
 
-        this.rippleIsOpen = false
-        const transitionedEvent = () => {
-            // First time
-            if (!this.rippleIsOpen) {
-                ripple.classList.add('activating-done')
-            }
-            this.rippleIsOpen = true
+        const transitionEventNames = ['transitionend', 'webkitTransitionEnd', 'oTransitionEnd', 'MSTransitionEnd']
+
+        const closeRipple = () => {
+            return new Promise((resolve, reject) => {
+                let rippleClosed = false
+                const rippleClosedEvent = e => {
+                    if (!rippleClosed) {
+                        rippleClosed = true
+                        transitionEventNames.forEach(name => ripple.removeEventListener(name, rippleClosedEvent))
+                        // Reset the ripple
+                        ripple.classList.remove('activating')
+                        ripple.classList.remove('activating-done')
+                        ripple.classList.remove('disabling')
+                        this.rippleIsOpen = false
+                        resolve()
+                    }
+                }
+
+                ripple.classList.add('disabling')
+                transitionEventNames.forEach(name => ripple.addEventListener(name, rippleClosedEvent))
+            })
         }
 
-        ripple.addEventListener('transitionend', transitionedEvent)
-        ripple.addEventListener('webkitTransitionEnd', transitionedEvent)
-        ripple.addEventListener('oTransitionEnd', transitionedEvent)
-        ripple.addEventListener('MSTransitionEnd', transitionedEvent)
+        return new Promise((resolve, reject) => {
+            this.rippleIsOpen = false
+            const transitionedEvent = () => {
+                // First time
+                if (!this.rippleIsOpen) {
+                    ripple.classList.add('activating-done')
+                    transitionEventNames.forEach(name => ripple.removeEventListener(name, transitionedEvent))
+                    resolve(closeRipple)
+                }
+                this.rippleIsOpen = true
+            }
+            transitionEventNames.forEach(name => ripple.addEventListener(name, transitionedEvent))
+        })
+    }
+
+    async login (rippleOrigin, params) {
+        const closeRipple = await this.loginAnimation(rippleOrigin)
+        try {
+            const wallet = await createWallet(this, params)
+            store.dispatch(doLogin(wallet, params.pin))
+            if (params.save) {
+                const saveSeedData = await generateSaveSeedData(wallet, params.pin, this.config.crypto.kdfThreads)
+            }
+            closeRipple()
+        } catch (e) {
+            alert(e)
+        }
     }
 }
 

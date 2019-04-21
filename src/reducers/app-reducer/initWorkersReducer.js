@@ -6,7 +6,7 @@ export const initWorkersReducer = (state, action) => {
             return {
                 ...state,
                 workers: {
-                    ...action.payload,
+                    workers: action.payload,
                     ready: true,
                     loading: false
                 }

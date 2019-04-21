@@ -4,8 +4,8 @@ import Base58 from './qora/deps/Base58.js'
 
 import reducers from './reducers/reducers.js'
 
-import { doLoadConfigFromAPI } from './actions/config-actions.js'
-import { doInitWorkers } from './actions/app-actions/initWorkers.js'
+import { doLoadConfigFromAPI } from './actions/config-actions/config-actions.js/index.js'
+import { doInitWorkers } from './actions/app-actions/init-worker-actions.js'
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 window.Base58 = Base58
@@ -26,7 +26,7 @@ const workerInitChecker = () => {
         } else {
             // Make sure it isn't busy at the moment and go set them up
             console.log('Dispatching worker initialization')
-            if (!state.app.workers.loading) store.dispatch(doInitWorkers(state.config.crypto.kdfThreads))
+            if (!state.app.workers.loading) store.dispatch(doInitWorkers(state.config.crypto.kdfThreads, state.config.constants.workerURL))
             // if (!state.app.workers.loading) store.dispatch(doInitWorkers(16))
         }
     }

@@ -87,12 +87,16 @@ const config = {
     constants: {
         pollingInterval: 3000, // How long between checking for new unconfirmed transactions and new blocks (in milliseconds).
         proxyURL: '/proxy/',
+        workerURL: '/build/es6/worker.js'
     },
     crypto: {
         kdfThreads: 16,
         staticSalt: '4ghkVQExoneGqZqHTMMhhFfxXsVg2A75QeS1HCM5KAih', // Base58 encoded
-        bcryptRounds: 10,
-        staticBcryptSalt: '$IxVE941tXVUD4cW0TNVm.O' // Will have version/rounds pre-pended
+        bcryptRounds: 10, // Note it's kinda 10 * log.2.16, cause it runs on all 16 threads
+        bcryptVersion: '2a',
+        get staticBcryptSalt () {
+            return `$${this.bcryptVersion}$${this.bcryptRounds}$IxVE941tXVUD4cW0TNVm.O`
+        }
     }
 }
 

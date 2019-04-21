@@ -1,17 +1,22 @@
-import { Epml, EpmlWorkerPlugin } from 'epml/src/epml.all.js'
+import { Epml } from '../../epml.js'
+import { EpmlWorkerPlugin } from 'epml'
 Epml.registerPlugin(EpmlWorkerPlugin)
 
 export const INIT_WORKERS = 'INIT_WORKERS'
 
-export const doInitWorkers = (numberOfWorkers) => {
+export const doInitWorkers = (numberOfWorkers, workerURL) => {
     const workers = []
     return (dispatch, getState) => {
         dispatch(initWorkers()) // loading
         try {
             for (let i = 0; i < numberOfWorkers; i++) {
-                workers.push(new Epml({ type: 'WORKER', source: new Worker('/src/actions/app-actions/worker.js') }))
+                workers.push(new Epml({ type: 'WORKER', source: new Worker(workerURL) }))
             }
-            dispatch(initWorkers('success', workers))
+            Promise.all(workers.map(workerEpml => workerEpml.ready()))
+                .then(() => {
+                    console.log('All workers ready')
+                    dispatch(initWorkers('success', workers))
+                })
         } catch (e) {
             dispatch(initWorkers('error', e))
         }

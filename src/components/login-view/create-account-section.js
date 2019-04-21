@@ -115,6 +115,11 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     this.loginFunction({
                         x: e.clientX,
                         y: e.clientY
+                    }, {
+                        seedType: 'phrase',
+                        seed: this.shadowRoot.getElementById('seedPhrase').value,
+                        pin: this.shadowRoot.getElementById('createPin').value,
+                        save: this.saveAccount
                     })
                 },
                 prev: () => {
@@ -372,6 +377,10 @@ class CreateAccountSection extends connect(store)(LitElement) {
 
     stateChanged (state) {
         // this.loggedIn = state.app.loggedIn
+    }
+    
+    createAccount () {
+
     }
 }
 

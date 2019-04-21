@@ -21,7 +21,8 @@ import './app-view.js' // Screw em then, let's make ff work
 class MainApp extends connect(store)(LitElement) {
     static get properties () {
         return {
-            name: { type: 'String' }
+            name: { type: 'String' },
+            loggedIn: { type: Boolean }
         }
     }
 
@@ -46,7 +47,7 @@ class MainApp extends connect(store)(LitElement) {
             
             <login-view></login-view>
             
-            <app-view hidden=${!this.loggedIn}></app-view> <!-- Might dynamic import this one... YUP DEFINITELY :) -->
+            <app-view ?hidden=${!this.loggedIn}></app-view> <!-- Might dynamic import this one... YUP DEFINITELY :) -->
             
 
             <!-- <input type="text" placeholder="name" value="${this.name}" @input=${this._nameChanged}> -->

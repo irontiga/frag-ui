@@ -11,6 +11,17 @@ const config = {
             domain: '192.168.178.35'
         }
     },
+    styles: {
+        theme: {
+            colors: {
+                primary: '#1BB9CE',
+                primaryBg: '#a3e3eb',
+
+                secondary: '#8BC651',
+                secondaryBg: '#d0e8b9'
+            }
+        }
+    },
     coin: {
         name: 'Karma',
         addressCount: 1, // Default amount of addresses to generate with an account.

@@ -72,6 +72,19 @@ export default [
     },
     {
         context: 'window',
+        input: 'src/worker.js',
+        output: [
+            {
+                dir: 'build/es6',
+                format: 'iife'
+            }
+        ],
+        plugins: plugins.concat([
+            babel(babelOptions)
+        ])
+    },
+    {
+        context: 'window',
         input: 'src/main.js',
         output: [
             {
