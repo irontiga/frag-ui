@@ -10,12 +10,4 @@ $mdc-layout-grid-breakpoints: (
     --layout-breakpoint-mobile: #{map-get($mdc-layout-grid-breakpoints, phone)};
 }
 
-@import '../../node_modules/@material/layout-grid/mdc-layout-grid.scss';
-
-
-html {
-    color:#333;
-}
-.pinko{
-    color:var(--mdc-theme-primary) !important;
-}
+// @import '../../node_modules/@material/layout-grid/mdc-layout-grid.scss';

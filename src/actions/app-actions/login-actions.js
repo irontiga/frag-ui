@@ -15,3 +15,16 @@ const login = (wallet, pin) => {
         pin
     }
 }
+
+export const doLogout = () => {
+    // Maybe add some checks for ongoing stuff...who knows
+    return (dispatch, getState) => {
+        dispatch(logout())
+    }
+}
+
+const logout = () => {
+    return {
+        type: LOG_OUT
+    }
+}

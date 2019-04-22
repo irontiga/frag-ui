@@ -5,7 +5,7 @@ import Base58 from '../qora/deps/Base58.js'
 const getRandomValues = window.crypto ? window.crypto.getRandomValues.bind(window.crypto) : window.msCrypto.getRandomValues.bind(window.msCrypto)
 
 // export const generateSaveSeedData = async (seed, version, name, password) => {
-export const generateSaveSeedData = async (wallet, pin, kdfThreads) => {
+export const generateSaveWalletData = async (wallet, pin, kdfThreads) => {
     let iv = new Uint8Array(16)
     getRandomValues(iv)
     let salt = new Uint8Array(32)
@@ -15,7 +15,7 @@ export const generateSaveSeedData = async (wallet, pin, kdfThreads) => {
     const key = await kdf(pin, salt)
     const encryptionKey = key.slice(0, 32)
     const macKey = key.slice(32, 63)
-    const encryptedSeed = AES_CBC.encrypt(wallet._base58Seed, encryptionKey, false, iv)
+    const encryptedSeed = AES_CBC.encrypt(wallet._byteSeed, encryptionKey, false, iv)
     // const mac = HmacSha512.bytes(encryptedSeed, macKey)
     const mac = new HmacSha512(macKey).process(encryptedSeed).finish().result
 

@@ -9,6 +9,13 @@ const INITIAL_STATE = {
         workers: [],
         ready: false,
         loading: false
+    },
+    wallet: {
+        addresses: [
+            {
+                address: ''
+            }
+        ]
     }
 }
 
@@ -26,7 +33,8 @@ export default (state = INITIAL_STATE, action) => {
         case LOG_OUT:
             return {
                 ...state,
-                loggedIn: false
+                loggedIn: false,
+                wallet: INITIAL_STATE.wallet
             }
         default:
             return state

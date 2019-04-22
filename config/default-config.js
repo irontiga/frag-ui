@@ -40,7 +40,10 @@ const config = {
 
                 surface: '#fff', /* Sets the background color to the surface background color. */
                 onSurface: '#333', /* Sets the text color to the color configured for text on the surface color. */
-                background: '#efefe'/* Sets the background color to the theme background color. */
+                background: '#efefe',/* Sets the background color to the theme background color. */
+
+                warning: '#FFA000',
+                error: '#F44336'
             },
 
             addressColors: [
@@ -55,6 +58,16 @@ const config = {
                 '#2196f3',
                 '#d81b60'
             ]
+        },
+        // Will make theme be calculated from config.styles.themes[config.user.theme]... or make theme the base..so it becomes theme = {...config.styles.theme, ...config.styles.themes[config.user.theme]}
+        themes: {
+            light: {
+                // ...
+            },
+            dark: {
+                // ...
+            }
+            // And more... perhaps installable or user definable, like slack (...used to be? haven't been on it in ages)
         }
     },
     server: {
@@ -92,7 +105,7 @@ const config = {
     crypto: {
         kdfThreads: 16,
         staticSalt: '4ghkVQExoneGqZqHTMMhhFfxXsVg2A75QeS1HCM5KAih', // Base58 encoded
-        bcryptRounds: 10, // Note it's kinda 10 * log.2.16, cause it runs on all 16 threads
+        bcryptRounds: 11, // Note it's kinda 10 * log.2.16, cause it runs on all 16 threads
         bcryptVersion: '2a',
         get staticBcryptSalt () {
             return `$${this.bcryptVersion}$${this.bcryptRounds}$IxVE941tXVUD4cW0TNVm.O`

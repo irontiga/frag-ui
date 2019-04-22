@@ -4,7 +4,7 @@ import Base58 from './qora/deps/Base58.js'
 
 import reducers from './reducers/reducers.js'
 
-import { doLoadConfigFromAPI } from './actions/config-actions/config-actions.js/index.js'
+import { doLoadConfigFromAPI } from './actions/config-actions/config-actions.js'
 import { doInitWorkers } from './actions/app-actions/init-worker-actions.js'
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 

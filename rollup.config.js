@@ -51,8 +51,8 @@ const plugins = [
     commonjs({}),
     globals(),
     builtins(),
-    sass(sassOptions),
-    minifyHTML()
+    sass(sassOptions)//,
+    // minifyHTML()
     // terser()
 ]
 
@@ -71,8 +71,21 @@ export default [
         ])
     },
     {
-        context: 'window',
+        context: 'self',
         input: 'src/worker.js',
+        output: [
+            {
+                dir: 'build/es6',
+                format: 'iife'
+            }
+        ],
+        plugins: plugins.concat([
+            babel(babelOptions)
+        ])
+    },
+    {
+        context: 'window',
+        input: 'src/plugins/plugin-mainjs-loader.js',
         output: [
             {
                 dir: 'build/es6',

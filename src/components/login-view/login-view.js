@@ -3,8 +3,9 @@ import { connect } from 'pwa-helpers'
 import { store } from '../../store.js'
 
 import { createWallet } from '../../qora/createWallet.js'
-import { generateSaveSeedData } from '../../qora/storeWallet.js'
+import { generateSaveWalletData } from '../../qora/storeWallet.js'
 import { doLogin } from '../../actions/app-actions/app-actions.js'
+import { doStoreWallet } from '../../actions/config-actions/store-wallet-action.js'
 
 // import { logIn } from '../../actions/app-actions.js'
 
@@ -49,7 +50,7 @@ class LoginView extends connect(store)(LitElement) {
                     width:0;
                     z-index:999;
                     overflow: visible;
-                    --ripple-activating-transition: transform 0.4s cubic-bezier(0.6, 0.0, 1, 1), opacity 0.6s cubic-bezier(0.6, 0.0, 1, 1);
+                    --ripple-activating-transition: transform 0.3s cubic-bezier(0.6, 0.0, 1, 1), opacity 0.3s cubic-bezier(0.6, 0.0, 1, 1);
                     /* --ripple-disable-transition: opacity 0.375s ease; */
                     --ripple-disable-transition: opacity 0.5s ease;
                 }
@@ -117,10 +118,13 @@ class LoginView extends connect(store)(LitElement) {
         ]
     }
 
+    getPreSelectedPage () {
+        return (store.getState().config.storedWallets && store.getState().config.storedWallets.length > 0) ? 'welcome' : 'login'
+    }
+
     constructor () {
         super()
-
-        this.selectedPage = 'welcome'
+        this.selectedPage = this.getPreSelectedPage()
         this.rippleIsOpen = false
         this.pages = {
             'welcome': 0,
@@ -132,6 +136,7 @@ class LoginView extends connect(store)(LitElement) {
 
     firstUpdated () {
         this.shadowRoot.getElementById('createAccountSection').loginFunction = (...args) => this.login(...args)
+        this.shadowRoot.getElementById('loginSection').loginFunction = (...args) => this.login(...args)
     }
 
     render () {
@@ -147,7 +152,9 @@ class LoginView extends connect(store)(LitElement) {
                     top:0;
                     left:0;
                     /* background: var(--mdc-theme-surface); */
-                    background: var(--mdc-theme-background);
+                    /* background: var(--mdc-theme-background); */
+                    background: #333; /* Needs to become configurable... */
+                    z-index:1;
                 }
                 .login-card-container {
                     max-width:100vw;
@@ -160,6 +167,7 @@ class LoginView extends connect(store)(LitElement) {
                 }
                 #loginContainerPages [page] {
                     background: var(--mdc-theme-surface);
+                    padding:0;
                 }
                 .login-card {
                     min-width: 340px;
@@ -184,6 +192,10 @@ class LoginView extends connect(store)(LitElement) {
                 .login-card iron-pages {
                     height:100%;
                 }
+                .backButton {
+                    padding-top:18px;
+                    text-align:center;
+                }
                 @media only screen and (min-width: ${getComputedStyle(document.body).getPropertyValue('--layout-breakpoint-tablet')}) {
                     /* Desktop/tablet */
                     .login-card {
@@ -193,7 +205,7 @@ class LoginView extends connect(store)(LitElement) {
                         /* border: 1px solid var(--mdc-theme-on-surface); */
                         box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
                         border-radius: 4px;
-                        padding: 6px;
+                        /* padding: 6px; */
                     }
                     #loginContainerPages [page="welcome"] {
 
@@ -210,6 +222,10 @@ class LoginView extends connect(store)(LitElement) {
                         margin:0;
                         top:0;
                         max-width:100%;
+                    }
+                    .backButton {
+                        text-align: left;
+                        padding-left:12px;
                     }
                 }
 
@@ -256,7 +272,7 @@ class LoginView extends connect(store)(LitElement) {
                                     Login
                                 </mwc-button>
                                 <div style="text-align: right; padding:12px;">
-                                    <br><br>
+                                    <br>
                                     <p style="margin:0; font-size: 0.9rem">Karmaship, LLC [alpha build v2.0]</p>
                                     <p style="font-size: 0.9rem"><i><small>Rewarding real life experiences</small></i></p>
                                 </div>
@@ -268,20 +284,27 @@ class LoginView extends connect(store)(LitElement) {
                                     icon="icons:arrow-back"
                                     @click=${() => this.selectPage('welcome')}
                                 ></paper-icon-button> -->
-                                <mwc-button
-                                    @click=${() => this.selectPage('welcome')}
-                                ><mwc-icon>keyboard_arrow_left</mwc-icon> Login</mwc-button>
+                                <div class="backButton">
+                                    <mwc-button
+                                        @click=${() => this.selectPage('welcome')}
+                                    ><mwc-icon>keyboard_arrow_left</mwc-icon> Login</mwc-button>
+                                </div>
                                 <br>
                                 <create-account-section id="createAccountSection"></create-account-section>
                             </div>
                             
                             <div page="login">
-                                login
-                                <paper-icon-button
+                                <!-- <paper-icon-button
                                     icon="icons:arrow-back"
                                     @click=${() => this.selectPage('welcome')}
-                                ></paper-icon-button>
+                                ></paper-icon-button> -->
+                                <div class="backButton">
+                                    <mwc-button
+                                        @click=${() => this.selectPage('welcome')}
+                                    ><mwc-icon>keyboard_arrow_left</mwc-icon> Create account</mwc-button>
+                                </div>
                                 <br>
+                                <login-section id='loginSection'></login-section>
                             </div>
                         </iron-pages>
                         
@@ -393,18 +416,37 @@ class LoginView extends connect(store)(LitElement) {
         })
     }
 
+    /*
+    NEED TO CHANGE THIS TO LISTENING TO STATE, WAITING FOR REDUX TO SAY, BUSY_LOGGING_IN = TRUE, WITH SOME X,Y VALUES, AND THEN RIPPLE AND UPDATE INFO FROM THERE. THIS IS CURRENTLY AN... ANTIPATTERN (MAYBE LOL)
+    */
     async login (rippleOrigin, params) {
         const closeRipple = await this.loginAnimation(rippleOrigin)
         try {
             const wallet = await createWallet(this, params)
             store.dispatch(doLogin(wallet, params.pin))
+            console.log('params', params)
             if (params.save) {
-                const saveSeedData = await generateSaveSeedData(wallet, params.pin, this.config.crypto.kdfThreads)
+                // Check if the seed is already saved
+                if (!this.config.savedWallets || !this.config.savedWallets[wallet._addresses[0].address]) {
+                    // Snackbar
+                    this.rippleLoadingMessage = 'Encrypting seed for storage'
+                    console.log(this.rippleLoadingMessage)
+                    const saveSeedData = await generateSaveWalletData(wallet, params.pin + params.birthMonth, this.config.crypto.kdfThreads)
+                    store.dispatch(doStoreWallet(saveSeedData))
+                } else {
+                    // Snackbar to say already saved
+                }
             }
             closeRipple()
+            this.cleanup()
         } catch (e) {
-            alert(e)
+            throw e
+            // alert(e)
         }
+    }
+
+    cleanup () {
+        this.selectedPage = 'welcome'
     }
 }
 

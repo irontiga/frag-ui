@@ -44,6 +44,9 @@ class AppTheme extends connect(store)(LitElement) {
                     --layout-breakpoint-tablet: ${this.styles.breakpoints.tablet};
                     --layout-breakpoint-desktop: ${this.styles.breakpoints.desktop};
                     --layout-breakpoint-mobile: ${this.styles.breakpoints.mobile};
+
+                    --mdc-theme-error: ${this.theme.colors.error};
+                    --mdc-theme-warning: ${this.theme.colors.warning};
                 }
                 
             </style>

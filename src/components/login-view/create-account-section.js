@@ -116,10 +116,14 @@ class CreateAccountSection extends connect(store)(LitElement) {
                         x: e.clientX,
                         y: e.clientY
                     }, {
-                        seedType: 'phrase',
-                        seed: this.shadowRoot.getElementById('seedPhrase').value,
+                        sourceType: 'phrase',
+                        source: this.shadowRoot.getElementById('seedPhrase').value,
                         pin: this.shadowRoot.getElementById('createPin').value,
+                        birthMonth: this.shadowRoot.getElementById('birthMonth').value,
                         save: this.saveAccount
+                    }).then(() => {
+                        // CLEANUP TIME.. change to state listener...on login -> cleanup
+                        this.cleanup()
                     })
                 },
                 prev: () => {
@@ -136,6 +140,20 @@ class CreateAccountSection extends connect(store)(LitElement) {
 
         this.nextEnabled = false
         this.prevEnabled = false
+    }
+
+    cleanup () { // Practically the constructor...what a waste
+        this.shadowRoot.getElementById('randSentence').generate()
+        this.shadowRoot.getElementById('seedPhrase').value = ''
+        this.shadowRoot.getElementById('createPin').value = ''
+        this.shadowRoot.getElementById('birthMonth').value = ''
+        this.tosAccepted = false
+        this.selectedPage = 'tos'
+        this.error = false
+        this.errorMessage = ''
+        this.nextButtonText = 'Next'
+        this.saveAccount = true
+        this.createAccountLoading = false
     }
 
     render () {
@@ -164,12 +182,12 @@ class CreateAccountSection extends connect(store)(LitElement) {
                 }
                 /* #tosContent { */
                 .section-content {
-                    padding:12px;
+                    padding:0 24px;
                     padding-bottom:0;
                     /* display:inline-block; */
                     overflow:auto;
                     flex-shrink:1;
-                    max-height: calc(100vh - 278px);
+                    max-height: calc(100vh - 296px);
                     
                 }
                 #tosContent > p {
@@ -184,6 +202,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     #createAccountSection {
                         /* max-height: calc(var(--window-height) - 204px); */
                         max-height: calc(var(--window-height) - 38px);
+                        /* height: calc(var(--window-height) - 38px); */
                         /* max-width:var(--layout-breakpoint-tablet); */
                         max-width: 100%;
                         height:100%;
@@ -191,8 +210,12 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     /* #tosContent { */
                     .section-content {
                         padding:12px;
-                        max-height:calc(var(--window-height) - 178px);
-
+                        max-height:calc(var(--window-height) - 166px);
+                        min-height:calc(var(--window-height) - 166px);
+                    }
+                    #tosContent {
+                        max-height:calc(var(--window-height) - 206px);
+                        min-height:calc(var(--window-height) - 206px)
                     }
                     #nav {
                         flex-shrink:0;
@@ -201,7 +224,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                 }
 
                 #infoContent{
-                    padding:12px;
+                    /* padding:12px; */
                 }
                 @keyframes fade {
                     from {
@@ -290,13 +313,14 @@ class CreateAccountSection extends connect(store)(LitElement) {
                                     </select>
                                 </iron-input>
                             </paper-input-container>
-                            
+                            <br>
                             <paper-input always-float-labell label="Pin" id="createPin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input>
-                            
+                            <br>
                             <p style="margin-bottom:0;">
                                 Below is a randomly generated seedphrase. You can regenerate it until you find one that you like. Please write it down and/or memorise it. You will need it in order to login to your account.
                             </p>
-                            <div style="display: inline-block; padding:8px; width:calc(100% - 72px); margin-top:24px; background: var(--mdc-theme-primary-bg); border-radius:2px;">
+                            <br>
+                            <div style="display: inline-block; padding:8px; width:calc(100% - 76px); margin-top:24px; background: var(--mdc-theme-secondary-bg); border-radius:2px;">
                                 <random-sentence-generator
                                     template="adverb verb the adjective noun and verb the adjective noun with the adjective noun"
                                     id="randSentence"></random-sentence-generator>
@@ -306,7 +330,10 @@ class CreateAccountSection extends connect(store)(LitElement) {
                                 style="top:-12px; margin:8px;"
                                 @click=${() => this.shadowRoot.getElementById('randSentence').generate()}
                             ></paper-icon-button>
-                            <paper-input id="seedPhrase" always-float-labell label="Repeat seed phrase"></paper-input>
+                            <div>
+                                <br>
+                                <paper-input id="seedPhrase" always-float-labell label="Repeat seed phrase"></paper-input>
+                            </div>
                         </div>
                     </div>
 
@@ -316,14 +343,17 @@ class CreateAccountSection extends connect(store)(LitElement) {
                             
                             <div style="text-align:right; padding-right:8px; min-height:40px;">
                                 <p style="vertical-align: top; line-height: 40px; margin:0;">
-                                    <label for="tosCheckbox" @click=${() => this.shadowRoot.getElementById('saveCheckbox').click()}>I want my account to be saved in this browser</label>
+                                    <label 
+                                    for="tosCheckbox"
+                                    @click=${() => this.shadowRoot.getElementById('saveCheckbox').click()}
+                                    >Save in this browser</label>
                                     <mwc-checkbox id="saveCheckbox" style="margin-bottom:-12px;" @click=${e => { this.saveAccount = !e.target.checked }} ?checked="${this.saveAccount}"></mwc-checkbox>
                                 </p>
                             </div>
                         </div>
                     </div>
                 </iron-pages>
-                <div id="errorMessage" style="height:24px; line-height:24px; vertical-align:top; color:red; text-align:right; padding: 0 16px; padding-bottom:6px;">
+                <div id="errorMessage" style="height:24px; line-height:24px; vertical-align:top; color: var(--mdc-theme-error); text-align:right; padding: 0 16px; padding-bottom:6px;">
                    
                     <span style="margin-top:-4px;height:24px;">
                         ${this.error ? html`

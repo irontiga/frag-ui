@@ -38,7 +38,7 @@ class MainApp extends connect(store)(LitElement) {
     // constructor () {
     //     super()
     // }
-
+    //  ?hidden=${!this.loggedIn}
     render () {
         return html`
             <app-styles></app-styles>
@@ -47,7 +47,7 @@ class MainApp extends connect(store)(LitElement) {
             
             <login-view></login-view>
             
-            <app-view ?hidden=${!this.loggedIn}></app-view> <!-- Might dynamic import this one... YUP DEFINITELY :) -->
+            <app-view></app-view> <!-- Might dynamic import this one... YUP DEFINITELY :) -->
             
 
             <!-- <input type="text" placeholder="name" value="${this.name}" @input=${this._nameChanged}> -->

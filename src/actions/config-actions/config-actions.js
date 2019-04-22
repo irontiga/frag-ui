@@ -1,3 +1,5 @@
+export { STORE_WALLET, doStoreWallet } from './store-wallet-action.js'
+
 export const LOAD_CONFIG_FROM_API = 'LOAD_CONFIG_FROM_API'
 
 const configUrl = '/getConfig'

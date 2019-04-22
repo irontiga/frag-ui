@@ -14,10 +14,10 @@ const config = {
     styles: {
         theme: {
             colors: {
-                primary: '#1BB9CE',
-                primaryBg: '#a3e3eb',
+                primary: '#18a5b7',
+                primaryBg: '#b8e9f0',
 
-                secondary: '#8BC651',
+                secondary: '#659932',
                 secondaryBg: '#d0e8b9'
             }
         }
@@ -30,13 +30,13 @@ const config = {
             explorer: {
                 // url: "http://127.0.0.1:9090", // Qora
                 // url: "http://159.89.132.89:4940", // Karma
-                url: 'http://127.0.0.1:4940', // Karma
+                url: 'http://karmaship.cc:4940/', // Karma
                 tail: '/index/blockexplorer.json'
             },
             api: {
                 // url: "http://127.0.0.1:9085", // Qora
                 // url: "http://159.89.132.89:4930", // Karma
-                url: 'http://127.0.0.1:4930', // Karma
+                url: 'http://karmaship.cc:4930/', // Karma
                 tail: '/'
             }
         }
