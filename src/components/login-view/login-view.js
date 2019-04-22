@@ -19,6 +19,8 @@ import '@polymer/paper-spinner/paper-spinner-lite.js'
 import './create-account-section.js'
 import './login-section.js'
 
+window.reduxStore = store
+
 // import { MDCTextField } from '@material/textfield'
 // const textField = new MDCTextField(document.querySelector('.mdc-text-field'))
 
@@ -119,7 +121,7 @@ class LoginView extends connect(store)(LitElement) {
     }
 
     getPreSelectedPage () {
-        return (store.getState().config.storedWallets && store.getState().config.storedWallets.length > 0) ? 'welcome' : 'login'
+        return (store.getState().config.storedWallets && Object.entries(store.getState().config.storedWallets || {}).length > 0) ? 'login' : 'welcome'
     }
 
     constructor () {
@@ -369,8 +371,8 @@ class LoginView extends connect(store)(LitElement) {
         const rippleContentWrapper = this.shadowRoot.getElementById('rippleContentWrapper')
 
         // Position the center of the ripple
-        console.dir(rippleWrapper)
-        console.log(rippleOrigin)
+        // console.dir(rippleWrapper)
+        // console.log(rippleOrigin)
         rippleWrapper.style.top = rippleOrigin.y + 'px'
         rippleWrapper.style.left = rippleOrigin.x + 'px'
         rippleContentWrapper.style.marginTop = -rippleOrigin.y + 'px'
@@ -424,13 +426,13 @@ class LoginView extends connect(store)(LitElement) {
         try {
             const wallet = await createWallet(this, params)
             store.dispatch(doLogin(wallet, params.pin))
-            console.log('params', params)
+            // console.log('params', params)
             if (params.save) {
                 // Check if the seed is already saved
                 if (!this.config.savedWallets || !this.config.savedWallets[wallet._addresses[0].address]) {
                     // Snackbar
                     this.rippleLoadingMessage = 'Encrypting seed for storage'
-                    console.log(this.rippleLoadingMessage)
+                    // console.log(this.rippleLoadingMessage)
                     const saveSeedData = await generateSaveWalletData(wallet, params.pin + params.birthMonth, this.config.crypto.kdfThreads)
                     store.dispatch(doStoreWallet(saveSeedData))
                 } else {

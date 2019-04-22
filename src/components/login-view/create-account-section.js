@@ -53,8 +53,6 @@ class CreateAccountSection extends connect(store)(LitElement) {
         this.pages = {
             tos: {
                 next: e => {
-                    console.log('to info, from tos')
-
                     this.error = false
                     this.errorMessage = ''
                     // Validation not needed... Button disabled if not checked
@@ -69,7 +67,6 @@ class CreateAccountSection extends connect(store)(LitElement) {
             },
             info: {
                 next: e => {
-                    console.log('to something from info')
                     this.error = false
                     this.errorMessage = ''
                     // const dob = this.shadowRoot.getElementById('dobInput').value
@@ -81,7 +78,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     //     return
                     // }
                     const birthMonth = this.shadowRoot.getElementById('birthMonth').value
-                    console.log(birthMonth, this.shadowRoot.getElementById('birthMonth'))
+                    // console.log(birthMonth, this.shadowRoot.getElementById('birthMonth'))
                     if (!(!isNaN(birthMonth) && birthMonth > 0 && birthMonth <= 12)) {
                         this.error = true
                         this.errorMessage = 'Please enter a valid birth month'
@@ -95,7 +92,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     }
                     const randSeedPhrase = this.shadowRoot.getElementById('randSentence').parsedString
                     const seedPhrase = this.shadowRoot.getElementById('seedPhrase').value
-                    console.log(randSeedPhrase, seedPhrase)
+                    // console.log(randSeedPhrase, seedPhrase)
                     if (!(randSeedPhrase === seedPhrase)) {
                         this.error = true
                         this.errorMessage = 'Seed phrase does not match the generated one'
@@ -111,7 +108,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                 next: e => {
                     // Create account and login :)
                     this.createAccountLoading = true
-                    console.dir(e)
+                    
                     this.loginFunction({
                         x: e.clientX,
                         y: e.clientY
@@ -292,7 +289,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                                 <label for="tosCheckbox" @click=${() => this.shadowRoot.getElementById('tosCheckbox').click()}>I agree to these terms of service</label>
                                 <mwc-checkbox id="tosCheckbox" style="margin-bottom:-12px;" @click=${e => {
                                     this.tosAccepted = !e.target.checked
-                                    console.log(e)
+                                    // console.log(e)
                                 }} ?checked="${this.tosAccepted}"></mwc-checkbox>
                             </p>
                         </div>

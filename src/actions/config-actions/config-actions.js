@@ -8,14 +8,14 @@ const configUrl = '/getConfig'
 export const doLoadConfigFromAPI = () => {
     console.log('do load config')
     return (dispatch, getState) => {
-        console.log(getState().config.loaded, 'test1')
+        // console.log(getState().config.loaded, 'test1')
         if (getState().config.loaded) return dispatch(loadConfigFromAPI('success')) // Already loaded :)..not needed...this could still be used to reset config from the api
         dispatch(loadConfigFromAPI())
         fetch(configUrl)
             .then(res => res.json())
             .then(data => dispatch(loadConfigFromAPI('success', data.config)))
             .catch(err => {
-                console.log(err)
+                console.error(err)
                 dispatch(loadConfigFromAPI('error', err))
             })
     }

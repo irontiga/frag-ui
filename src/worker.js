@@ -14,7 +14,7 @@ Epml.registerPlugin(EpmlWorkerPlugin)
 const parentEpml = new Epml({type: 'WORKER', source: self})
 
 parentEpml.route('kdf', async req => {
-    console.log(req)
+    // console.log(req)
     const { salt, key, nonce, staticSalt, staticBcryptSalt } = req.data
     const combinedBytes = utils.appendBuffer(salt, utils.stringtoUTF8Array(staticSalt + key + nonce))
     const sha512Hash = new Sha512().process(combinedBytes).finish().result

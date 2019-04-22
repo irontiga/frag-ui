@@ -65,17 +65,17 @@ class AppStyles extends LitElement {
     _windowResized () {
         const ua = navigator.userAgent
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(ua)
-        console.log(isMobile, "MOBILE")
+        // console.log(isMobile, 'MOBILE')
         const isChrome = /Chrome/i.test(ua)
 
         if (isMobile && isChrome) {
             this.windowHeight = html`calc(100vh - 56px)`
             // document.body.style.setProperty('--window-height', 'calc(100vh - 56px)')
-            console.log('not same')
+            // console.log('not same')
         } else {
             this.windowHeight = html`100vh`
             // document.body.style.setProperty('--window-height', '100vh')
-            console.log('same')
+            // console.log('same')
         }
     }
 }

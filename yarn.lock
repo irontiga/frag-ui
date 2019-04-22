@@ -2670,10 +2670,10 @@ env-paths@^1.0.0:
   resolved "https://registry.yarnpkg.com/env-paths/-/env-paths-1.0.0.tgz#4168133b42bb05c38a35b1ae4397c8298ab369e0"
   integrity sha1-QWgTO0K7BcOKNbGuQ5fIKYqzaeA=
 
-epml@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/epml/-/epml-0.1.3.tgz#ce13dae91ec04c67f65fb6c5d51977c7b8d4074f"
-  integrity sha512-KCpSBOU6X+zSTkJQylyiz/ks8imFIJe51aLUpKOLvKrdQoA9t4pdr+48p5jPTAKRGAvPIRp7FivR25vqjxD6fQ==
+epml@^0.1.9:
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/epml/-/epml-0.1.9.tgz#d0de463188f5b043ed5071805bfb6c9169260b38"
+  integrity sha512-Rb0ID3VOzNMQP7CSbULWMmooI0mj9m77sweixEULSy+DWpw1LHj6xKMaAURXJXwYABgpJK4SKG4vlVOIkYTUAw==
 
 errno@^0.1.1, errno@~0.1.1:
   version "0.1.7"

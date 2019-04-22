@@ -1,6 +1,6 @@
 export const initWorkersReducer = (state, action) => {
     // action.payload = new state
-    console.log('action', action)
+    // console.log('action', action)
     switch (action.status) {
         case 'success':
             return {

@@ -1,23 +1,40 @@
 import { store } from '../store.js'
-import Epml from '../epml.js'
+import { Epml } from '../epml.js'
 import { ContentWindow as EpmlContentWindow } from 'epml'
 import { doAddPlugin } from '../actions/app-actions/plugin-actions.js'
 
 Epml.registerPlugin(EpmlContentWindow)
 
-export const loadPlugins = (plugins, config) => {
+let retryLoadPluginsInterval = 0
+export const loadPlugins = () => fetch('/getPlugins')
+    .then(response => response.json())
+    .then(response => {
+        // console.log(response)
+        const plugins = response.plugins
+        const config = store.getState().config
+        // console.log(config)
+        pluginLoader(plugins, config)
+    })
+    .catch(err => {
+        retryLoadPluginsInterval += 1000
+        console.error(err)
+        console.error(`Could not load plugins. Retrying in ${retryLoadPluginsInterval / 1000} second(s)`)
+        setTimeout(loadPlugins, retryLoadPluginsInterval)
+    })
+
+export const pluginLoader = (plugins, config) => {
     plugins.forEach(plugin => {
         const frame = document.createElement('iframe')
         frame.className += 'pluginJSFrame'
         frame.sandbox = 'allow-scripts allow-same-origin'
         // Why not support http/https, pass the plugin as a location hash
-        frame.src = window.location.protocol + '//' + window.location.hostname + ':' + config.plugins.port + '/plugins/plugin-mainjs-loader.html#' + plugin + '/main.js'
+        frame.src = window.location.protocol + '//' + window.location.hostname + ':' + config.server.plugins.port + '/src/plugins/plugin-mainjs-loader.html#' + plugin + '/main.js'
 
         const insertedFrame = window.document.body.appendChild(frame)
 
-        store.disptach(doAddPlugin(new Epml({
+        store.dispatch(doAddPlugin(new Epml({
             type: 'WINDOW',
-            source: insertedFrame
+            source: insertedFrame.contentWindow
         })))
         // Wimp.registerTarget(plugin, insertedFrame.contentWindow)
     })

@@ -1,3 +1,6 @@
-import Epml from '../../node_modules/epml/src/Epml.js'
+const parentEpml = new Epml({
+    type: 'WINDOW',
+    source: window.parent
+})
 
-const parentEpml = new Epml(window.parent)
+console.log(parentEpml)

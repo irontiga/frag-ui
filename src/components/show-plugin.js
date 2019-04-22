@@ -29,10 +29,10 @@ class ShowPlugin extends connect(store)(LitElement) {
     }
 
     firstUpdated () {
-        console.log(this)
+        // console.log(this)
         // const frameElement = this.shadowRoot.getElementById('showPluginFrame')
         // this._walletEpml = new Epml({ type: 'WINDOW', source: frameElement })
-        console.log(this._walletEpml)
+        // console.log(this._walletEpml)
     }
 }
 

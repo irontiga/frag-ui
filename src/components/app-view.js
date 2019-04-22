@@ -2,6 +2,8 @@ import { LitElement, html, css } from 'lit-element'
 import { connect } from 'pwa-helpers'
 import { store } from '../store.js'
 
+import { loadPlugins } from '../plugins/load-plugins.js'
+
 // import '@material/mwc-icon'
 import '@polymer/paper-icon-button/paper-icon-button.js'
 import '@polymer/iron-icons/iron-icons.js'
@@ -25,7 +27,7 @@ import { doLogout } from '../actions/app-actions/app-actions.js'
 class AppView extends connect(store)(LitElement) {
     static get properties () {
         return {
-            loggedIn: { 
+            loggedIn: {
                 type: Boolean,
                 hasChanged: (some, thing) => {
                     console.log('loggedIn CHANGED!!!', some, thing)
@@ -132,6 +134,15 @@ class AppView extends connect(store)(LitElement) {
             </app-drawer-layout>
 
         `
+    }
+
+    constructor () {
+        super()
+        loadPlugins()
+    }
+
+    firstUpdated () {
+        //
     }
 
     stateChanged (state) {

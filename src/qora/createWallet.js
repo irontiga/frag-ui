@@ -21,8 +21,8 @@ export const createWallet = async (_this, { sourceType, source }) => {
                 _this.rippleLoadingMessage = status
             })
     }
-    console.log('making wallet')
+    // console.log('making wallet')
     const wallet = new PhraseWallet(seed, version)
-    console.log('returning wallet')
+    // console.log('returning wallet')
     return wallet
 }
