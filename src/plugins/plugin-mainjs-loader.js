@@ -1,8 +1,8 @@
 'use strict'
 import { Epml } from '../epml.js'
-import { ContentWindow } from 'epml'
+// import { ContentWindow } from 'epml'
 
-Epml.registerPlugin(ContentWindow)
+// Epml.registerPlugin(ContentWindow)
 
 window.Epml = Epml
 

@@ -1,10 +1,10 @@
 import { store } from '../store.js'
 import { Epml } from '../epml.js'
-import { ContentWindow as EpmlContentWindow } from 'epml'
+// import { ContentWindow as EpmlContentWindow } from 'epml'
 import { addPluginRoutes } from './addPluginRoutes'
 import { doAddPlugin } from '../redux/app/app-actions.js'
 
-Epml.registerPlugin(EpmlContentWindow)
+// Epml.registerPlugin(EpmlContentWindow)
 
 let retryLoadPluginsInterval = 0
 export const loadPlugins = () => fetch('/getPlugins')
@@ -40,7 +40,7 @@ export const pluginLoader = (plugins, config) => {
 
         addPluginRoutes(epmlInstance)
         epmlInstance.imReady()
-        console.log('I\'m ready!')
+        // console.log('I\'m ready!')
 
         store.dispatch(doAddPlugin(epmlInstance))
         // Wimp.registerTarget(plugin, insertedFrame.contentWindow)

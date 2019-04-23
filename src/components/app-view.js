@@ -121,7 +121,7 @@ class AppView extends connect(store)(LitElement) {
 
     constructor () {
         super()
-        console.log('loading plugins')
+        // console.log('loading plugins')
         loadPlugins()
     }
 

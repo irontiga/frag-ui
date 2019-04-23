@@ -3,8 +3,7 @@ const parentEpml = new Epml({
     source: window.parent
 })
 
-console.log('core', parentEpml)
-setTimeout(() => console.log('core', parentEpml), 4000)
+// console.log('core', parentEpml)
 
 parentEpml.ready().then(() => {
 

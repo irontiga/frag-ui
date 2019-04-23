@@ -13,7 +13,7 @@ export const doNavigate = loca => {
 // Action creator
 const navigate = loca => {
     // Action
-    console.log(loca)
+    // console.log(loca)
     return {
         type: NAVIGATE,
         url: loca.pathname

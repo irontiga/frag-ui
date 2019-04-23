@@ -71,7 +71,6 @@ class SidenavMenu extends connect(store)(LitElement) {
     stateChanged (state) {
         this.config = state.config
         this.urls = state.app.registeredUrls
-        console.log(Object.entries(this.urls))
     }
 }
 

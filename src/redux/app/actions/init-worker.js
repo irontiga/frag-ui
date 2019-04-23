@@ -14,7 +14,7 @@ export const doInitWorkers = (numberOfWorkers, workerURL) => {
             }
             Promise.all(workers.map(workerEpml => workerEpml.ready()))
                 .then(() => {
-                    console.log('All workers ready')
+                    // console.log('All workers ready')
                     dispatch(initWorkers('success', workers))
                 })
         } catch (e) {
