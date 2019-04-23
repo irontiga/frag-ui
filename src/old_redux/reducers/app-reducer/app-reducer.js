@@ -1,5 +1,5 @@
 // Loading state, login state, isNavDrawOpen state etc. None of this needs to be saved to localstorage.
-import { LOG_IN, LOG_OUT, INIT_WORKERS } from '../../actions/app-actions/app-actions.js'
+import { LOG_IN, LOG_OUT, INIT_WORKERS, ADD_PLUGIN_URL } from '../../redux/app/app-actions.js'
 import { initWorkersReducer } from './initWorkersReducer.js'
 
 const INITIAL_STATE = {
@@ -16,7 +16,8 @@ const INITIAL_STATE = {
                 address: ''
             }
         ]
-    }
+    },
+    registeredUrls: []
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -35,6 +36,11 @@ export default (state = INITIAL_STATE, action) => {
                 ...state,
                 loggedIn: false,
                 wallet: INITIAL_STATE.wallet
+            }
+        case ADD_PLUGIN_URL:
+            return {
+                ...state,
+                registeredUrls: [...state.registeredUrls, action.urlOptions]
             }
         default:
             return state

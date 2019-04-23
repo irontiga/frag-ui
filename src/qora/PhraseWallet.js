@@ -118,7 +118,7 @@ export default class PhraseWallet {
             addrSeed = this._genAddressSeed(addrSeed).slice(0, 32)
         }
 
-        console.log(addrSeed)
+        // console.log(addrSeed)
         const addrKeyPair = nacl.sign.keyPair.fromSeed(new Uint8Array(addrSeed));
 
         // const publicKeyHash = new RIPEMD160().digest(Sha256.bytes(addrKeyPair.publicKey));

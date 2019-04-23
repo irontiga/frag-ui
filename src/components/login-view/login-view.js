@@ -4,8 +4,8 @@ import { store } from '../../store.js'
 
 import { createWallet } from '../../qora/createWallet.js'
 import { generateSaveWalletData } from '../../qora/storeWallet.js'
-import { doLogin } from '../../actions/app-actions/app-actions.js'
-import { doStoreWallet } from '../../actions/config-actions/store-wallet-action.js'
+import { doLogin } from '../../redux/app/app-actions.js'
+import { doStoreWallet } from '../../redux/config/config-actions.js'
 
 // import { logIn } from '../../actions/app-actions.js'
 

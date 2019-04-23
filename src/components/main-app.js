@@ -1,10 +1,12 @@
 /* STUFF THAT WE'RE NOT USING RESOLVE...WE'RE IMPORTING THE FILES DIRECTLY */
 import { LitElement, html } from 'lit-element'
+import { installRouter } from 'pwa-helpers/router.js'
 // import { LitElement, html, css, unsafeCSS } from 'lit-element'
 // Feel like I need to use sass for every element and just import it all individually...may result in some duplicate sass I guess
 // ...but maybe the bundler can be smart...doubt it
 import { connect } from 'pwa-helpers'
 import { store } from '../store.js'
+import { doNavigate } from '../redux/app/app-actions.js'
 
 import '../styles/app-styles.js'
 // import styles from '../styles/styles.scss'
@@ -13,6 +15,8 @@ import './login-view/login-view.js'
 
 // import('./app-view.js') // Async
 import './app-view.js' // Screw em then, let's make ff work
+
+installRouter((location) => store.dispatch(doNavigate(location)))
 
 // console.log('==============')
 // console.log(styles)

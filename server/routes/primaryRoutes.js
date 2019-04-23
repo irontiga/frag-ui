@@ -11,12 +11,12 @@ routes.push(
         path: '/',
         handler: (request, h) => {
             console.log(request.params)
-            return h.redirect(`/${config.server.primary.baseURL}/wallet`)
+            return h.redirect(`/${config.coin.baseUrl}/wallet`)
         }
     },
     {
         method: 'GET',
-        path: `/${config.server.primary.baseURL}/{path*}`,
+        path: `/${config.coin.baseUrl}/{path*}`,
         handler: {
             file: path.join(__dirname, '../../index.html')
             // file: path.join(__dirname, "../../build/src/index.html") // Production

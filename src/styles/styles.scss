@@ -11,3 +11,7 @@ $mdc-layout-grid-breakpoints: (
 }
 
 // @import '../../node_modules/@material/layout-grid/mdc-layout-grid.scss';
+
+iframe.pluginJSFrame {
+    display:none;
+}

@@ -1,4 +1,4 @@
-import { Epml } from '../../epml.js'
+import { Epml } from '../../../epml.js'
 import { EpmlWorkerPlugin } from 'epml'
 Epml.registerPlugin(EpmlWorkerPlugin)
 

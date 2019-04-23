@@ -1,6 +1,6 @@
 import { store } from '../store.js'
-import { doAddPluginUrl } from '../actions/app-actions/app-actions.js'
-import { api } from '../qora/api.js'
+import { doAddPluginUrl } from '../redux/app/app-actions.js'
+import * as api from '../qora/api.js'
 
 export const routes = {
     'hello': async req => {
@@ -12,7 +12,8 @@ export const routes = {
     },
 
     'registerUrl': async req => {
-        const { url, title, menus, icon, page, parent = false } = req
+        console.log('REGISTER URL REQUEST YASSSSS', req)
+        const { url, title, menus, icon, page, parent = false } = req.data
         store.dispatch(doAddPluginUrl({
             url,
             title,
@@ -33,7 +34,7 @@ export const routes = {
     },
 
     'apiCall': async req => {
-        return api(req)
+        return api.request(req)
     },
 
     'addresses': async req => {

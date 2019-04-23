@@ -2,6 +2,7 @@ const config = {
     version: process.env.npm_package_version,
     coin: {
         name: 'Frag',
+        baseUrl: 'frag',
         addressCount: 1,
         addressVersion: 58, // Q for Qora
         node: {
@@ -24,9 +25,9 @@ const config = {
     },
     styles: {
         breakpoints: {
-            tablet: "",
-            desktop: "",
-            mobile: ""
+            tablet: '',
+            desktop: '',
+            mobile: ''
         },
         theme: {
             colors: {
@@ -40,7 +41,7 @@ const config = {
 
                 surface: '#fff', /* Sets the background color to the surface background color. */
                 onSurface: '#333', /* Sets the text color to the color configured for text on the surface color. */
-                background: '#efefe',/* Sets the background color to the theme background color. */
+                background: '#efefe', /* Sets the background color to the theme background color. */
 
                 warning: '#FFA000',
                 error: '#F44336'
@@ -76,8 +77,7 @@ const config = {
             port: 9086, // Port to access the Qora UI from
             directory: './src/', // Core Qora-lite code.,
             page404: './src/404.html',
-            host: '0.0.0.0', // This probably shouldn't be the default...
-            baseURL: 'frag'
+            host: '0.0.0.0' // This probably shouldn't be the default...
         },
         plugins: {
             domain: '127.0.0.1',
@@ -85,6 +85,12 @@ const config = {
             directory: './plugins', // Where the plugin folders are stored,
             default: 'wallet',
             host: '0.0.0.0'
+        },
+        airdrop: {
+            domain: '127.0.0.1',
+            port: 4999,
+            url: '/airdrop/',
+            dhcpUrl: '/airdrop/ping/'
         }
     },
 

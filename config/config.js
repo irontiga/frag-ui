@@ -4,8 +4,7 @@
 const config = {
     server: {
         primary: {
-            domain: '192.168.178.35',
-            baseURL: 'qora'
+            domain: '192.168.178.35'
         },
         plugins: {
             domain: '192.168.178.35'
@@ -24,6 +23,7 @@ const config = {
     },
     coin: {
         name: 'Karma',
+        baseURL: 'karma',
         addressCount: 1, // Default amount of addresses to generate with an account.
         addressVersion: 46, // K for Karma
         node: {

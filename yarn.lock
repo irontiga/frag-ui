@@ -2670,10 +2670,10 @@ env-paths@^1.0.0:
   resolved "https://registry.yarnpkg.com/env-paths/-/env-paths-1.0.0.tgz#4168133b42bb05c38a35b1ae4397c8298ab369e0"
   integrity sha1-QWgTO0K7BcOKNbGuQ5fIKYqzaeA=
 
-epml@^0.1.9:
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/epml/-/epml-0.1.9.tgz#d0de463188f5b043ed5071805bfb6c9169260b38"
-  integrity sha512-Rb0ID3VOzNMQP7CSbULWMmooI0mj9m77sweixEULSy+DWpw1LHj6xKMaAURXJXwYABgpJK4SKG4vlVOIkYTUAw==
+epml@^0.1.10:
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/epml/-/epml-0.1.10.tgz#62b8a3950797b4015e3ada0576ba7756049369ec"
+  integrity sha512-PzXUZcP7q+iePkuUA6rfz+fL3Zx/4F7u7ppnsRQIUtEDheSI1873Z7vV2U1aFRXLVGywBUObQxKaQPfGj/Flvw==
 
 errno@^0.1.1, errno@~0.1.1:
   version "0.1.7"
@@ -4162,6 +4162,13 @@ lit-html@^1.0.0:
   resolved "https://registry.yarnpkg.com/lit-html/-/lit-html-1.0.0.tgz#3dc3781a8ca68a9b5c2ff2a61e263662b9b2267b"
   integrity sha512-oeWlpLmBW3gFl7979Wol2LKITpmKTUFNn7PnFbh6YNynF61W74l6x5WhwItAwPRSATpexaX1egNnRzlN4GOtfQ==
 
+lit-redux-router@^0.8.4:
+  version "0.8.4"
+  resolved "https://registry.yarnpkg.com/lit-redux-router/-/lit-redux-router-0.8.4.tgz#f1d3f5614b25e90eab3f78e73d6d3c0c0289bd43"
+  integrity sha512-fmnrhoUgoIM8dGPZt8+dBg8Tr42pt8/JGhS6TXCcDjr2jozgk7HRYQ2oL4uxMGcad3BiXp2nT0bYCR75BxPrcQ==
+  dependencies:
+    regexparam "^1.2.1"
+
 load-json-file@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/load-json-file/-/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"
@@ -5645,6 +5652,11 @@ regexp-tree@^0.1.0:
   version "0.1.5"
   resolved "https://registry.yarnpkg.com/regexp-tree/-/regexp-tree-0.1.5.tgz#7cd71fca17198d04b4176efd79713f2998009397"
   integrity sha512-nUmxvfJyAODw+0B13hj8CFVAxhe7fDEAgJgaotBu3nnR+IgGgZq59YedJP5VYTlkEfqjuK6TuRpnymKdatLZfQ==
+
+regexparam@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/regexparam/-/regexparam-1.2.1.tgz#cc2a50a987efacd328de8fa4989e3a919e6e3bab"
+  integrity sha512-L/xx/JNXFvejDD9b4FukSh2wCyYUpxSTnLkMpcZc/ygnmaF6ETnphh+FDKZS8XBGmu2e3GoZ1why9qkTYqr1ag==
 
 regexpp@^2.0.1:
   version "2.0.1"

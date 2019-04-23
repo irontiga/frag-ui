@@ -7,7 +7,12 @@ import { store } from '../store.js'
 
 class ShowPlugin extends connect(store)(LitElement) {
     static get properties () {
-        return {}
+        return {
+            app: { type: Object },
+            pluginConfig: { type: Object },
+            url: { type: String },
+            computedUrl: { type: String }
+        }
     }
 
     static get styles () {
@@ -22,10 +27,33 @@ class ShowPlugin extends connect(store)(LitElement) {
         `
     }
 
+    constructor () {
+        super()
+        this.computedUrl = 'about:blank'
+    }
+
     render () {
         return html`
-            <iframe src="http://i7-16gb-hp-laptop:9087/plugins/wallet/index.html" id="showPluginFrame"></iframe>
+            <iframe src="${this.computedUrl}" id="showPluginFrame"></iframe>
         `
+    }
+
+    computeUrl (url) {
+        return `${window.location.protocol}//${this.pluginConfig.domain}:${this.pluginConfig.port}/plugins/${url}`
+    }
+
+    updated (changedProps) {
+        if (changedProps.has('url')) {
+            const url = this.app.url.split('/')[2]
+            this.computedUrl = url ? this.computeUrl(this.app.registeredUrls[url].page) : 'about:blank'
+        }
+    }
+
+    stateChanged (state) {
+        console.log(Object.freeze(state))
+        this.app = state.app
+        this.pluginConfig = state.config.server.plugins
+        this.url = state.app.url
     }
 
     firstUpdated () {
