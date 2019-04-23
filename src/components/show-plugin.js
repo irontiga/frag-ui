@@ -1,17 +1,15 @@
 import { LitElement, html, css } from 'lit-element'
 import { connect } from 'pwa-helpers'
 import { store } from '../store.js'
-// import { Epml, ContentWindow as EpmlContentWindowPlugin } from 'epml'
-
-// Epml.registerPlugin(EpmlContentWindowPlugin)
+import { Epml } from '../epml.js'
+import { addPluginRoutes } from '../plugins/addPluginRoutes.js'
 
 class ShowPlugin extends connect(store)(LitElement) {
     static get properties () {
         return {
             app: { type: Object },
             pluginConfig: { type: Object },
-            url: { type: String },
-            computedUrl: { type: String }
+            url: { type: String }
         }
     }
 
@@ -27,33 +25,39 @@ class ShowPlugin extends connect(store)(LitElement) {
         `
     }
 
-    constructor () {
-        super()
-        this.computedUrl = 'about:blank'
-    }
-
     render () {
         return html`
-            <iframe src="${this.computedUrl}" id="showPluginFrame"></iframe>
+            <iframe src="${this.app.registeredUrls[this.url] ? `
+                ${window.location.protocol}//${this.pluginConfig.domain}:${this.pluginConfig.port}/plugins/${this.app.registeredUrls[this.url].page}
+            ` : `about:blank`}" id="showPluginFrame"></iframe>
         `
     }
 
-    computeUrl (url) {
-        return `${window.location.protocol}//${this.pluginConfig.domain}:${this.pluginConfig.port}/plugins/${url}`
+    firstUpdated () {
+        const showingPluginEpml = new Epml({
+            type: 'WINDOW',
+            source: this.shadowRoot.getElementById('showPluginFrame').contentWindow
+        })
+        addPluginRoutes(showingPluginEpml)
     }
 
     updated (changedProps) {
         if (changedProps.has('url')) {
-            const url = this.app.url.split('/')[2]
-            this.computedUrl = url ? this.computeUrl(this.app.registeredUrls[url].page) : 'about:blank'
+            //
+        }
+
+        if (changedProps.has('computerUrl')) {
+            if (this.computedUrl !== 'about:blank') {
+                this.loading = true
+                // this.
+            }
         }
     }
 
     stateChanged (state) {
-        console.log(Object.freeze(state))
         this.app = state.app
         this.pluginConfig = state.config.server.plugins
-        this.url = state.app.url
+        this.url = state.app.url.split('/')[2]
     }
 
     firstUpdated () {
