@@ -23,7 +23,7 @@ const config = {
     },
     coin: {
         name: 'Karma',
-        baseURL: 'karma',
+        baseUrl: 'karma',
         addressCount: 1, // Default amount of addresses to generate with an account.
         addressVersion: 46, // K for Karma
         node: {
