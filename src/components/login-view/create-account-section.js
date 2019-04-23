@@ -237,6 +237,16 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     animation-duration: 0.6s;
                     animation-name: fade;
                 }
+
+                #birthMonthContainer {
+                    --paper-input-container-underline: {
+                        border:0;
+                    }
+                }
+                #birthMonthContainer select {
+                    padding:8px;
+                    width:100%;
+                }
             </style>
             
             <div id="createAccountSection" class="flex column">
@@ -300,10 +310,10 @@ class CreateAccountSection extends connect(store)(LitElement) {
                         <div id="infoContent" class="section-content">
                             <!-- <paper-input always-float-labell id="dobInput" label="Date of birth (needed to login again)" type="date"></paper-input> -->
 
-                            <paper-input-container always-float-label="true">
+                            <paper-input-container always-float-label="true" id="birthMonthContainer">
                                 <label slot="label">Birth month</label>
                                 <iron-input slot="input">
-                                    <select id="birthMonth" style="width:100px;">
+                                    <select id="birthMonth">
                                         ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(num => html`
                                             <option value="${num}">${num}</option>
                                         `)}

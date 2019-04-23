@@ -109,6 +109,17 @@ class LoginSection extends connect(store)(LitElement) {
                         max-width: 100%;
                     }
                 }
+
+                #birthMonthContainer {
+                    --paper-input-container-underline: {
+                        display: none;
+                        visibility: hidden;
+                    }
+                }
+                #birthMonthContainer select {
+                    padding:8px;
+                    width:100%;
+                }
             </style>
             
             <div id="loginSection">
@@ -143,10 +154,10 @@ class LoginSection extends connect(store)(LitElement) {
                         <hr style="margin: 24px 48px;">
                         
                         <div>
-                            <paper-input-container always-float-label="true">
+                            <paper-input-container always-float-label="true" id="birthMonthContainer">
                                 <label slot="label">Birth month</label>
                                 <iron-input slot="input">
-                                    <select id="birthMonth" style="width:100px;">
+                                    <select id="birthMonth">
                                         ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(num => html`
                                             <option value="${num}">${num}</option>
                                         `)}

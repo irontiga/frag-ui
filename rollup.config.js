@@ -118,5 +118,18 @@ export default [
                 ]
             ]
         })])
+    },
+    {
+        context: 'self',
+        input: 'plugins/core/wallet/wallet-app.js',
+        output: [
+            {
+                dir: 'plugins/core/wallet/build',
+                format: 'iife'
+            }
+        ],
+        plugins: plugins.concat([
+            babel(babelOptions)
+        ])
     }
 ]

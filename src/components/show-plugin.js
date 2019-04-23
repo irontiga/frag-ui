@@ -33,12 +33,16 @@ class ShowPlugin extends connect(store)(LitElement) {
         `
     }
 
-    firstUpdated () {
+    firstUpdated (changedProps) {
+        console.log(changedProps)
         const showingPluginEpml = new Epml({
             type: 'WINDOW',
             source: this.shadowRoot.getElementById('showPluginFrame').contentWindow
         })
         addPluginRoutes(showingPluginEpml)
+        showingPluginEpml.imReady()
+        this.showingPluginEpml = showingPluginEpml
+        console.log(showingPluginEpml)
     }
 
     updated (changedProps) {
@@ -58,13 +62,6 @@ class ShowPlugin extends connect(store)(LitElement) {
         this.app = state.app
         this.pluginConfig = state.config.server.plugins
         this.url = state.app.url.split('/')[2]
-    }
-
-    firstUpdated () {
-        // console.log(this)
-        // const frameElement = this.shadowRoot.getElementById('showPluginFrame')
-        // this._walletEpml = new Epml({ type: 'WINDOW', source: frameElement })
-        // console.log(this._walletEpml)
     }
 }
 

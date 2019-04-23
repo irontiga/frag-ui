@@ -24,9 +24,9 @@ export const doAddPlugin = (epmlInstance) => {
     }
 }
 
-const addPlugin = (epmlInstance) => {
+const addPlugin = (payload) => {
     return {
         type: ADD_PLUGIN,
-        instance: epmlInstance
+        payload
     }
 }
