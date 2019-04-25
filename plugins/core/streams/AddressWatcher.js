@@ -70,17 +70,19 @@ export class AddressWatcher {
 
     async updateAddress (addr) {
         // console.log('UPPPDDAAATTTINGGG AADDDRRR', addr)
-        const addressRequest = await parentEpml.request('apiCall', {
+        let addressRequest = await parentEpml.request('apiCall', {
             type: 'explorer',
             data: {
                 addr: addr,
                 txOnPage: 10
             }
         })
-        // console.log(addressRequest, 'AAADDDREESS REQQUEESTT')
+        addressRequest = JSON.parse(addressRequest)
+        console.log(addressRequest, 'AAADDDREESS REQQUEESTT')
         // console.log('response: ', addressRequest)
 
         const addressInfo = addressRequest.success ? addressRequest.data : DEFAULT_ADDRESS_INFO
+        // const addressInfo = addressRequest.success ? addressRequest.data : DEFAULT_ADDRESS_INFO
         addressInfo.transactions = []
 
         for (let i = addressInfo.start; i >= addressInfo.end; i--) {
@@ -91,6 +93,7 @@ export class AddressWatcher {
         if (!this._addresses[addr]) return
 
         this._addresses[addr] = addressInfo
+        console.log('--------------------------------------------------------', this._addresses,this._addressStreams)
         this._addressStreams[addr].emit(addressInfo)
     }
 }

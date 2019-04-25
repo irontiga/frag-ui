@@ -39,14 +39,17 @@ export const request = (options) => {
             if (xhttp.readyState === 4) {
                 if (xhttp.status === 200) {
                     let response = xhttp.responseText
-                    console.log(options)
+                    // console.log(options)
                     if (options.type === 'explorer') {
                         response = JSON.parse(response)
-                        console.log('JSONIFIED', response)
+                        // console.log('JSONIFIED', response)
+                        // console.log('FUCK', response)
+                        if (response.error) { return resolve(response) }
 
-                        if (response.error) { return reject(response.error) }
-
-                        response.success = true
+                        response = {
+                            data: response,
+                            success: true
+                        }
                     }
                     // console.log('RESOLVING', response)
                     resolve(response)

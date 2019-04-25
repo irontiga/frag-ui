@@ -51,10 +51,15 @@ const plugins = [
     commonjs({}),
     globals(),
     builtins(),
-    sass(sassOptions),
-    // minifyHTML(),
-    // terser()
+    sass(sassOptions)
 ]
+
+if (process.env.NODE_ENV === 'production') {
+    plugins.push(
+        minifyHTML(),
+        terser()
+    )
+}
 
 export default [
     {

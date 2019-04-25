@@ -7,7 +7,7 @@
   "author": "irontiga <irontiga@gmail.com>",
   "license": "GPL-3.0",
   "scripts": {
-    "build": "rollup -c",
+    "build": "cross-env NODE_ENV=production rollup -c",
     "watch": "rollup -c --watch",
     "server": "node server/server.js",
     "lint": "eslint src"
@@ -41,6 +41,7 @@
     "bcryptjs": "^2.4.3",
     "bluebird": "^3.5.4",
     "core-js": "^3.0.1",
+    "cross-env": "^5.2.0",
     "dimport": "^1.0.0",
     "electron": "^4.0.4",
     "epml": "^0.3.0",
