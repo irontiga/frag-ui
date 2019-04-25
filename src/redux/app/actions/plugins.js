@@ -1,8 +1,5 @@
 // import { addPluginRoutes } from '../../../plugins/addPluginRoutes.js'
-
-export const ADD_PLUGIN_URL = 'ADD_PLUGIN_URL'
-export const ADD_PLUGIN = 'ADD_PLUGIN'
-
+import { ADD_PLUGIN, ADD_PLUGIN_URL } from '../app-action-types.js'
 // BOUND action creator
 export const doAddPluginUrl = (urlOptions) => {
     return (dispatch, getState) => {

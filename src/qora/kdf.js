@@ -1,4 +1,4 @@
-import stateAwait from '../stateAwait.js'
+import { stateAwait } from '../stateAwait.js'
 import { store } from '../store.js'
 import { Sha512 } from 'asmcrypto.js'
 import utils from '../qora/deps/utils.js'

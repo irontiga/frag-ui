@@ -14,6 +14,8 @@ import '@polymer/paper-ripple'
 // import '@polymer/paper-spinner/paper-spinner-lite.js'
 // import '@polymer/iron-flex-layout/iron-flex-layout-classes.js'
 
+import { doLogin } from '../../redux/app/app-actions.js'
+
 // import '@polymer/iron-pages'
 // import '@polymer/paper-icon-button/paper-icon-button.js'
 // import { MDCTextField } from '@material/textfield'
@@ -25,7 +27,8 @@ class LoginSection extends connect(store)(LitElement) {
             loginFunction: { type: Object },
             selectedWallet: { type: Object },
             selectedPage: { type: String },
-            wallets: { type: Object }
+            wallets: { type: Object },
+            loginErrorMessage: { type: String }
         }
     }
 
@@ -41,6 +44,7 @@ class LoginSection extends connect(store)(LitElement) {
         super()
         this.selectedPage = 'wallets'
         this.selectedWallet = {}
+        this.loginErrorMessage = ''
     }
 
     render () {
@@ -52,8 +56,10 @@ class LoginSection extends connect(store)(LitElement) {
                 }
                 #wallets {
                     max-height: 400px;
-                    overflow-y:scroll;
+                    overflow-y:auto;
                     overflow-x:hidden;
+                    border-bottom: 1px solid #eee;
+                    border-top: 1px solid #eee;
                 }
                 .wallet {
                     max-width: 300px;
@@ -102,7 +108,7 @@ class LoginSection extends connect(store)(LitElement) {
                     #wallets {
                         max-height: calc(var(--window-height) - 130px);
                         height:100%;
-                        overflow-y:scroll;
+                        overflow-y:auto;
                         overflow-x:hidden;
                     }
                     .wallet {
@@ -120,13 +126,17 @@ class LoginSection extends connect(store)(LitElement) {
                     padding:8px;
                     width:100%;
                 }
+                .backButton {
+                    padding:14px;
+                    text-align:left;
+                }
             </style>
             
             <div id="loginSection">
                 <iron-pages selected="${this.selectedPage}" attr-for-selected="page" id="createAccountPages">
                     <div page="wallets" id="walletsPage">
                         <h1>Your accounts</h1>
-                        ${(Object.entries(this.wallets || {}).length <1) ? html`
+                        ${(Object.entries(this.wallets || {}).length < 1) ? html`
                             <p style="padding: 0 24px 12px 24px;">You need to create an account before you can log in!</p>
                         ` : ''}
                         <div id="wallets">
@@ -143,8 +153,20 @@ class LoginSection extends connect(store)(LitElement) {
                                 </div>
                             `)}
                         </div>
+                        <div style="text-align: right; padding:24px;">
+                            <a @click=${() => { this.selectedPage = 'existingSeed' }} style="color: var(--mdc-theme-secondary); text-decoration: underline; cursor: pointer;">I want sign in with my seedphrase</a>
+                        </div>
                     </div>
-
+                    <div page="existingSeed" id="existingSeedPage" style=" padding:24px;">
+                        <div style="display:flex;">
+                            <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
+                            <paper-input style="width:100%;" label="Seedphrase" id="seedphrase" type="password"></paper-input>
+                        </div>
+                        <mwc-button style="margin-top:12px; width:100%;" raised @click=${e => this.login(e)}>Login</mwc-button>
+                        <div style="text-align: right; padding:24px;">
+                            <a @click=${() => { this.selectedPage = 'wallets' }} style="color: var(--mdc-theme-secondary); text-decoration: underline; cursor: pointer;">I want to sign in with a different account</a>
+                        </div>
+                    </div>
                     <div page="unlock" id="unlockPage">
                         <div style="text-align:center;">
                             <mwc-icon id='accountIcon' style=" padding-bottom:24px;">account_circle</mwc-icon>
@@ -153,8 +175,9 @@ class LoginSection extends connect(store)(LitElement) {
                         </div>
                         <hr style="margin: 24px 48px;">
                         
-                        <div>
-                            <paper-input-container always-float-label="true" id="birthMonthContainer">
+                        <div style="display:flex;">
+                            <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">calendar_today</mwc-icon>
+                            <paper-input-container style="width:100%;" always-float-label="true" id="birthMonthContainer">
                                 <label slot="label">Birth month</label>
                                 <iron-input slot="input">
                                     <select id="birthMonth">
@@ -166,18 +189,31 @@ class LoginSection extends connect(store)(LitElement) {
                             </paper-input-container>
                         </div>
                         
-                        <div>
-                            <paper-input always-float-labell label="Pin" id="pin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input>
+                        <div style="display:flex;">
+                            <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
+                            <paper-input style="width:100%;" always-float-labell label="Pin" id="pin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input>
                         </div>
 
                         <mwc-button style="margin-top:12px; width:100%;" raised @click=${e => this.login(e)}>Login</mwc-button>
+                        
+                        <div style="text-align: right; padding:24px;">
+                            <a @click=${() => { this.selectedPage = 'wallets' }} style="color: var(--mdc-theme-secondary); text-decoration: underline; cursor: pointer;">I want to sign in with a different account</a>
+                        </div>
 
+                        <div style="text-align: right; color: var(--mdc-theme-error)">
+                            ${this.loginErrorMessage}
+                        </div>
                     </div>
 
                 </iron-pages>
                 
+                <loading-ripple id="loadingRipple"></loading-ripple>
             </div>
         `
+    }
+
+    firstUpdated () {
+        this.loadingRipple = this.shadowRoot.getElementById('loadingRipple')
     }
 
     selectWallet (wallet) {
@@ -187,7 +223,7 @@ class LoginSection extends connect(store)(LitElement) {
 
     stateChanged (state) {
         this.loggedIn = state.app.loggedIn
-        this.wallets = state.config.storedWallets
+        this.wallets = state.user.storedWallets
     }
 
     login (e) {
@@ -196,18 +232,36 @@ class LoginSection extends connect(store)(LitElement) {
         const pin = this.shadowRoot.querySelector('#pin').value
 
         // First decrypt...
-
-        this.loginFunction({
+        this.loadingRipple.open({
             x: e.clientX,
             y: e.clientY
-        }, {
-            save: false,
-            sourceType: 'storedWallet',
-            source: {
+        })
+            .then(() => store.dispatch(doLogin('storedWallet', {
                 wallet,
                 password: pin + '' + birthMonth
-            }
-        }).then(() => this.cleanup())
+            }, status => { this.loadingRipple.loadingMessage = status })))
+            .then(() => {
+                this.cleanup()
+                return this.loadingRipple.fade()
+            })
+            .catch(e => {
+                this.loginErrorMessage = e
+                console.error(e)
+                return this.loadingRipple.close()
+            })
+        // this.loginFunction({
+        //     x: e.clientX,
+        //     y: e.clientY
+        // }, {
+        //     save: false,
+        //     sourceType: 'storedWallet',
+        //     source: {
+        //         wallet,
+        //         password: pin + '' + birthMonth
+        //     }
+        // }).then(() => this.cleanup()).catch(e => {
+        //     this.loginErrorMessage = e
+        // })
     }
 
     cleanup () {

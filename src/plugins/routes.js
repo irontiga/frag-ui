@@ -34,7 +34,9 @@ export const routes = {
     },
 
     'apiCall': async req => {
-        return api.request(req)
+        // console.log(req.data)
+        // console.log(api.request)
+        return api.request[req.data.type](req.data)
     },
 
     'addresses': async req => {

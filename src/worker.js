@@ -1,5 +1,5 @@
 // import { Epml, EpmlWorkerPlugin } from 'epml/src/epml.all.js'
-import { Epml, EpmlReadyPlugin, RequestPlugin, EpmlWorkerPlugin } from 'epml/src/epml.all.js'
+import { Epml, EpmlReadyPlugin, RequestPlugin, EpmlWorkerPlugin } from 'epml'
 
 import utils from './qora/deps/utils.js'
 // import { STATIC_SALT, STATIC_BCRYPT_SALT } from './qora/constants.js' // Get these by asking the parent...or just pass them along with the request or whatever. Yup, pass em along

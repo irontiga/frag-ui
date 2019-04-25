@@ -42,6 +42,7 @@ class ShowPlugin extends connect(store)(LitElement) {
         addPluginRoutes(showingPluginEpml)
         showingPluginEpml.imReady()
         this.showingPluginEpml = showingPluginEpml
+        Epml.registerProxyInstance('visible-plugin', showingPluginEpml)
         console.log(showingPluginEpml)
     }
 

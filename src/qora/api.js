@@ -31,5 +31,3 @@ export const createTransaction = (type, keyPair, params) => {
     tx.keyPair = keyPair
     return tx.signedBytes
 }
-
-export default QoraAPI

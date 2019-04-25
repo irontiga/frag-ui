@@ -15,7 +15,8 @@ export const decryptStoredWallet = async (password, wallet, statusFn = () => {})
     statusFn('Checking key')
     const mac = new HmacSha512(macKey).process(encryptedSeedBytes).finish().result
     if (Base58.encode(mac) !== wallet.mac) {
-        throw new Error('Incorrect password')
+        // throw new Error('Incorrect password')
+        throw new Error('Incorrect pin or birth month')
     }
     statusFn('Decrypting')
     const decryptedBytes = AES_CBC.decrypt(encryptedSeedBytes, encryptionKey, false, iv)

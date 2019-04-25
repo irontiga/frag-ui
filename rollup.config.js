@@ -120,11 +120,24 @@ export default [
         })])
     },
     {
-        context: 'self',
+        context: 'window',
         input: 'plugins/core/wallet/wallet-app.js',
         output: [
             {
                 dir: 'plugins/core/wallet/build',
+                format: 'iife'
+            }
+        ],
+        plugins: plugins.concat([
+            babel(babelOptions)
+        ])
+    },
+    {
+        context: 'window',
+        input: 'plugins/core/main.src.js',
+        output: [
+            {
+                file: 'plugins/core/main.js',
                 format: 'iife'
             }
         ],

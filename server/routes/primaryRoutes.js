@@ -2,6 +2,7 @@ const path = require('path')
 
 const routes = require('./commonRoutes.js')
 const getPluginDirs = require('../getPluginDirs.js')
+const getAirdrop = require('./getAirdrop.js')
 
 const config = require('../../config/config-loader.js')
 
@@ -41,15 +42,27 @@ routes.push(
         }
     },
     {
+        method: 'GET',
+        path: '/getAirdrop/{name}/{address}',
+        handler: (request, h) => {
+            // console.log(request.params)
+            // pluginLoader.loadPlugins()
+            return getAirdrop(request.params.name, request.params.address)
+        }
+    },
+    {
         method: '*',
         path: '/proxy/{url*}',
         handler: {
             proxy: {
                 mapUri: (request) => {
-                    // http://127.0.0.1:3000/qoraProxy/explorer/addr=Qewuihwefuiehwfiuwe
+                    // http://127.0.0.1:3000/proxy/explorer/addr=Qewuihwefuiehwfiuwe
                     // protocol :// path:port / blockexplorer.json?addr=Qwqfdweqfdwefwef
-                    const url = request.url.href.slice(7)// Chop out "/proxy/"
+                    // const url = request.url.href.slice(7)// Chop out "/proxy/"
+                    const url = request.url.pathname.slice(7)// Chop out "/proxy/"
                     // let url = remote.url + "/" + request.url.href.replace('/' + remote.path + '/', '')
+                    console.log(url)
+                    // console.log(request)
                     return {
                         uri: url
                     }

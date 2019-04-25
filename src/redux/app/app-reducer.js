@@ -1,7 +1,8 @@
 // Loading state, login state, isNavDrawOpen state etc. None of this needs to be saved to localstorage.
-import { LOG_IN, LOG_OUT, INIT_WORKERS, ADD_PLUGIN_URL, ADD_PLUGIN, NAVIGATE } from './app-actions.js'
+import { LOG_IN, LOG_OUT, INIT_WORKERS, ADD_PLUGIN_URL, ADD_PLUGIN, NAVIGATE, SELECT_ADDRESS } from './app-action-types.js'
 // import { initWorkersReducer } from './initWorkersReducer.js'
 import { initWorkersReducer } from './reducers/init-workers.js'
+import { loginReducer } from './reducers/login-reducer.js'
 
 const INITIAL_STATE = {
     loggedIn: false,
@@ -20,7 +21,8 @@ const INITIAL_STATE = {
     },
     plugins: [],
     registeredUrls: [],
-    url: ''
+    url: '',
+    selectedAddress: {}
 }
 
 export default (state = INITIAL_STATE, action) => {
@@ -28,12 +30,7 @@ export default (state = INITIAL_STATE, action) => {
         case INIT_WORKERS:
             return initWorkersReducer(state, action)
         case LOG_IN:
-            return {
-                ...state,
-                wallet: action.wallet,
-                pin: action.pin, // Probably shouldn't store this plain text...ever. Better store a quick hash... stops someone from peeping your pin...not that that's the vital part
-                loggedIn: true
-            }
+            return loginReducer(state, action)
         case LOG_OUT:
             return {
                 ...state,
@@ -60,6 +57,11 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 url: action.url
+            }
+        case SELECT_ADDRESS:
+            return {
+                ...state,
+                selectedAddress: action.address
             }
         default:
             return state

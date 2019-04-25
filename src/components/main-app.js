@@ -7,6 +7,7 @@ import { installRouter } from 'pwa-helpers/router.js'
 import { connect } from 'pwa-helpers'
 import { store } from '../store.js'
 import { doNavigate } from '../redux/app/app-actions.js'
+import '../plugins/streams.js'
 
 import '../styles/app-styles.js'
 // import styles from '../styles/styles.scss'
@@ -65,6 +66,7 @@ class MainApp extends connect(store)(LitElement) {
     stateChanged (state) {
         // this.name = state.test.name
         this.loggedIn = state.app.loggedIn
+        document.title = state.config.coin.name
     }
 
     connectedCallback () {

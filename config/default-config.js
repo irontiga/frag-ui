@@ -3,6 +3,7 @@ const config = {
     coin: {
         name: 'Frag',
         baseUrl: 'frag',
+        symbol: 'FRG',
         addressCount: 1,
         addressVersion: 58, // Q for Qora
         node: {
@@ -15,6 +16,13 @@ const config = {
                 // url: "http://127.0.0.1:9085", // Qora
                 url: 'http://127.0.0.1:4930', // Karma
                 tail: '/'
+            },
+            airdrop: {
+                protocol: 'http',
+                domain: '127.0.0.1',
+                port: 4999,
+                url: '/airdrop/',
+                dhcpUrl: '/airdrop/ping/'
             }
         },
         decimals: 100000000
@@ -85,12 +93,6 @@ const config = {
             directory: './plugins', // Where the plugin folders are stored,
             default: 'wallet',
             host: '0.0.0.0'
-        },
-        airdrop: {
-            domain: '127.0.0.1',
-            port: 4999,
-            url: '/airdrop/',
-            dhcpUrl: '/airdrop/ping/'
         }
     },
 

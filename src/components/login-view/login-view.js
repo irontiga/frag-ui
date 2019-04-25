@@ -2,10 +2,10 @@ import { LitElement, html, css } from 'lit-element'
 import { connect } from 'pwa-helpers'
 import { store } from '../../store.js'
 
-import { createWallet } from '../../qora/createWallet.js'
-import { generateSaveWalletData } from '../../qora/storeWallet.js'
-import { doLogin } from '../../redux/app/app-actions.js'
-import { doStoreWallet } from '../../redux/config/config-actions.js'
+// import { createWallet } from '../../qora/createWallet.js'
+// import { generateSaveWalletData } from '../../qora/storeWallet.js'
+// import { doLogin, doSelectAddress } from '../../redux/app/app-actions.js'
+// import { doStoreWallet } from '../../redux/user/user-actions.js'
 
 // import { logIn } from '../../actions/app-actions.js'
 
@@ -39,89 +39,13 @@ class LoginView extends connect(store)(LitElement) {
     static get styles () {
         return [
             css`
-                * {
-                    --paper-spinner-color: var(--mdc-theme-secondary);
-                }
-                #rippleWrapper{
-                    position:fixed;
-                    top:0;
-                    left:0;
-                    bottom:0;
-                    right:0;
-                    height:0;
-                    width:0;
-                    z-index:999;
-                    overflow: visible;
-                    --ripple-activating-transition: transform 0.3s cubic-bezier(0.6, 0.0, 1, 1), opacity 0.3s cubic-bezier(0.6, 0.0, 1, 1);
-                    /* --ripple-disable-transition: opacity 0.375s ease; */
-                    --ripple-disable-transition: opacity 0.5s ease;
-                }
-                #ripple{
-                    border-radius:50%;
-                    border-width:0;
-                    //transition:all 0.5s ease;
-                    /* height:0;
-                    width:0;
-                    margin:0; */
-                    /* margin-top: -300vh; */
-                    /* margin-left:-300vh; */
-                    margin-left:-100vmax;
-                    margin-top: -100vmax;
-                    height:200vmax;
-                    width:200vmax;
-                    overflow:hidden;
-                    /* border:300vh solid var(--mdc-theme-secondary); */
-                    /* border:0 solid rgba(85,85,85,1); */
-                    /* background:transparent; */
-                    background: var(--mdc-theme-secondary);
-                    transform: scale(0);
-                }
-                #rippleShader {
-                    background: var(--mdc-theme-surface);
-                    opacity:0;
-                    height:100%;
-                    width:100%;
-                }
-                #ripple.activating{
-                    transition: var(--ripple-activating-transition);
-                     /* 200vh... */
-                    /* border:300vh solid rgba(34,34,34,1);
-                    margin-top: -300vh;
-                    margin-left:-300vh;  */
-                    transform: scale(1)
-                }
-                .activating #rippleShader {
-                    transition: var(--ripple-activating-transition);
-                    opacity: 1;
-                }
-                #ripple.disabling{
-                    transition: var(--ripple-disable-transition);
-                    opacity: 0;
-                }
-                #rippleContentWrapper {
-                    position: absolute;
-                    top:100vmax;
-                    left:100vmax;
-                    height:var(--window-height);
-                    width:100vw;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-                #rippleContent {
-                    opacity: 0;
-                    text-align:center;
-                }
-                .activating-done #rippleContent {
-                    opacity: 1;
-                    transition: var(--ripple-activating-transition);
-                }
+                
             `
         ]
     }
 
     getPreSelectedPage () {
-        return (store.getState().config.storedWallets && Object.entries(store.getState().config.storedWallets || {}).length > 0) ? 'login' : 'welcome'
+        return (store.getState().user.storedWallets && Object.entries(store.getState().user.storedWallets || {}).length > 0) ? 'login' : 'welcome'
     }
 
     constructor () {
@@ -137,8 +61,8 @@ class LoginView extends connect(store)(LitElement) {
     }
 
     firstUpdated () {
-        this.shadowRoot.getElementById('createAccountSection').loginFunction = (...args) => this.login(...args)
-        this.shadowRoot.getElementById('loginSection').loginFunction = (...args) => this.login(...args)
+        // this.shadowRoot.getElementById('createAccountSection').loginFunction = (...args) => this.login(...args)
+        // this.shadowRoot.getElementById('loginSection').loginFunction = (...args) => this.login(...args)
     }
 
     render () {
@@ -248,6 +172,9 @@ class LoginView extends connect(store)(LitElement) {
                 div[page] > paper-icon-button {
                     margin:12px;
                 }
+                .hideme { 
+                    visibility:none;
+                }
             </style>
             
             <div class="login-page" ?hidden=${this.loggedIn}>
@@ -313,18 +240,6 @@ class LoginView extends connect(store)(LitElement) {
                     </div>
                 </div>
             </div>
-            <div id="rippleWrapper">
-                <div id="ripple">
-                    <div id="rippleShader"></div>
-                    <div id="rippleContentWrapper">
-                        <div id="rippleContent">
-                            <h1>Welcome to ${this.config.coin.name}</h1>
-                            <paper-spinner-lite active></paper-spinner-lite>
-                            <p>${this.rippleLoadingMessage}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
         `
     }
 
@@ -365,87 +280,126 @@ class LoginView extends connect(store)(LitElement) {
         this.config = state.config
     }
 
-    loginAnimation (rippleOrigin) {
-        const rippleWrapper = this.shadowRoot.getElementById('rippleWrapper')
-        const ripple = this.shadowRoot.getElementById('ripple')
-        const rippleContentWrapper = this.shadowRoot.getElementById('rippleContentWrapper')
+    // loginAnimation (rippleOrigin) {
+    //     const rippleWrapper = this.shadowRoot.getElementById('rippleWrapper')
+    //     const ripple = this.shadowRoot.getElementById('ripple')
+    //     const rippleContentWrapper = this.shadowRoot.getElementById('rippleContentWrapper')
 
-        // Position the center of the ripple
-        // console.dir(rippleWrapper)
-        // console.log(rippleOrigin)
-        rippleWrapper.style.top = rippleOrigin.y + 'px'
-        rippleWrapper.style.left = rippleOrigin.x + 'px'
-        rippleContentWrapper.style.marginTop = -rippleOrigin.y + 'px'
-        rippleContentWrapper.style.marginLeft = -rippleOrigin.x + 'px'
+    //     // Position the center of the ripple
+    //     // console.dir(rippleWrapper)
+    //     // console.log(rippleOrigin)
+    //     rippleWrapper.style.top = rippleOrigin.y + 'px'
+    //     rippleWrapper.style.left = rippleOrigin.x + 'px'
+    //     rippleContentWrapper.style.marginTop = -rippleOrigin.y + 'px'
+    //     rippleContentWrapper.style.marginLeft = -rippleOrigin.x + 'px'
 
-        ripple.classList.add('activating')
+    //     ripple.classList.add('activating')
 
-        const transitionEventNames = ['transitionend', 'webkitTransitionEnd', 'oTransitionEnd', 'MSTransitionEnd']
+    //     const transitionEventNames = ['transitionend', 'webkitTransitionEnd', 'oTransitionEnd', 'MSTransitionEnd']
 
-        const closeRipple = () => {
-            return new Promise((resolve, reject) => {
-                let rippleClosed = false
-                const rippleClosedEvent = e => {
-                    if (!rippleClosed) {
-                        rippleClosed = true
-                        transitionEventNames.forEach(name => ripple.removeEventListener(name, rippleClosedEvent))
-                        // Reset the ripple
-                        ripple.classList.remove('activating')
-                        ripple.classList.remove('activating-done')
-                        ripple.classList.remove('disabling')
-                        this.rippleIsOpen = false
-                        resolve()
-                    }
-                }
+    //     const closeRipple = () => {
+    //         return new Promise((resolve, reject) => {
+    //             let rippleClosed = false
+    //             const rippleClosedEvent = e => {
+    //                 if (!rippleClosed) {
+    //                     rippleClosed = true
+    //                     transitionEventNames.forEach(name => ripple.removeEventListener(name, rippleClosedEvent))
+    //                     // Reset the ripple
+    //                     ripple.classList.remove('activating')
+    //                     ripple.classList.remove('activating-done')
+    //                     ripple.classList.remove('disabling')
+    //                     this.rippleIsOpen = false
+    //                     resolve()
+    //                 }
+    //             }
 
-                ripple.classList.add('disabling')
-                transitionEventNames.forEach(name => ripple.addEventListener(name, rippleClosedEvent))
-            })
-        }
+    //             ripple.classList.add('disabling')
+    //             transitionEventNames.forEach(name => ripple.addEventListener(name, rippleClosedEvent))
+    //         })
+    //     }
 
-        return new Promise((resolve, reject) => {
-            this.rippleIsOpen = false
-            const transitionedEvent = () => {
-                // First time
-                if (!this.rippleIsOpen) {
-                    ripple.classList.add('activating-done')
-                    transitionEventNames.forEach(name => ripple.removeEventListener(name, transitionedEvent))
-                    resolve(closeRipple)
-                }
-                this.rippleIsOpen = true
-            }
-            transitionEventNames.forEach(name => ripple.addEventListener(name, transitionedEvent))
-        })
-    }
+    //     return new Promise((resolve, reject) => {
+    //         this.rippleIsOpen = false
+    //         const transitionedEvent = () => {
+    //             // First time
+    //             if (!this.rippleIsOpen) {
+    //                 ripple.classList.add('activating-done')
+    //                 transitionEventNames.forEach(name => ripple.removeEventListener(name, transitionedEvent))
+    //                 resolve(closeRipple)
+    //             }
+    //             this.rippleIsOpen = true
+    //         }
+    //         transitionEventNames.forEach(name => ripple.addEventListener(name, transitionedEvent))
+    //     })
+    // }
 
-    /*
-    NEED TO CHANGE THIS TO LISTENING TO STATE, WAITING FOR REDUX TO SAY, BUSY_LOGGING_IN = TRUE, WITH SOME X,Y VALUES, AND THEN RIPPLE AND UPDATE INFO FROM THERE. THIS IS CURRENTLY AN... ANTIPATTERN (MAYBE LOL)
-    */
-    async login (rippleOrigin, params) {
-        const closeRipple = await this.loginAnimation(rippleOrigin)
-        try {
-            const wallet = await createWallet(this, params)
-            store.dispatch(doLogin(wallet, params.pin))
-            // console.log('params', params)
-            if (params.save) {
-                // Check if the seed is already saved
-                if (!this.config.savedWallets || !this.config.savedWallets[wallet._addresses[0].address]) {
-                    // Snackbar
-                    this.rippleLoadingMessage = 'Encrypting seed for storage'
-                    // console.log(this.rippleLoadingMessage)
-                    const saveSeedData = await generateSaveWalletData(wallet, params.pin + params.birthMonth, this.config.crypto.kdfThreads)
-                    store.dispatch(doStoreWallet(saveSeedData))
-                } else {
-                    // Snackbar to say already saved
-                }
-            }
-            closeRipple()
-            this.cleanup()
-        } catch (e) {
-            throw e
-            // alert(e)
-        }
-    }
+    // /*
+    // NEED TO CHANGE THIS TO LISTENING TO STATE, WAITING FOR REDUX TO SAY, BUSY_LOGGING_IN = TRUE, WITH SOME X,Y VALUES, AND THEN RIPPLE AND UPDATE INFO FROM THERE. THIS IS CURRENTLY AN... ANTIPATTERN (MAYBE LOL)
+    // */
+    // async login (rippleOrigin, params) {
+    //     const closeRipple = await this.loginAnimation(rippleOrigin)
+    //     try {
+    //         const wallet = await createWallet(this, params)
+    //         store.dispatch(doLogin(wallet, params.pin))
+    //         const addressColors = this.config.styles.theme.addressColors
+    //         const addresses = wallet.addresses.map(address => {
+    //             address.color = addressColors[address.nonce % addressColors.length]
+
+    //             const hexSplit = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(address.color)
+    //             const rgb = hexSplit.map(color => {
+    //                 return parseInt(color, 16) / 255
+    //             }).map(color => {
+    //                 return color <= 0.03928 ? color / 12.92 : Math.pow((color + 0.055) / 1.055, 2.4)
+    //             })
+    //             const luminance = 0.2126 * rgb[1] + 0.7152 * rgb[2] + 0.0722 * rgb[3]
+
+    //             address.textColor = luminance > 0.179 ? 'dark' : 'light'
+
+    //             return address
+    //         })
+
+    //         store.dispatch(doSelectAddress(addresses[0]))
+    //         // console.log('params', params)
+    //         if (params.save) {
+    //             // Check if the seed is already saved
+    //             if (!this.config.savedWallets || !this.config.savedWallets[wallet._addresses[0].address]) {
+    //                 // Snackbar
+    //                 this.rippleLoadingMessage = 'Encrypting seed for storage'
+    //                 // console.log(this.rippleLoadingMessage)
+    //                 const saveSeedData = await generateSaveWalletData(wallet, params.pin + params.birthMonth, this.config.crypto.kdfThreads)
+    //                 store.dispatch(doStoreWallet(saveSeedData))
+    //             } else {
+    //                 // Snackbar to say already saved
+    //             }
+    //         }
+    //         closeRipple()
+    //         this.cleanup()
+    //     } catch (e) {
+    //         return new Promise((resolve, reject) => {
+    //             const ripple = this.shadowRoot.getElementById('ripple')
+    //             const transitionEventNames = ['transitionend', 'webkitTransitionEnd', 'oTransitionEnd', 'MSTransitionEnd']
+    //             let rippleClosed = false
+    //             ripple.classList.add('error')
+    //             ripple.classList.remove('activating')
+    //             ripple.classList.remove('activating-done')
+    //             const rippleClosedEvent = e => {
+    //                 if (!rippleClosed) {
+    //                     rippleClosed = true
+    //                     transitionEventNames.forEach(name => ripple.removeEventListener(name, rippleClosedEvent))
+    //                     // Reset the ripple
+    //                     ripple.classList.remove('error')
+    //                     this.rippleIsOpen = false
+    //                     resolve()
+    //                 }
+    //             }
+    //             transitionEventNames.forEach(name => ripple.addEventListener(name, rippleClosedEvent))
+    //         }).then(() => {
+    //             throw e
+    //         })
+    //         // alert(e)
+    //     }
+    //     return 'success'
+    // }
 
     cleanup () {
         this.selectedPage = 'welcome'

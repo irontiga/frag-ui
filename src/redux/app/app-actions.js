@@ -1,8 +1,8 @@
+import { NAVIGATE } from './app-action-types.js'
+
 export * from './actions/login.js'
 export * from './actions/init-worker.js'
 export * from './actions/plugins.js'
-
-export const NAVIGATE = 'NAVIGATE'
 
 export const doNavigate = loca => {
     return (dispatch, getState) => {

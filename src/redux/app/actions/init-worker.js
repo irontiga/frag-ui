@@ -1,8 +1,8 @@
 import { Epml } from '../../../epml.js'
 import { EpmlWorkerPlugin } from 'epml'
-Epml.registerPlugin(EpmlWorkerPlugin)
 
-export const INIT_WORKERS = 'INIT_WORKERS'
+import { INIT_WORKERS } from '../app-action-types.js'
+Epml.registerPlugin(EpmlWorkerPlugin)
 
 export const doInitWorkers = (numberOfWorkers, workerURL) => {
     const workers = []

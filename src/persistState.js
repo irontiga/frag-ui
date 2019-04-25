@@ -2,7 +2,8 @@ import { store } from './store.js'
 import { saveStateToLocalStorage } from './localStorageHelpers.js'
 
 const keys = [
-    'config'
+    'config',
+    'user'
 ]
 
 const oldReducers = {}
@@ -14,7 +15,7 @@ for (const key of keys) {
 
 store.subscribe(() => {
     const newState = store.getState()
-    keys.some(key => {
+    keys.forEach(key => {
         if (newState[key] !== oldState[key]) {
             saveStateToLocalStorage(key, store.getState()[key])
         }

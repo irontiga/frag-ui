@@ -1,4 +1,4 @@
-import { routes } from './pluginRoutes.js'
+import { routes } from './routes.js'
 
 export const addPluginRoutes = epmlInstance => {
     // console.log('Adding routes')

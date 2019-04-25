@@ -22,7 +22,7 @@ options = {
 import { store } from '../store.js'
 
 /* CONVERT TO USING FETCH YOU DUMBASS */
-export const request = (options, proxyUrl) => {
+export const request = (options) => {
     options.url = options.url || '';
     options.method = options.method || 'GET'
 
@@ -30,7 +30,7 @@ export const request = (options, proxyUrl) => {
     // options.node = window.App.config.qoraNode
 
     const node = options.node[options.type]
-    const url = proxyUrl + node.url + node.tail + options.url
+    const url = store.getState().config.constants.proxyURL + node.url + node.tail + options.url
 
     return new Promise((resolve, reject) => {
         const xhttp = new XMLHttpRequest()
@@ -55,7 +55,7 @@ export const request = (options, proxyUrl) => {
         }
 
         // If it's get then convert data into a query string...
-        if (options.method == 'GET') {
+        if (options.method === 'GET') {
             let params = '?';
             // Let's not make errors if there is no data
             options.data = options.data || {}
@@ -65,7 +65,7 @@ export const request = (options, proxyUrl) => {
             }).join('&')
 
             params = params === '?' ? '' : params // No question mark if no params
-
+            // console.log(options, url, params)
             xhttp.open(options.method, url + params, true)
             xhttp.send()
         } else {

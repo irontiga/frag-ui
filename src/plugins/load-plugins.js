@@ -24,6 +24,7 @@ export const loadPlugins = () => fetch('/getPlugins')
     })
 
 export const pluginLoader = (plugins, config) => {
+    const pluginContentWindows = []
     plugins.forEach(plugin => {
         const frame = document.createElement('iframe')
         frame.className += 'pluginJSFrame'
@@ -33,6 +34,8 @@ export const pluginLoader = (plugins, config) => {
 
         const insertedFrame = window.document.body.appendChild(frame)
 
+        pluginContentWindows.push(insertedFrame.contentWindow)
+
         const epmlInstance = new Epml({
             type: 'WINDOW',
             source: insertedFrame.contentWindow
@@ -40,11 +43,25 @@ export const pluginLoader = (plugins, config) => {
 
         addPluginRoutes(epmlInstance)
         epmlInstance.imReady()
-        // console.log('I\'m ready!')
+        console.log('I\'m ready!')
+        console.log(`${plugin}-plugin`)
+        Epml.registerProxyInstance(`${plugin}-plugin`, epmlInstance)
 
         store.dispatch(doAddPlugin(epmlInstance))
         // Wimp.registerTarget(plugin, insertedFrame.contentWindow)
     })
+
+    // const allPluginsEpml = new Epml(pluginContentWindows.map(cwindow => {
+    //     return {
+    //         type: 'WINDOW',
+    //         source: cwindow
+    //     }
+    // }))
+
+    // addPluginRoutes(allPluginsEpml)
+    // allPluginsEpml.imReady()
+
+    // store.dispatch(doAddPlugin(allPluginsEpml))
 
     // Wimp.registerTarget('all-plugin-loaders', plugins)
 

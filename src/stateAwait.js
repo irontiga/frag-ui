@@ -9,16 +9,9 @@ store.subscribe(() => {
     const state = store.getState()
 
     subscriptions = subscriptions.filter(fn => fn(state))
-
-    // let i = subscriptions.length
-
-    // while (i > -1) {
-    //     if (subscriptions[i](state)) subscriptions.splice(i, 1)
-    //     i--
-    // }
 })
 
-export default function (fn) {
+export const stateAwait = fn => {
     return new Promise((resolve, reject) => {
         // Check immediately...then if not true store it
         if (fn(store.getState())) resolve()
