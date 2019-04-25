@@ -144,5 +144,18 @@ export default [
         plugins: plugins.concat([
             babel(babelOptions)
         ])
+    },
+    {
+        context: 'window',
+        input: 'plugins/core/send-money/send-money.src.js',
+        output: [
+            {
+                file: 'plugins/send-money/send-money.js',
+                format: 'iife'
+            }
+        ],
+        plugins: plugins.concat([
+            babel(babelOptions)
+        ])
     }
 ]

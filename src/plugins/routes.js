@@ -1,6 +1,7 @@
 import { store } from '../store.js'
 import { doAddPluginUrl } from '../redux/app/app-actions.js'
 import * as api from '../qora/api.js'
+import { createTransaction } from '../api/createTransaction.js'
 
 export const routes = {
     'hello': async req => {
@@ -57,5 +58,6 @@ export const routes = {
 
     'transaction': async req => {
         // One moment please...this requires templates in the transaction classes
+        return createTransaction(req.data)
     }
 }

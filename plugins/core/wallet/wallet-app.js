@@ -282,7 +282,7 @@ class WalletApp extends LitElement {
             parentEpml.subscribe('selected_address', async selectedAddress => {
                 selectedAddress = JSON.parse(selectedAddress)
                 this.selectedAddress = {}
-                console.log('==========================SELECTED ADDRESS',selectedAddress)
+                // console.log('==========================SELECTED ADDRESS',selectedAddress)
                 if (!selectedAddress) return // Not ready yet ofc
                 this.selectedAddress = selectedAddress
                 const addr = selectedAddress.address
