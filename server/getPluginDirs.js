@@ -19,9 +19,10 @@ const getPluginDirs = async () => {
             .then(file => {
                 return dir
             })
-            // .catch(err => {
-            //     return false
-            // })
+            // eslint-disable-next-line handle-callback-err
+            .catch(err => {
+                // return false
+            })
     }))
     return directories.filter(dir => dir)
 }

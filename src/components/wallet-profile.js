@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit-element'
 import { connect } from 'pwa-helpers'
 import { store } from '../store.js'
+import download from '../api/deps/download.js'
 
 // import '@material/mwc-icon'
 import '@polymer/paper-icon-button/paper-icon-button.js'
@@ -13,6 +14,7 @@ class WalletProfile extends connect(store)(LitElement) {
         return {
             loggedIn: { type: Boolean },
             config: { type: Object },
+            user: { type: Object },
             wallet: { type: Object },
             dialog: { type: Object },
             newName: { type: String }
@@ -25,6 +27,13 @@ class WalletProfile extends connect(store)(LitElement) {
                 
             `
         ]
+    }
+
+    constructor () {
+        super()
+        this.user = {
+            accountInfo: {}
+        }
     }
 
     render () {
@@ -70,7 +79,8 @@ class WalletProfile extends connect(store)(LitElement) {
                 </div>
                 <div style="padding: 8px 0;">
                     <span id="accountName">
-                        No name set 
+                        <!-- No name set  -->
+                        ${this.user.accountInfo.name}
                         <!-- <mwc-icon style="float:right; top: -10px;">keyboard_arrow_down</mwc-icon> -->
                         <paper-icon-button
                             @click=${() => this.dialog.open()}
@@ -126,11 +136,11 @@ class WalletProfile extends connect(store)(LitElement) {
                     <hr>
                 </div>
                 <div id="profileList">
-                    <div id="nameDiv" style="position:relative;" @mouseup=${() => this.openSetName()}>
+                    <div id="nameDiv" style="position:relative;" @mouseup=${/* () => this.openSetName() */ ''}>
                         <span class="title">Name</span>
                         <br>
-                        ${this.name ? html`
-                             <span class="">${this.name}</span>
+                        ${/*this.name*/ true ? html`
+                             <span class="">${this.user.accountInfo.name}</span>
                             ` : html`
                             <span class="">Set name <mwc-icon style="float:right; margin-top:-6px;">call_made</mwc-icon></span>
                             <paper-ripple></paper-ripple>
@@ -210,12 +220,18 @@ class WalletProfile extends connect(store)(LitElement) {
         }
 
         this.toast = container.appendChild(toast)
+    }
 
+    downloadBackup () {
+        const state = store.getState()
+        const data = state.user.storedWallets[state.app.selectedAddress.address]
+        return download(JSON.stringify(data), 'karam_backup.json', 'application/json')
     }
 
     stateChanged (state) {
         this.loggedIn = state.app.loggedIn
         this.config = state.config
+        this.user = state.user
         this.wallet = state.app.wallet
     }
 }

@@ -38,11 +38,12 @@ const doCheck = async () => {
     })
     clearTimeout(timeout)
 
-    const parsedBlock = JSON.parse(block)
+    const parsedBlock = JSON.parse(JSON.parse(block)) // Dang that's weird lol
+    // console.log(parsedBlock, mostRecentBlock)
     if (parsedBlock.height > mostRecentBlock.height) {
-        // console.log('NNEEEWWW BLLOOCCCKKK')
+        console.log('NNEEEWWW BLLOOCCCKKK')
         mostRecentBlock = parsedBlock
         blockStream.emit(mostRecentBlock)
-        this.onNewBlockFunctions.forEach(fn => fn(mostRecentBlock))
+        onNewBlockFunctions.forEach(fn => fn(mostRecentBlock))
     }
 }

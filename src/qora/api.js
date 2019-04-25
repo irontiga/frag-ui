@@ -11,7 +11,10 @@ export const request = {
     },
     explorer: options => {
         options.type = 'explorer'
-        return _request(options)
+        return _request(options).then(grr => {
+            console.log('GRRR', grr)
+            return grr
+        })
     },
     _request
 }

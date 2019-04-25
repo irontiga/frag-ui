@@ -31,17 +31,17 @@ const config = {
             explorer: {
                 // url: "http://127.0.0.1:9090", // Qora
                 // url: "http://159.89.132.89:4940", // Karma
-                url: 'http://home.crowetic.com:4940', // Karma
+                url: 'http://127.0.0.1:4940', // Karma
                 tail: '/index/blockexplorer.json'
             },
             api: {
                 // url: "http://127.0.0.1:9085", // Qora
                 // url: "http://159.89.132.89:4930", // Karma
-                url: 'http://home.crowetic.com:4930', // Karma
+                url: 'http://127.0.0.1:4930', // Karma
                 tail: '/'
             },
             airdrop: {
-                domain: 'home.crowetic.com',
+                domain: '127.0.0.1',
                 port: 4999,
                 url: '/airdrop/',
                 dhcpUrl: '/airdrop/ping/'

@@ -38,6 +38,7 @@ export class AddressWatcher {
     }
 
     testBlock (block) {
+        // console.log('TESTING BLOCK BITCH')
         const pendingUpdateAddresses = []
 
         // blockTests.forEach(fn => {
@@ -63,7 +64,7 @@ export class AddressWatcher {
                  */
             }
         })
-
+        
         pendingUpdateAddresses.forEach(addr => this.updateAddress(addr))
     }
 
@@ -76,6 +77,7 @@ export class AddressWatcher {
                 txOnPage: 10
             }
         })
+        // console.log(addressRequest, 'AAADDDREESS REQQUEESTT')
         // console.log('response: ', addressRequest)
 
         const addressInfo = addressRequest.success ? addressRequest.data : DEFAULT_ADDRESS_INFO

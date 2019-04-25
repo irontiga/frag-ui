@@ -1671,6 +1671,7 @@
     }
 
     testBlock(block) {
+      // console.log('TESTING BLOCK BITCH')
       const pendingUpdateAddresses = []; // blockTests.forEach(fn => {
       // })
       // transactionTests.forEach(fn => {
@@ -1698,7 +1699,8 @@
           addr: addr,
           txOnPage: 10
         }
-      }); // console.log('response: ', addressRequest)
+      }); // console.log(addressRequest, 'AAADDDREESS REQQUEESTT')
+      // console.log('response: ', addressRequest)
 
       const addressInfo = addressRequest.success ? addressRequest.data : DEFAULT_ADDRESS_INFO;
       addressInfo.transactions = [];
@@ -1735,7 +1737,7 @@
       this._addressesUnconfirmedTransactions[addr] = [];
       if (this._unconfirmedTransactionStreams[addr]) return; // console.log("CREATING A STRTRREEAAAMMMM")
 
-      this._unconfirmedTransactionStreams[addr] = new EpmlStream(`unconfirmedOfAddress/${addr}`, this._addressesUnconfirmedTransactions[addr]); // this.updateAddress(address.address)
+      this._unconfirmedTransactionStreams[addr] = new EpmlStream(`unconfirmedOfAddress/${addr}`, () => this._addressesUnconfirmedTransactions[addr]); // this.updateAddress(address.address)
     }
 
     check() {
@@ -1915,9 +1917,11 @@
   const BLOCK_CHECK_INTERVAL = 3000;
   const BLOCK_CHECK_TIMEOUT = 3000;
   const BLOCK_STREAM_NAME = 'new block';
+  const onNewBlockFunctions = [];
   let mostRecentBlock = {
     height: -1
   };
+  const onNewBlock = newBlockFn => onNewBlockFunctions.push(newBlockFn);
   const blockStream = new EpmlStream$1(BLOCK_STREAM_NAME, () => mostRecentBlock);
   const check = () => {
     const c = doCheck(); // CHANGE TO Promise.prototype.finally
@@ -1939,13 +1943,14 @@
       url: 'blocks/last'
     });
     clearTimeout(timeout);
-    const parsedBlock = JSON.parse(block);
+    const parsedBlock = JSON.parse(JSON.parse(block)); // Dang that's weird lol
+    // console.log(parsedBlock, mostRecentBlock)
 
     if (parsedBlock.height > mostRecentBlock.height) {
-      // console.log('NNEEEWWW BLLOOCCCKKK')
+      console.log('NNEEEWWW BLLOOCCCKKK');
       mostRecentBlock = parsedBlock;
       blockStream.emit(mostRecentBlock);
-      window.onNewBlockFunctions.forEach(fn => fn(mostRecentBlock));
+      onNewBlockFunctions.forEach(fn => fn(mostRecentBlock));
     }
   };
 
@@ -1962,6 +1967,10 @@
       txWatcher.reset();
       parsedAddress.forEach(addr => txWatcher.addAddress(addr));
     }
+  });
+  onNewBlock(block => {
+    console.log('New block', block);
+    addrWatcher.testBlock(block);
   });
   check();
 

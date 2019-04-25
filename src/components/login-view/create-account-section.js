@@ -2,8 +2,9 @@ import { LitElement, html, css } from 'lit-element'
 import { connect } from 'pwa-helpers'
 import { store } from '../../store.js'
 
-import { doLogin } from '../../redux/app/app-actions.js'
-import { doStoreWallet } from '../../redux/user/user-actions.js'
+import { doLogin, doLogout } from '../../redux/app/app-actions.js'
+import { doStoreWallet, doClaimAirdrop } from '../../redux/user/user-actions.js'
+import { registerUsername } from '../../api/registerUsername.js'
 
 // import { logIn } from '../../actions/app-actions.js'
 import '@polymer/iron-pages'
@@ -16,6 +17,10 @@ import '@polymer/paper-input/paper-input.js'
 import 'random-sentence-generator'
 
 import './loading-ripple.js'
+import { doUpdateAccountInfo } from '../../redux/user/actions/update-account-info.js'
+
+const EMAIL_VALIDATION_REGEX = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
 // import '@polymer/paper-spinner/paper-spinner-lite.js'
 // import '@polymer/iron-flex-layout/iron-flex-layout-classes.js'
 
@@ -117,10 +122,18 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     this.createAccountLoading = true
 
                     let username = this.shadowRoot.getElementById('username').value.replace(/^\s+|\s+$/g, '') // Removing leading and trailing whitespace
+                    username = username.toLowerCase()
                     const email = this.shadowRoot.getElementById('email').value
-
-                    if (!username) {
+                    
+                    if (username === '') {
+                        this.error = true
                         this.errorMessage = 'Please choose a username'
+                        return
+                    }
+                    if (!EMAIL_VALIDATION_REGEX.test(email)) {
+                        this.error = true
+                        this.errorMessage = 'Invalid email address'
+                        return
                     }
 
                     const seedPhrase = this.shadowRoot.getElementById('randSentence').parsedString
@@ -136,29 +149,44 @@ class CreateAccountSection extends connect(store)(LitElement) {
                             this.loadingRipple.loadingMessage = status
                         })))
                         .then(wallet => {
+                            // Get airdrop here ninja
+                            // Do the callbacks here so that I can return the wallet again at the end of it
+                            const addr0 = wallet.addresses[0]
+                            console.log(`/getAirdrop/${username}/${addr0.address}`)
+                            return fetch(`/getAirdrop/${username}/${addr0.address}`)
+                                .then(res => res.json())
+                                .then(res => {
+                                    // console.error(res)
+                                    if (!res.success) throw new Error(res.reason)
+                                    store.dispatch(doClaimAirdrop())
+                                    registerUsername({
+                                        name: username,
+                                        address: addr0.address,
+                                        lastRef: res.data.reference,
+                                        keyPair: addr0.keyPair
+                                    })
+                                    return wallet
+                                })
+                        })
+                        .then(wallet => {
                             if (!this.saveAccount) return
                             return store.dispatch(doStoreWallet(wallet, password, username, () => {
-                                console.log('STATUS UPDATE <3')
+                                // console.log('STATUS UPDATE <3')
                                 this.loadingRipple.loadingMessage = status
                             }))
                         })
                         .then(() => {
+                            fetch('/saveEmail/' + email)
+                            store.dispatch(doUpdateAccountInfo({ name: username }))
                             this.cleanup()
                             return this.loadingRipple.fade()
                         })
                         .catch(e => {
                             this.errorMessage = e
                             console.error('COCK', e)
+                            store.dispatch(doLogout())
                             this.loadingRipple.close()
                         })
-
-                    // this.loginFunction(, {
-                    //     sourceType: 'phrase',
-                    //     save: this.saveAccount
-                    // }).then(() => {
-                    //     // CLEANUP TIME.. change to state listener...on login -> cleanup
-                    //     this.cleanup()
-                    // })
                 },
                 prev: () => {
                     this.nextButtonText = 'Next'

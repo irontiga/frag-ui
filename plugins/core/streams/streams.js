@@ -20,5 +20,8 @@ parentEpml.subscribe('logged_in', async isLoggedIn => {
     }
 })
 
-onNewBlock(block => this.AddressWatcher.testBlock(block))
+onNewBlock(block => {
+    console.log('New block', block)
+    addrWatcher.testBlock(block)
+})
 check()

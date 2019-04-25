@@ -280,36 +280,45 @@ class WalletApp extends LitElement {
         parentEpml.ready().then(() => {
             // Guess this is our version of state management...should make a plugin for it...proxied redux or whatever lol
             parentEpml.subscribe('selected_address', async selectedAddress => {
-                selectedAddress = JSON.parse(selectedAddress)
                 this.selectedAddress = {}
+                selectedAddress = JSON.parse(selectedAddress)
                 // console.log('==========================SELECTED ADDRESS',selectedAddress)
-                if (!selectedAddress) return // Not ready yet ofc
+                if (!selectedAddress || Object.entries(selectedAddress).length === 0) return // Not ready yet ofc
                 this.selectedAddress = selectedAddress
                 const addr = selectedAddress.address
+                // console.log(selectedAddress)
+                // console.log(addr)
 
-                await coreEpml.ready()
+                // Let's just assume ok
+                // const ready = coreEpml.ready()
+                // await ready
+                // console.log('Core ready FFUCCC')
 
                 if (!this.addressInfoStreams[addr]) {
                     console.log('AND DIDN\'T FIND AN EXISTING ADDRESS STREAM')
-                    this.addressInfoStreams[addr] = this.coreWimp.listen(`address/${addr}`, addrInfo => {
+                    this.addressInfoStreams[addr] = coreEpml.subscribe(`address/${addr}`, addrInfo => {
                         console.log(addrInfo)
-
+                        addrInfo = JSON.parse(addrInfo)
                         this.loading = false
 
                         addrInfo.nativeBalance = addrInfo.nativeBalance || { total: {} }
                         addrInfo.nativeBalance.total['0'] = addrInfo.nativeBalance.total['0'] || 0
 
-                        this.set(`addressesInfo.${addr}`, addrInfo)
-                        const addressesInfoStore = this.addressesInfo
-                        this.addressesInfo = {}
-                        this.addressesInfo = addressesInfoStore
+                        this.addressesInfo = {
+                            ...this.addressesInfo,
+                            [addr]: addrInfo
+                        }
+                        // const addressesInfoStore = this.addressesInfo
+                        // this.addressesInfo = {}
+                        // this.addressesInfo = addressesInfoStore
                     })
                 }
                 if (!this.unconfirmedTransactionStreams[addr]) {
                     console.log('AND DIDN\'T FIND AN EXISTING UNCONFIRMED TX STREAM')
                     this.addressesUnconfirmedTransactions[addr] = []
 
-                    this.unconfirmedTransactionStreams[addr] = this.coreWimp.listen(`unconfirmedOfAddress/${addr}`, unconfirmedTransactions => {
+                    this.unconfirmedTransactionStreams[addr] = coreEpml.subscribe(`unconfirmedOfAddress/${addr}`, unconfirmedTransactions => {
+                        unconfirmedTransactions = JSON.parse(unconfirmedTransactions)
                         unconfirmedTransactions = unconfirmedTransactions.map(tx => {
                             return {
                                 transaction: tx,

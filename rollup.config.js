@@ -11,7 +11,7 @@ import autoprefixer from 'autoprefixer'
 import postcss from 'postcss'
 
 import minifyHTML from 'rollup-plugin-minify-html-literals'
-// import { terser } from 'rollup-plugin-terser'
+import { terser } from 'rollup-plugin-terser'
 
 const sassOptions = {
     output: 'build/styles.bundle.css',
@@ -51,8 +51,8 @@ const plugins = [
     commonjs({}),
     globals(),
     builtins(),
-    sass(sassOptions)//,
-    // minifyHTML()
+    sass(sassOptions),
+    // minifyHTML(),
     // terser()
 ]
 
@@ -150,7 +150,7 @@ export default [
         input: 'plugins/core/send-money/send-money.src.js',
         output: [
             {
-                file: 'plugins/send-money/send-money.js',
+                file: 'plugins/core/send-money/send-money.js',
                 format: 'iife'
             }
         ],

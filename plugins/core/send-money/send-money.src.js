@@ -18,41 +18,18 @@ const coreEpml = new Epml({
 class SendMoneyPage extends LitElement {
     static get properties () {
         return {
-            addresses: { type: Array,
-                value: []
-            },
+            addresses: { type: Array },
             amount: { type: Number },
-            errorMessage: { type: String,
-                value: ''
-            },
-            sendMoneyLoading: { type: Boolean,
-                value: false
-            },
-            data: { type: Object,
-                value: {}
-            },
-            addressesInfo: {  type: Object,
-                value: {}
-            },
-            selectedAddress: { type: Object,
-                value: {}
-            },
-            selectedAddressInfo: { type: Object,
-                value: {},
-                computed: '_getSelectedAddressInfo(addressesInfo, selectedAddress)'
-            },
-            addressesUnconfirmedTransactions: { type: Object,
-                value: {}
-            },
-            addressInfoStreams: { type: Object,
-                value: {}
-            },
-            unconfirmedTransactionStreams: { type: Object,
-                value: {}
-            },
-            maxWidth: { type: String,
-                value: '600'
-            }
+            errorMessage: { type: String },
+            sendMoneyLoading: { type: Boolean },
+            data: { type: Object },
+            addressesInfo: {  type: Object },
+            selectedAddress: { type: Object },
+            selectedAddressInfo: { type: Object },
+            addressesUnconfirmedTransactions: { type: Object },
+            addressInfoStreams: { type: Object },
+            unconfirmedTransactionStreams: { type: Object },
+            maxWidth: { type: String }
         }
     }
 
@@ -265,7 +242,20 @@ class SendMoneyPage extends LitElement {
     constructor () {
         super()
 
-        parentEpml.ready.then(() => {
+        this.addresses = []
+        this.errorMessage = ''
+        this.sendMoneyLoading = false
+        this.data = {}
+        this.addressesInfo = {}
+        this.selectedAddress = {}
+        this.selectedAddressInfo = {}
+            //computed: '_getSelectedAddressInfo(addressesInfo, selectedAddress)'
+        this.addressesUnconfirmedTransactions = {}
+        this.addressInfoStreams = {}
+        this.unconfirmedTransactionStreams = {}
+        this.maxWidth = '600'
+
+        parentEpml.ready().then(() => {
             parentEpml.subscribe('selected_address', async selectedAddress => {
                 selectedAddress = JSON.parse(selectedAddress)
                 this.selectedAddress = {}

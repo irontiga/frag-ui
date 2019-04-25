@@ -37,6 +37,7 @@ export const routes = {
     'apiCall': async req => {
         // console.log(req.data)
         // console.log(api.request)
+        console.log(req)
         return api.request[req.data.type](req.data)
     },
 

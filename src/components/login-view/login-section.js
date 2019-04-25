@@ -15,6 +15,7 @@ import '@polymer/paper-ripple'
 // import '@polymer/iron-flex-layout/iron-flex-layout-classes.js'
 
 import { doLogin } from '../../redux/app/app-actions.js'
+import { doUpdateAccountInfo } from '../../redux/user/actions/update-account-info.js'
 
 // import '@polymer/iron-pages'
 // import '@polymer/paper-icon-button/paper-icon-button.js'
@@ -241,6 +242,7 @@ class LoginSection extends connect(store)(LitElement) {
                 password: pin + '' + birthMonth
             }, status => { this.loadingRipple.loadingMessage = status })))
             .then(() => {
+                store.dispatch(doUpdateAccountInfo({ name: wallet.name }))
                 this.cleanup()
                 return this.loadingRipple.fade()
             })

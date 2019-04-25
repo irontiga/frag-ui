@@ -21,7 +21,7 @@ export class UnconfirmedTransactionWatcher {
 
         if (this._unconfirmedTransactionStreams[addr]) return
         // console.log("CREATING A STRTRREEAAAMMMM")
-        this._unconfirmedTransactionStreams[addr] = new EpmlStream(`unconfirmedOfAddress/${addr}`, this._addressesUnconfirmedTransactions[addr])
+        this._unconfirmedTransactionStreams[addr] = new EpmlStream(`unconfirmedOfAddress/${addr}`, () => this._addressesUnconfirmedTransactions[addr])
 
         // this.updateAddress(address.address)
     }

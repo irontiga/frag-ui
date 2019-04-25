@@ -34,7 +34,9 @@ export default (state = INITIAL_STATE, action) => {
         case LOG_OUT:
             return {
                 ...state,
+                pin: '', // Probably shouldn't store this plain text...ever. Better store a quick hash... stops someone from peeping your pin...not that that's the vital part
                 loggedIn: false,
+                loggingIn: false,
                 wallet: INITIAL_STATE.wallet
             }
         case ADD_PLUGIN:

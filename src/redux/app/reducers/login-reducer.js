@@ -6,14 +6,14 @@ export const loginReducer = (state, action) => {
                 wallet: action.payload.wallet,
                 pin: action.payload.pin, // Probably shouldn't store this plain text...ever. Better store a quick hash... stops someone from peeping your pin...not that that's the vital part
                 loggedIn: true,
-                logginIn: false
+                loggingIn: false
             }
         case 'error':
             return {
                 ...state,
                 pin: '',
                 loggedIn: false,
-                logginIn: false
+                loggingIn: false
             }
         // Nah, excessive store updates, unnecessary
         // case 'progress':
@@ -26,8 +26,7 @@ export const loginReducer = (state, action) => {
         default:
             return {
                 ...state,
-                loading: true,
-                logginIn: true
+                loggingIn: true
             }
     }
 }
