@@ -1,6 +1,8 @@
 import { LitElement, html, css } from 'lit-element'
 import { ERROR_CODES } from '../../../src/qora/constants.js'
 import { Epml } from '../../../src/epml.js'
+import '@material/mwc-button'
+import '@polymer/paper-input/paper-input.js'
 
 const KMX_IN_USD = 5 // 1 KMX - 5 USD
 
@@ -23,13 +25,14 @@ class SendMoneyPage extends LitElement {
             errorMessage: { type: String },
             sendMoneyLoading: { type: Boolean },
             data: { type: Object },
-            addressesInfo: {  type: Object },
+            addressesInfo: { type: Object },
             selectedAddress: { type: Object },
             selectedAddressInfo: { type: Object },
             addressesUnconfirmedTransactions: { type: Object },
             addressInfoStreams: { type: Object },
             unconfirmedTransactionStreams: { type: Object },
-            maxWidth: { type: String }
+            maxWidth: { type: String },
+            recipient: { type: String }
         }
     }
 
@@ -43,6 +46,7 @@ class SendMoneyPage extends LitElement {
 
     static get styles () {
         return css`
+        
             #sendMoneyWrapper {
                 /* Extra 3px for left border */
                 /* overflow: hidden; */
@@ -105,10 +109,10 @@ class SendMoneyPage extends LitElement {
             }
         `
     }
-
+    // @keyup=${() => {this.shadowRoot.getElementById('USDAmountInput').value = this.shadowRoot.getElementById('amountInput').value / 0.2 }}
     render () {
         return html`
-            <div id="sendMoneyWrapper" style="width:auto; margin:10px;">
+            <div id="sendMoneyWrapper" style="width:auto; padding:10px; background: #fff; height:100vh;">
                 <div class="layout horizontal center">
                     <paper-card style="width:100%; max-width:740px;">
                         <div style="background-color: ${this.selectedAddress.color}; padding:12px 15px; margin:0; color: ${this.textColor(this.selectedAddress.textColor)};">
@@ -123,38 +127,44 @@ class SendMoneyPage extends LitElement {
                                 <span>${this.selectedAddress.address}</span>
                             </div>
                         </div>
-            
-                        <div class="card-content">
-                            <!-- KMX <paper-toggle-button checked="{{useUSDAmount}}" style="cursor:pointer; display: inline"></paper-toggle-button> USD -->
-            
-                            <paper-input id="USDAmountInput" label="Amount (USD)" ?hidden="${!this.useUSDAmount}" value="${this.usdAmount}"
-                                type="number">
-                                <div slot="prefix">$ &nbsp;</div>
-                            </paper-input>
-                            <paper-input id="amountInput" required label="Amount (KMX)" type="number" invalid=${this.validAmount} value="${this.amount}"
-                                error-message="Insufficient funds" @keyup="${() => this._checkAmount}"></paper-input>
-            
-                            <paper-input label="To (address or name)" type="text" value="${this.recipient}"></paper-input>
-            
-                            <!-- <paper-input label="Fee" type="text" value="{{fee}}"></paper-input> -->
-            
-                            <p style="color:red">${this.errorMessage}</p>
-                            <p style="color:green;word-break: break-word;">${this.successMessage}</p>
-            
-                            <div class="buttons">
-                                <div>
-                                    <paper-button autofocus on-tap="_sendMoney">Send &nbsp;
-                                        <iron-icon icon="send"></iron-icon>
-                                    </paper-button>
-                                </div>
-                            </div>
 
-                            ${this.sendMoneyLoading ? html`
-                                <paper-progress auto></paper-progress>
-                            ` : ''}
-                        </div>
                     </paper-card>
-            
+                <paper-input
+                    id="USDAmountInput"
+                    label="Amount (USD)"
+                    @keyup=${() => { this.shadowRoot.getElementById('amountInput').value = this.shadowRoot.getElementById('USDAmountInput').value / 5 }}
+                    ?hidden="${!this.useUSDAmount}"
+                    value="${this.usdAmount}"
+                    type="number">
+                <div slot="prefix">$ &nbsp;</div>
+                </paper-input>
+                <paper-input
+                    
+                    id="amountInput"
+                    required
+                    label="Amount (KMX)"
+                    type="number"
+                    invalid=${this.validAmount}
+                    value="${this.amount}"
+                    error-message="Insufficient funds" @keyup="${e => this._checkAmount(e)}"></paper-input>
+                
+                <paper-input label="To (address or name)" id="recipient" type="text" value="${this.recipient}"></paper-input>
+                
+                <!-- <paper-input label="Fee" type="text" value="{{fee}}"></paper-input> -->
+                
+                <p style="color:red">${this.errorMessage}</p>
+                <p style="color:green;word-break: break-word;">${this.successMessage}</p>
+                
+                <div class="buttons" style="text-align:right;">
+                    <div>
+                        <mwc-button style="" autofocus @click=${e => this._sendMoney(e)}>Send &nbsp;
+                            <iron-icon icon="send"></iron-icon>
+                        </mwc-button>
+                    </div>
+                </div>
+                
+                ${this.sendMoneyLoading ? html`
+                <paper-progress auto></paper-progress>  ` : ''}
                 </div>
             </div>
         `
@@ -173,8 +183,8 @@ class SendMoneyPage extends LitElement {
     }
 
     async _sendMoney (e) {
-        const amount = this.amount * Math.pow(10, 8)
-        let recipient = this.recipient
+        const amount = this.shadowRoot.getElementById('amountInput').value * Math.pow(10, 8)
+        let recipient = this.shadowRoot.getElementById('recipient').value
         // var fee = this.fee
 
         // Check for valid...^
@@ -182,33 +192,31 @@ class SendMoneyPage extends LitElement {
         this.sendMoneyLoading = true
 
         console.log(this.selectedAddress)
-
-        let lastRef = await parentEpml.request('apiCall', {
-            data: {
+        try {
+            let lastRef = await parentEpml.request('apiCall', {
                 type: 'api',
                 url: `addresses/lastreference/${this.selectedAddress.address}/unconfirmed`
-            }
-        })
-        lastRef = lastRef.data
-
-        let recipientAsNameInfo = await parentEpml.request('apiCall', {
-            data: {
+            })
+            // lastRef = lastRef.data
+            console.log(lastRef) // TICK
+            lastRef = JSON.parse(lastRef)
+            let recipientAsNameInfo = await parentEpml.request('apiCall', {
                 type: 'api',
                 url: `names/${recipient}`
+                // eslint-disable-next-line handle-callback-err
+            }).catch(err => {
+                return JSON.stringify({})
+            }) //  ...uhhh i dont even know
+            console.log(recipientAsNameInfo)
+
+            if (recipientAsNameInfo.success) {
+                recipientAsNameInfo = JSON.parse(recipientAsNameInfo.data)
+                recipient = recipientAsNameInfo.value
             }
-        // eslint-disable-next-line handle-callback-err
-        }).catch(err => {
-            return JSON.stringify({})
-        })
-        console.log(recipientAsNameInfo)
 
-        if (recipientAsNameInfo.success) {
-            recipientAsNameInfo = JSON.parse(recipientAsNameInfo.data)
-            recipient = recipientAsNameInfo.value
-        }
+            console.log('makingtx  request now')
 
-        parentEpml.request('transaction', {
-            data: {
+            const txRequestResponse = await parentEpml.request('transaction', {
                 type: 2,
                 nonce: this.selectedAddress.nonce,
                 params: {
@@ -218,21 +226,25 @@ class SendMoneyPage extends LitElement {
                     // ,
                     // fee
                 }
-            }
-        }).then(response => {
-            const responseData = JSON.parse(response.data)
+            })
+
+            console.log(txRequestResponse)
+            const responseData = JSON.parse(txRequestResponse)
             if (!responseData.reference) {
+                if (responseData.success === false) {
+                    throw new Error(responseData.reason)
+                }
                 throw new Error(`Error! ${ERROR_CODES[responseData]}. Error code ${responseData}`)
             }
 
             this.errorMessage = ''
             this.recipient = ''
             this.amount = ''
-            this.successMessage = 'Success! ' + response.data
-        }).catch(err => {
-            console.log(err)
-            this.errorMessage = err
-        })
+            this.successMessage = 'Success! ' + txRequestResponse
+        } catch (e) {
+            console.error('FUCK THESE CUNTS MUTHEROEHAODFHASIBU ', e)
+            this.errorMessage = e
+        }
     }
 
     _getSelectedAddressInfo (addressesInfo, selectedAddress) {
@@ -241,47 +253,104 @@ class SendMoneyPage extends LitElement {
 
     constructor () {
         super()
-
+        this.recipient = ''
         this.addresses = []
         this.errorMessage = ''
         this.sendMoneyLoading = false
         this.data = {}
         this.addressesInfo = {}
         this.selectedAddress = {}
-        this.selectedAddressInfo = {}
-            //computed: '_getSelectedAddressInfo(addressesInfo, selectedAddress)'
+        this.selectedAddressInfo = {
+            nativeBalance: {
+                total: {}
+            }
+        }
+        // computed: '_getSelectedAddressInfo(addressesInfo, selectedAddress)'
         this.addressesUnconfirmedTransactions = {}
         this.addressInfoStreams = {}
         this.unconfirmedTransactionStreams = {}
         this.maxWidth = '600'
+        this.useUSDAmount = true
 
         parentEpml.ready().then(() => {
             parentEpml.subscribe('selected_address', async selectedAddress => {
-                selectedAddress = JSON.parse(selectedAddress)
                 this.selectedAddress = {}
-                if (!selectedAddress) return
+                selectedAddress = JSON.parse(selectedAddress)
+                // console.log('==========================SELECTED ADDRESS',selectedAddress)
+                if (!selectedAddress || Object.entries(selectedAddress).length === 0) return // Not ready yet ofc
+                this.selectedAddress = selectedAddress
                 const addr = selectedAddress.address
+                // console.log(selectedAddress)
+                // console.log(addr)
 
-                await coreEpml.ready()
+                // Let's just assume ok
+                // const ready = coreEpml.ready()
+                // await ready
+                // console.log('Core ready FFUCCC')
 
                 if (!this.addressInfoStreams[addr]) {
+                    console.log('AND DIDN\'T FIND AN EXISTING ADDRESS STREAM')
                     this.addressInfoStreams[addr] = coreEpml.subscribe(`address/${addr}`, addrInfo => {
-                        console.log('Send money page received', addrInfo)
-                        // Ahh....actually if no balance....no last reference and so you can't send money
-                        addrInfo.nativeBalance = addrInfo.nativeBalance || { total: {} }
-                        addrInfo.nativeBalance.total['0'] = addrInfo.nativeBalance.total['0'] || 0
-                        this.set(`addressesInfo.${addr}`, addrInfo)
-                        const addressesInfoStore = this.addressesInfo
-                        this.addressesInfo = {}
-                        this.addressesInfo = addressesInfoStore
-                    })
-                }
+                        addrInfo = JSON.parse(addrInfo)
+                        console.log('FINALLY RECEIVE ADDR INFO DUMB CUNTS', addrInfo)
+                        this.loading = false
 
-                if (!this.unconfirmedTransactionStreams[addr]) {
-                    this.unconfirmedTransactionStreams[addr] = coreEpml.subscribe(`unconfirmedOfAddress/${addr}`, unconfirmedTransactions => {
-                        this.addressesUnconfirmedTransactions[addr] = unconfirmedTransactions
+                        addrInfo.nativeBalance = addrInfo.nativeBalance || { total: {} }
+                        // console.log('NATIVE FUCKING BITCH',addrInfo)
+                        // addrInfo.nativeBalance.total['0'] = addrInfo.nativeBalance.total['0'] || 0
+                        // addrInfo.nativeBalance.total['1'] = addrInfo.nativeBalance.total['1'] || 0
+                        console.log(addrInfo.nativeBalance)
+                        this.addressesInfo = {
+                            ...this.addressesInfo,
+                            [addr]: addrInfo
+                        }
+                        this.selectedAddressInfo = this.addressesInfo[this.selectedAddress.address]
+                        // console.log(this.addressesInfo)
+                        console.log(this.selectedAddressInfo)
+                        // const addressesInfoStore = this.addressesInfo
+                        // this.addressesInfo = {}
+                        // this.addressesInfo = addressesInfoStore
                     })
                 }
+                if (!this.unconfirmedTransactionStreams[addr]) {
+                    console.log('AND DIDN\'T FIND AN EXISTING UNCONFIRMED TX STREAM')
+                    this.addressesUnconfirmedTransactions[addr] = []
+
+                    this.unconfirmedTransactionStreams[addr] = coreEpml.subscribe(`unconfirmedOfAddress/${addr}`, unconfirmedTransactions => {
+                        unconfirmedTransactions = JSON.parse(unconfirmedTransactions)
+                        unconfirmedTransactions = unconfirmedTransactions.map(tx => {
+                            return {
+                                transaction: tx,
+                                unconfirmed: true
+                            }
+                        })
+                    })
+                }
+                // parentEpml.subscribe('selected_address', async selectedAddress => {
+                //     selectedAddress = JSON.parse(selectedAddress)
+                //     this.selectedAddress = {}
+                //     if (!selectedAddress) return
+                //     const addr = selectedAddress.address
+                //     // await coreEpml.ready()
+                //     // console.log('STULE FUCK YEA')
+                //     if (!this.addressInfoStreams[addr]) {
+                //         this.addressInfoStreams[addr] = coreEpml.subscribe(`address/${addr}`, addrInfo => {
+                //             console.log('Send money page received', addrInfo)
+                //             // Ahh....actually if no balance....no last reference and so you can't send money
+                //             addrInfo.nativeBalance = addrInfo.nativeBalance || { total: {} }
+                //             addrInfo.nativeBalance.total['0'] = addrInfo.nativeBalance.total['0'] || 0
+                //             this.set(`addressesInfo.${addr}`, addrInfo)
+                //             const addressesInfoStore = this.addressesInfo
+                //             this.addressesInfo = {}
+                //             this.addressesInfo = addressesInfoStore
+                //         })
+                //     }
+
+            //     if (!this.unconfirmedTransactionStreams[addr]) {
+            //         this.unconfirmedTransactionStreams[addr] = coreEpml.subscribe(`unconfirmedOfAddress/${addr}`, unconfirmedTransactions => {
+            //             this.addressesUnconfirmedTransactions[addr] = unconfirmedTransactions
+            //         })
+            //     }
             })
         })
     }

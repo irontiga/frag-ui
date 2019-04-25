@@ -3,6 +3,7 @@ import { requestTransaction } from '../transactionRequest.js'
 import { processTransaction } from './processTransaction.js'
 
 export const createTransaction = (type, keyPair, params) => {
+    console.log(type, keyPair, params)
     const tx = new transactionTypes[type]()
     Object.keys(params).forEach(param => {
         tx[param] = params[param]

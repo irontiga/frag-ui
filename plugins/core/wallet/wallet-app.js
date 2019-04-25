@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit-element'
 import { Epml } from '../../../src/epml.js'
 
+import '@material/mwc-icon'
 import '@polymer/paper-spinner/paper-spinner-lite.js'
 import 'time-elements'
 import '@vaadin/vaadin-grid/vaadin-grid.js'
@@ -109,6 +110,19 @@ class WalletApp extends LitElement {
             .text-white-hint{
                 color: var(--white-divider)
             }
+
+            table td, th{
+                padding:10px;
+                text-align:left;
+                font-size:14px;
+            }
+            table th{
+                /* color:var(--menu-link-color); */
+            }
+            .white-bg {
+                height:100vh;
+                background: #fff;
+            }
         `
     }
 
@@ -124,7 +138,8 @@ class WalletApp extends LitElement {
         this.selectedAddressInfo = {
             nativeBalance: {
                 total: {}
-            }
+            },
+            transactions: []
         }
         // selectedAddressTransactions: {
         //     value: [],
@@ -135,126 +150,179 @@ class WalletApp extends LitElement {
         this.unconfirmedTransactionStreams = {}
     }
 
-    render () {
-        return html`
-            <div ?hidden="${!this.loading}" class="layout horizontal center" style="height:100vh;">
-                <div class="layout vertical center" style="width:100%;">
-                    <paper-spinner-lite ?active="${this.loading}" alt="Loading address"></paper-spinner-lite>
-                </div>
-            </div>
-            
-            
-            <div ?hidden="${this.loading}">
-                <div id="topbar" style="background:${this.selectedAddress.color}; color: ${this.textColor(this.selectedAddress.textColor)}; padding: 40px;">
-                    <span class="mono weight-1300">
-                        <iron-icon icon="account-balance-wallet"></iron-icon> ${this.selectedAddress.address}
-                    </span>
-                    <!-- <template is="dom-if" if="{{!address.name}}">
-                                        <paper-button on-tap="setName"><i>Set name</i></paper-button>
-                                    </template> -->
-                    <br>
-                    <div class="layout horizontal wrap">
-                        <div>
-                            <span class="mono weight-100" style="font-size: 70px;">${this.floor(this.selectedAddressInfo.nativeBalance.total[0])}<span
-                                    style="font-size:24px; vertical-align: top; line-height:60px;">.${this.decimals(this.selectedAddressInfo.nativeBalance.total[0])}
-                                    KMX</span></span>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </div>
+    /*
+
                         <div>
                             <span class="mono weight-100" style="font-size: 70px;">${this.floor(this.selectedAddressInfo.nativeBalance.total[1])}<span
                                     style="font-size:24px; vertical-align: top; line-height:60px;">.${this.decimals(this.selectedAddressInfo.nativeBalance.total[1])}
                                     KEX</span></span>
                         </div>
-                    </div>
+    */
+    render () {
+        return html`
+            <div class="white-bg">
+                <div ?hidden="${!this.loading}" class="layout horizontal center" style="height:100vh;">
+                <div class="layout vertical center" style="width:100%;">
+                    <paper-spinner-lite ?active="${this.loading}" alt="Loading address"></paper-spinner-lite>
                 </div>
-            
-                <div id="contentDiv" style="margin: 8px;">
-            
-            
-            
-                    <div class="layout horizontal">
-                        <paper-card style="width:100%">
-            
-                            <!-- <div class="card-content"  hidden$="{{!isEmptyArray(address.transactions)}}"> -->
-                            <div class="card-content" ?hidden="${!this.isEmptyArray(this.selectedAddressTransactions)}">
-                                Address has no transactions yet. Start by sending some KMX to <b>${this.selectedAddress.address}</b> or
-                                by claiming KEX from the airdrop.
+                </div>
+                
+                
+                <div ?hidden="${this.loading}">
+                    <div id="topbar" style="background:xxxxxxxxxxxxxxxxxxxxxxxxxxxxx; color: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx; padding: 20px;">
+                        <span class="mono weight-1300">
+                            <iron-icon icon="account-balance-wallet"></iron-icon> ${this.selectedAddress.address}
+                        </span>
+                        <!-- <template is="dom-if" if="{{!address.name}}">
+                                                        <paper-button on-tap="setName"><i>Set name</i></paper-button>
+                                                    </template> -->
+                        <br>
+                        <div class="layout horizontal wrap">
+                            <div>
+                                <span class="mono weight-100" style="font-size: 70px;">${this.floor(this.selectedAddressInfo.nativeBalance.total[0])}<span
+                                        style="font-size:24px; vertical-align: top; line-height:60px;">.${this.decimals(this.selectedAddressInfo.nativeBalance.total[0])}
+                                        KMX</span></span>
+                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             </div>
-            
-                            <vaadin-grid ?hidden="${this.isEmptyArray(this.selectedAddressTransactions)}" height-by-rows style="height:auto;"
-                                aria-label="Transactions" items="${this.selectedAddressTransactions}">
-            
-                                <vaadin-grid-column flex-grow="x">
-                                    <template class="header">
-                                        <iron-icon style="height:16px" icon="device:access-time"></iron-icon>
-                                    </template>
-                                    <template>
-                                        <span class$="{{_unconfirmedClass(item.unconfirmed)}}">
-                                            <time-ago datetime$="{(new Date(this.item.transaction.timestamp).toISOString())}">
-                                                {{item.transaction.dateTime}}
-                                            </time-ago>
-                                        </span>
-                                    </template>
-                                </vaadin-grid-column>
-            
-                                <vaadin-grid-column>
-                                    <template class="header">
-                                        Type
-                                    </template>
-                                    <template>
-                                        <span class$="{{_unconfirmedClass(item.unconfirmed)}}">
-                                            {{getTxType(item.transaction.type)}}
-                                        </span>
-                                    </template>
-                                </vaadin-grid-column>
-            
-                                <vaadin-grid-column>
-                                    <template class="header">
-                                        Amount
-                                        <!-- + fee -->
-                                    </template>
-                                    <template>
-                                        <span class$="mono {{txColor(item.transaction)}} {{_unconfirmedClass(item.unconfirmed)}}">
-                                            <!-- Ugly to avoid the space -->
-                                            <iron-icon hidden$="{{sendOrRecieve(item.transaction)}}" icon="icons:add-circle" style="height:16px;"></iron-icon>
-                                            <iron-icon hidden$="{{!sendOrRecieve(item.transaction)}}" icon="icons:remove-circle"
-                                                style="height:16px; font-size:16px;"></iron-icon><span>[[floor(item.transaction.amount)]]</span><span
-                                                style="font-size:12px; vertical-align:top; line-height:16px;">[[decimals(item.transaction.amount)]]</span>
-                                            <!-- +
-                                                            <span>[[floor(item.transaction.fee)]]</span
-                                                                ><span style="font-size:8px; vertical-align:top; line-height:16px;">[[decimals(item.transaction.fee)]]</span> -->
-                                        </span>
-                                    </template>
-                                </vaadin-grid-column>
-            
-                                <vaadin-grid-column flex-grow="4">
-                                    <template class="header">
-                                        Sender/Recipient
-                                    </template>
-                                    <template>
-                                        <span class$="{{_unconfirmedClass(item.unconfirmed)}}">{{senderOrRecipient(item.transaction)}}</span>
-                                    </template>
-                                </vaadin-grid-column>
-            
-                                <vaadin-grid-column>
-                                    <template class="header">
-                                        Confirmations
-                                    </template>
-                                    <template>
-                                        <span class$="{{_unconfirmedClass(item.unconfirmed)}}">
-                                            <template is="dom-if" if="{{!item.unconfirmed}}">
-                                                {{getConfirmations(item.transaction.blockHeight, lastBlock.height)}}
-                                            </template>
-                                            <template is="dom-if" if="{{item.unconfirmed}}">
-                                                0
-                                            </template>
-                                        </span>
-                                    </template>
-                                </vaadin-grid-column>
-            
-                            </vaadin-grid>
-            
-                        </paper-card>
+                
+                        </div>
+                    </div>
+                
+                    <div id="contentDiv" style="margin: 8px;">
+                
+                
+                
+                        <div class="layout horizontal">
+                            <paper-card style="width:100%">
+                
+                                <!-- <div class="card-content"  hidden$="{{!isEmptyArray(address.transactions)}}"> -->
+                                <!--!this.isEmptyArray(this.selectedAddressTransactions)-->
+                                <div class="card-content" ?hidden="${this.selectedAddressInfo.transactions.length > 0}">
+                                    Address has no transactions yet. Start by sending some KMX to <b>${this.selectedAddress.address}</b>
+                                    or
+                                    by claiming KEX from the airdrop.
+                                </div>
+                
+                                <h3 style="padding-left:12px;" class="mono weight-100">Recent transactions</h3>
+                
+                                <div id="tableContainer" style="max-width:100vw; overflow-x: auto;">
+                                    <table>
+                                        <tr>
+                                            <th>Time</th>
+                                            <th>Type</th>
+                                            <th>Amount</th>
+                                            <th>Confirmations</th>
+                                            <th>Sender/Recipient</th>
+                                        </tr>
+                                        ${this.selectedAddressInfo.transactions.map(transaction => html`
+                                        <tr>
+                                            <td>
+                                                <time-ago .datetime=${new Date(transaction.transaction.timestamp).toISOString()}>
+                                                    ${transaction.transaction.dateTime}
+                                                </time-ago>
+                                            </td>
+                                            <td>
+                                                <span class="${this._unconfirmedClass(transaction.transaction.unconfirmed)}}">
+                                                    ${this.getTxType(transaction.transaction.type)}
+                                                </span>
+                                            </td>
+                                            <td style="min-width:60px;">
+                                                <span class="mono ${this.txColor(transaction.transaction)} ${this._unconfirmedClass(transaction.transaction.unconfirmed)}}">
+                                                    <!-- Ugly to avoid the space -->
+                                                    <mwc-icon style="height:16px; font-size:16px;">${this.sendOrRecieve(transaction.transaction) ? 'add_circle' : 'remove_circle'}</mwc-icon>
+                                                    <span>${this.floor(transaction.transaction.amount)}</span>
+                                                    <span style="font-size:12px; vertical-align:top; line-height:16px;">${this.decimals(transaction.transaction.amount)}</span>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="${this._unconfirmedClass(transaction.transaction.unconfirmed)}}">
+                                                    ${!transaction.unconfirmed ? this.getConfirmations(transaction.transaction.blockHeight, this.lastBlock.height) : '0'}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="${this._unconfirmedClass(transaction.unconfirmed)}">${this.senderOrRecipient(transaction.transaction)}</span>
+                                            </td>
+                                        </tr> `)}
+                                    </table>
+                                </div>
+                
+                
+                
+                                <vaadin-grid ?hidden="${this.isEmptyArray(this.selectedAddressTransactions)}" height-by-rows style="height:auto;"
+                                    aria-label="Transactions" items="${this.selectedAddressTransactions}">
+                
+                                    <vaadin-grid-column flex-grow="x">
+                                        <template class="header">
+                                            <iron-icon style="height:16px" icon="device:access-time"></iron-icon>
+                                        </template>
+                                        <template>
+                                            <span class$="{{_unconfirmedClass(item.unconfirmed)}}">
+                                                <time-ago datetime$="{(new Date(this.item.transaction.timestamp).toISOString())}">
+                                                    {{item.transaction.dateTime}}
+                                                </time-ago>
+                                            </span>
+                                        </template>
+                                    </vaadin-grid-column>
+                
+                                    <vaadin-grid-column>
+                                        <template class="header">
+                                            Type
+                                        </template>
+                                        <template>
+                                            <span class$="{{_unconfirmedClass(item.unconfirmed)}}">
+                                                {{getTxType(item.transaction.type)}}
+                                            </span>
+                                        </template>
+                                    </vaadin-grid-column>
+                
+                                    <vaadin-grid-column>
+                                        <template class="header">
+                                            Amount
+                                            <!-- + fee -->
+                                        </template>
+                                        <template>
+                                            <span class$="mono {{txColor(item.transaction)}} {{_unconfirmedClass(item.unconfirmed)}}">
+                                                <!-- Ugly to avoid the space -->
+                                                <iron-icon hidden$="{{sendOrRecieve(item.transaction)}}" icon="icons:add-circle" style="height:16px;"></iron-icon>
+                                                <iron-icon hidden$="{{!sendOrRecieve(item.transaction)}}" icon="icons:remove-circle"
+                                                    style="height:16px; font-size:16px;"></iron-icon><span>[[floor(item.transaction.amount)]]</span><span
+                                                    style="font-size:12px; vertical-align:top; line-height:16px;">[[decimals(item.transaction.amount)]]</span>
+                                                <!-- +
+                                                                            <span>[[floor(item.transaction.fee)]]</span
+                                                                                ><span style="font-size:8px; vertical-align:top; line-height:16px;">[[decimals(item.transaction.fee)]]</span> -->
+                                            </span>
+                                        </template>
+                                    </vaadin-grid-column>
+                
+                                    <vaadin-grid-column flex-grow="4">
+                                        <template class="header">
+                                            Sender/Recipient
+                                        </template>
+                                        <template>
+                                            <span class$="{{_unconfirmedClass(item.unconfirmed)}}">{{senderOrRecipient(item.transaction)}}</span>
+                                        </template>
+                                    </vaadin-grid-column>
+                
+                                    <vaadin-grid-column>
+                                        <template class="header">
+                                            Confirmations
+                                        </template>
+                                        <template>
+                                            <span class$="{{_unconfirmedClass(item.unconfirmed)}}">
+                                                <template is="dom-if" if="{{!item.unconfirmed}}">
+                                                    {{getConfirmations(item.transaction.blockHeight, lastBlock.height)}}
+                                                </template>
+                                                <template is="dom-if" if="{{item.unconfirmed}}">
+                                                    0
+                                                </template>
+                                            </span>
+                                        </template>
+                                    </vaadin-grid-column>
+                
+                                </vaadin-grid>
+                
+                            </paper-card>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -298,7 +366,7 @@ class WalletApp extends LitElement {
                     console.log('AND DIDN\'T FIND AN EXISTING ADDRESS STREAM')
                     this.addressInfoStreams[addr] = coreEpml.subscribe(`address/${addr}`, addrInfo => {
                         addrInfo = JSON.parse(addrInfo)
-                        console.log('FINALLY RECEIVE ADDR INFO DUMB CUNTS',addrInfo)
+                        console.log('FINALLY RECEIVE ADDR INFO DUMB CUNTS', addrInfo)
                         this.loading = false
 
                         addrInfo.nativeBalance = addrInfo.nativeBalance || { total: {} }
@@ -311,7 +379,8 @@ class WalletApp extends LitElement {
                             [addr]: addrInfo
                         }
                         this.selectedAddressInfo = this.addressesInfo[this.selectedAddress.address]
-                        console.log(this.addressesInfo)
+                        // console.log(this.addressesInfo)
+                        console.log(this.selectedAddressInfo)
                         // const addressesInfoStore = this.addressesInfo
                         // this.addressesInfo = {}
                         // this.addressesInfo = addressesInfoStore
@@ -341,8 +410,8 @@ class WalletApp extends LitElement {
             })
         })
 
-        coreEpml.ready().then(() => coreEpml.listen('New block', block => {
-            // console.log("---- BLOCK ----" ,block)
+        coreEpml.ready().then(() => coreEpml.subscribe('new_block', block => {
+            console.log('---- BLOCK ----', block)
             this.lastBlock = block
         }))
 

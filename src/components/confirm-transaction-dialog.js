@@ -2,9 +2,11 @@ import { LitElement, html, css } from 'lit-element'
 import { connect } from 'pwa-helpers'
 import { store } from '../store.js'
 
-import { listenForRequest } from '../../transactionRequest.js'
+import { listenForRequest } from '../transactionRequest.js'
+// import { listenForRequest } from '../../transactionRequest.js'
 
 import '@polymer/paper-dialog/paper-dialog.js'
+import '@material/mwc-button'
 
 class ConfirmTransactionDialog extends connect(store)(LitElement) {
     static get properties () {
@@ -32,13 +34,13 @@ class ConfirmTransactionDialog extends connect(store)(LitElement) {
                 
             </style>
 
-            <paper-dialog>
+            <paper-dialog id="james" modal>
                 <h2>Transaction request</h2>
                 <div id="txInfo">
                     ${this.txInfo}
                 <div class="buttons">
-                    <paper-button @click=${e => this.decline(e)} dialog-dismiss>Decline</paper-button>
-                    <paper-button @click=${e => this.confirm(e)} dialog-confirm autofocus>Confirm</paper-button>
+                    <mwc-button @click=${e => this.decline(e)} dialog-dismiss>Decline</mwc-button>
+                    <mwc-button @click=${e => this.confirm(e)} dialog-confirm autofocus>Confirm</mwc-button>
                 </div>
             </paper-dialog>
         `
@@ -49,6 +51,7 @@ class ConfirmTransactionDialog extends connect(store)(LitElement) {
     }
 
     requestTransaction (transaction) {
+        this.shadowRoot.getElementById('james').open()
         this.txInfo = transaction.render()
         return new Promise((resolve, reject) => {
             this._resolve = resolve
@@ -58,13 +61,13 @@ class ConfirmTransactionDialog extends connect(store)(LitElement) {
 
     confirm (e) {
         this._resolve({
-            confirmed: true
+            success: true
         })
     }
 
     decline (e) {
         this._resolve({
-            confirmed: false,
+            success: false,
             reason: 'User declined transaction'
         })
     }

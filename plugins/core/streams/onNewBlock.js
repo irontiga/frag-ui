@@ -4,7 +4,7 @@ import { EpmlStream } from 'epml'
 const BLOCK_CHECK_INTERVAL = 3000
 const BLOCK_CHECK_TIMEOUT = 3000
 
-export const BLOCK_STREAM_NAME = 'new block'
+export const BLOCK_STREAM_NAME = 'new_block'
 
 const onNewBlockFunctions = []
 
@@ -14,7 +14,6 @@ let mostRecentBlock = {
 
 export const onNewBlock = newBlockFn => onNewBlockFunctions.push(newBlockFn)
 
-const blockStream = new EpmlStream(BLOCK_STREAM_NAME, () => mostRecentBlock)
 
 export const check = () => {
     const c = doCheck()
@@ -43,7 +42,6 @@ const doCheck = async () => {
     if (parsedBlock.height > mostRecentBlock.height) {
         console.log('NNEEEWWW BLLOOCCCKKK')
         mostRecentBlock = parsedBlock
-        blockStream.emit(mostRecentBlock)
         onNewBlockFunctions.forEach(fn => fn(mostRecentBlock))
     }
 }

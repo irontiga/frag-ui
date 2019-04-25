@@ -80,7 +80,7 @@ export const request = (options) => {
             // Otherwise it's post, so send it as data. Doesn't even have to be an object
             xhttp.open(options.method, url, true)
             xhttp.setRequestHeader('Accept', 'application/json')
-            console.log(options)
+            // console.log(options)
             xhttp.send(options.data)
         }
     })

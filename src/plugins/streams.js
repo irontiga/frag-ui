@@ -9,9 +9,20 @@ export const loggedInStream = new EpmlStream(LOGIN_STREAM_NAME, () => store.getS
 export const configStream = new EpmlStream(CONFIG_STREAM_NAME, () => store.getState().config)
 export const selectedAddressStream = new EpmlStream(SELECTED_ADDRESS_STREAM_NAME, () => store.getState().app.selectedAddress)
 
+const INTERVAL = 10 * 60 * 1000 // 10 minutes
+
 let oldState = {
     app: {}
 }
+
+let pingInterval = setInterval(() => {}, INTERVAL)
+
+// protocol: 'http',
+//     domain: '127.0.0.1',
+//         port: 4999,
+//             url: '/airdrop/',
+//                 dhcpUrl: '/airdrop/ping/'
+
 store.subscribe(() => {
     const state = store.getState()
     if (oldState.app.loggedIn !== state.app.loggedIn) {
@@ -30,6 +41,12 @@ store.subscribe(() => {
             nonce: state.app.selectedAddress.nonce,
             textColor: state.app.selectedAddress.textColor
         })
+
+        clearInterval(pingInterval)
+        pingInterval = setInterval(() => {
+            const node = store.getState().config.coin.node.airdrop
+            fetch(node.protocol + '://' + node.domain + ':' + node.port + node.dhcpUrl).then(res => console.log('Ping resonse', res)).catch(err => console.error('Ping error', err))
+        }, INTERVAL)
     }
     oldState = state
 })

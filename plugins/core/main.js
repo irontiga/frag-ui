@@ -1777,35 +1777,6 @@
    * @module Target
    */
 
-  class Target {
-      // // Need a static getter to check for inheritance...otherwise browser bundles can break
-      // static get _isInheritedFromTargetBaseClass () {
-      //     return true
-      // }
-      /**
-          * Last step before sending data. Turns it into a string (obj->JSON)
-          * @param {object} data
-          */
-      static prepareOutgoingData (data) {
-          return JSON.stringify(data)
-      }
-
-      constructor (source) {
-          if (!source) throw new Error('Source must be spcified')
-
-          // Not needed, uses type instead
-          // if (!this.constructor.test) throw new Error('Class requires a static `test` method in order to check whether or not a source is compatible with the constructor')
-
-          if (!this.constructor.type) throw new Error(`Type not defined`)
-
-          if (!this.constructor.name) console.warn(`No name provided`);
-
-          if (!this.constructor.description) console.warn('No description provided');
-
-          if (!this.sendMessage) throw new Error('A new target requires a sendMessage method')
-      }
-  }
-
   // https://gist.github.com/LeverOne/1308368
 
   // function () {
@@ -1879,54 +1850,14 @@
 
   // I need to pass the proxySources twowaymap to the proxyTarget object, so that any new target created through it can be pushed to it
 
-  const STREAM_UPDATE_MESSAGE_TYPE = 'STREAM_UPDATE';
-
-  const allStreams = {}; // Maybe not even needed
-
-  class EpmlStream$1 {
-      static get streams () {
-          return allStreams
-      }
-
-      constructor (name, subscriptionFn = () => {}) {
-          this._name = name; // Stream name
-          this.targets = []; // Targets listening to the stream
-          this._subscriptionFn = subscriptionFn; // Called on subscription, whatever it returns we send to the new target
-          if (name in allStreams) throw new Error(`Stream with name ${name} already exists!`)
-          allStreams[name] = this;
-      }
-
-      async subscribe (target) {
-          if (target in this.targets) {
-              console.info('Target is already subscribed to this stream');
-          }
-          const response = await this._subscriptionFn();
-          this._sendMessage(response, target);
-          this.targets.push(target);
-      }
-
-      _sendMessage (data, target) {
-          target.sendMessage({
-              data: Target.prepareOutgoingData(data),
-              EpmlMessageType: STREAM_UPDATE_MESSAGE_TYPE,
-              streamName: this._name
-          });
-      }
-
-      emit (data) {
-          this.targets.forEach(target => this._sendMessage(data, target));
-      }
-  }
-
   const BLOCK_CHECK_INTERVAL = 3000;
   const BLOCK_CHECK_TIMEOUT = 3000;
-  const BLOCK_STREAM_NAME = 'new block';
+  const BLOCK_STREAM_NAME = 'new_block';
   const onNewBlockFunctions = [];
   let mostRecentBlock = {
     height: -1
   };
   const onNewBlock = newBlockFn => onNewBlockFunctions.push(newBlockFn);
-  const blockStream = new EpmlStream$1(BLOCK_STREAM_NAME, () => mostRecentBlock);
   const check = () => {
     const c = doCheck(); // CHANGE TO Promise.prototype.finally
 
@@ -1953,13 +1884,19 @@
     if (parsedBlock.height > mostRecentBlock.height) {
       console.log('NNEEEWWW BLLOOCCCKKK');
       mostRecentBlock = parsedBlock;
-      blockStream.emit(mostRecentBlock);
       onNewBlockFunctions.forEach(fn => fn(mostRecentBlock));
     }
   };
 
   const addrWatcher = new AddressWatcher();
   const txWatcher = new UnconfirmedTransactionWatcher();
+  let mostRecentBlock$1 = {
+    height: -1
+  };
+  const blockStream = new EpmlStream(BLOCK_STREAM_NAME, () => {
+    console.log('WE GOT A SUBSCRIPTION');
+    return mostRecentBlock$1;
+  });
   parentEpml.subscribe('logged_in', async isLoggedIn => {
     if (isLoggedIn === 'true') {
       // console.log('"logged_in stream" in core/main.js', isLoggedIn)
@@ -1974,6 +1911,8 @@
   });
   onNewBlock(block => {
     console.log('New block', block);
+    mostRecentBlock$1 = block;
+    blockStream.emit(block);
     addrWatcher.testBlock(block);
   });
   check();
