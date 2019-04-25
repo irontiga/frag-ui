@@ -89,11 +89,11 @@ export class AddressWatcher {
             addressInfo.transactions.push(addressInfo[i])
             delete addressInfo[i]
         }
-
+        console.log('ADDRESS INFO MUTHA FUCKA', addressInfo)
         if (!this._addresses[addr]) return
 
         this._addresses[addr] = addressInfo
-        console.log('--------------------------------------------------------', this._addresses,this._addressStreams)
+        console.log('--------------------------------------------------------', this._addresses, this._addressStreams)
         this._addressStreams[addr].emit(addressInfo)
     }
 }

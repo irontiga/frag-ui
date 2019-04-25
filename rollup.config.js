@@ -10,7 +10,7 @@ import autoprefixer from 'autoprefixer'
 // import postcss from 'rollup-plugin-postcss'
 import postcss from 'postcss'
 
-import minifyHTML from 'rollup-plugin-minify-html-literals'
+// import minifyHTML from 'rollup-plugin-minify-html-literals'
 import { terser } from 'rollup-plugin-terser'
 
 const sassOptions = {
@@ -56,7 +56,7 @@ const plugins = [
 
 if (process.env.NODE_ENV === 'production') {
     plugins.push(
-        minifyHTML(),
+        // minifyHTML(),
         terser()
     )
 }

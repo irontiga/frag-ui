@@ -1712,6 +1712,7 @@
         delete addressInfo[i];
       }
 
+      console.log('ADDRESS INFO MUTHA FUCKA', addressInfo);
       if (!this._addresses[addr]) return;
       this._addresses[addr] = addressInfo;
       console.log('--------------------------------------------------------', this._addresses, this._addressStreams);

@@ -73,7 +73,7 @@ export const request = (options) => {
             params = params === '?' ? '' : params // No question mark if no params
             // console.log(options, url, params)
             url += params
-            console.log(options.method, url)
+            // console.log(options.method, url)
             xhttp.open(options.method, url, true)
             xhttp.send()
         } else {

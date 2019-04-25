@@ -182,6 +182,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                             return this.loadingRipple.fade()
                         })
                         .catch(e => {
+                            this.error = true
                             this.errorMessage = e
                             console.error('COCK', e)
                             store.dispatch(doLogout())

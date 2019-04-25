@@ -49,7 +49,13 @@ routes.push(
         handler: (request, h) => {
             // console.log(request.params)
             // pluginLoader.loadPlugins()
-            return getAirdrop(request.params.name, request.params.address)
+            return getAirdrop(request.params.name, request.params.address).then(res => {
+                console.log(res)
+                return res
+            }).catch(err => {
+                console.error(err)
+                throw err
+            })
         }
     },
     {
@@ -76,13 +82,13 @@ routes.push(
         handler: {
             proxy: {
                 mapUri: (request) => {
-                    console.log(request)
+                    // console.log(request)
                     // http://127.0.0.1:3000/proxy/explorer/addr=Qewuihwefuiehwfiuwe
                     // protocol :// path:port / blockexplorer.json?addr=Qwqfdweqfdwefwef
                     // const url = request.url.href.slice(7)// Chop out "/proxy/"
                     const url = request.url.pathname.slice(7) + request.url.search// Chop out "/proxy/"
                     // let url = remote.url + "/" + request.url.href.replace('/' + remote.path + '/', '')
-                    console.log(url)
+                    // console.log(url)
                     // console.log(request)
                     return {
                         uri: url
