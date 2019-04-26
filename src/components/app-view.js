@@ -77,7 +77,7 @@ class AppView extends connect(store)(LitElement) {
 
                     <wallet-profile></wallet-profile>
 
-                    <sidenav-menu .menuItemClick=${() => this.shadowRoot.getElementById('appdrawer').close()}></sidenav-menu>
+                    <sidenav-menu></sidenav-menu>
 
                 </app-header-layout>
             </app-drawer>

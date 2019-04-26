@@ -9,8 +9,8 @@ class SidenavMenu extends connect(store)(LitElement) {
     static get properties () {
         return {
             config: { type: Object },
-            urls: { type: Object },
-            menuItemClick: { type: Function }
+            urls: { type: Object }// ,
+            // menuItemClick: { type: Function }
         }
     }
 
@@ -38,13 +38,13 @@ class SidenavMenu extends connect(store)(LitElement) {
                 }
                 ul#sideNavMenu li a mwc-icon {
                     vertical-align: top;
-                    padding-top: 11px;
+                    padding-top: 12px;
                     padding-right: 18px;
                 }
             `
         ]
     }
-
+    // .menuItemClick=${() => this.shadowRoot.getElementById('appdrawer').close()}
     render () {
         return html`
             <style>
@@ -71,6 +71,7 @@ class SidenavMenu extends connect(store)(LitElement) {
 
     menuItemClick () {
         //
+        console.log('hi')
     }
 
     stateChanged (state) {

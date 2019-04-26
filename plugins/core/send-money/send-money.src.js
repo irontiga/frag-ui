@@ -307,6 +307,13 @@ class SendMoneyPage extends LitElement {
                 if (!this.addressInfoStreams[addr]) {
                     console.log('AND DIDN\'T FIND AN EXISTING ADDRESS STREAM')
                     this.addressInfoStreams[addr] = coreEpml.subscribe(`address/${addr}`, addrInfo => {
+                        console.log('HELLLLLLOOOOOOOOO')
+                        console.log('HELLLLLLOOOOOOOOO')
+                        console.log('HELLLLLLOOOOOOOOO')
+                        console.log('HELLLLLLOOOOOOOOO')
+                        console.log('HELLLLLLOOOOOOOOO')
+                        console.log('HELLLLLLOOOOOOOOO')
+                        console.log('HELLLLLLOOOOOOOOO')
                         addrInfo = JSON.parse(addrInfo)
                         console.log('FINALLY RECEIVE ADDR INFO DUMB CUNTS', addrInfo)
                         this.loading = false

@@ -127,7 +127,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     let username = this.shadowRoot.getElementById('username').value.replace(/^\s+|\s+$/g, '') // Removing leading and trailing whitespace
                     username = username.toLowerCase()
                     const email = this.shadowRoot.getElementById('email').value
-                    
+
                     if (username === '') {
                         this.error = true
                         this.errorMessage = 'Please choose a username'
@@ -150,7 +150,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     })
                         .then(() => createWallet('phrase', seedPhrase, status => {
                             this.loadingRipple.loadingMessage = status
-                        }))                            
+                        }))
                         .then(wallet => {
                             // .then(() => store.dispatch(doLogin('phrase', seedPhrase, status => {
                             //     this.loadingRipple.loadingMessage = status

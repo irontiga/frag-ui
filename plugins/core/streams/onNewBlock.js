@@ -14,7 +14,6 @@ let mostRecentBlock = {
 
 export const onNewBlock = newBlockFn => onNewBlockFunctions.push(newBlockFn)
 
-
 export const check = () => {
     const c = doCheck()
     // CHANGE TO Promise.prototype.finally

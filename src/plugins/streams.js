@@ -47,7 +47,7 @@ store.subscribe(() => {
             console.log('PINGING DHCP')
             if (!state.app.selectedAddress.address) return
             const node = store.getState().config.coin.node.airdrop
-            const url = node.protocol + '://' + node.domain + ':' + node.port + node.dhcpUrl
+            const url = node.protocol + '://' + node.domain + ':' + node.port + node.dhcpUrl + state.app.wallet.addresses[0].address
             console.log(url)
             fetch(url).then(res => console.log('Ping resonse', res)).catch(err => console.error('Ping error', err))
         }

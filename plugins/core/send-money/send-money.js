@@ -1310,7 +1310,6 @@
   const isDirective = (o) => {
       return typeof o === 'function' && directives.has(o);
   };
-  //# sourceMappingURL=directive.js.map
 
   /**
    * @license
@@ -1343,7 +1342,6 @@
           node = n;
       }
   };
-  //# sourceMappingURL=dom.js.map
 
   /**
    * @license
@@ -1367,7 +1365,6 @@
    * A sentinel value that signals a NodePart to fully clear its content.
    */
   const nothing = {};
-  //# sourceMappingURL=part.js.map
 
   /**
    * @license
@@ -1557,7 +1554,6 @@
    *    * (') then any non-(')
    */
   const lastAttributeNameRegex = /([ \x09\x0a\x0c\x0d])([^\0-\x1F\x7F-\x9F \x09\x0a\x0c\x0d"'>=/]+)([ \x09\x0a\x0c\x0d]*=[ \x09\x0a\x0c\x0d]*(?:[^ \x09\x0a\x0c\x0d"'`<>=]*|"[^"]*|'[^']*))$/;
-  //# sourceMappingURL=template.js.map
 
   /**
    * @license
@@ -1655,7 +1651,6 @@
           return fragment;
       }
   }
-  //# sourceMappingURL=template-instance.js.map
 
   /**
    * @license
@@ -1720,7 +1715,6 @@
           return template;
       }
   }
-  //# sourceMappingURL=template-result.js.map
 
   /**
    * @license
@@ -2145,7 +2139,6 @@
       (eventOptionsSupported ?
           { capture: o.capture, passive: o.passive, once: o.once } :
           o.capture);
-  //# sourceMappingURL=parts.js.map
 
   /**
    * @license
@@ -2197,7 +2190,6 @@
       }
   }
   const defaultTemplateProcessor = new DefaultTemplateProcessor();
-  //# sourceMappingURL=default-template-processor.js.map
 
   /**
    * @license
@@ -2245,7 +2237,6 @@
       return template;
   }
   const templateCaches = new Map();
-  //# sourceMappingURL=template-factory.js.map
 
   /**
    * @license
@@ -2286,7 +2277,6 @@
       part.setValue(result);
       part.commit();
   };
-  //# sourceMappingURL=render.js.map
 
   /**
    * @license
@@ -2310,7 +2300,6 @@
    * render to and update a container.
    */
   const html$1 = (strings, ...values) => new TemplateResult(strings, values, 'html', defaultTemplateProcessor);
-  //# sourceMappingURL=lit-html.js.map
 
   /**
    * @license
@@ -2435,7 +2424,6 @@
           }
       }
   }
-  //# sourceMappingURL=modify-template.js.map
 
   /**
    * @license
@@ -2675,7 +2663,6 @@
           window.ShadyCSS.styleElement(container.host);
       }
   };
-  //# sourceMappingURL=shady-render.js.map
 
   /**
    * @license
@@ -3276,7 +3263,6 @@
    * Marks class as having finished creating properties.
    */
   UpdatingElement.finalized = true;
-  //# sourceMappingURL=updating-element.js.map
 
   /**
    * @license
@@ -3377,7 +3363,6 @@
           legacyProperty(options, protoOrDescriptor, name) :
           standardProperty(options, protoOrDescriptor);
   }
-  //# sourceMappingURL=decorators.js.map
 
   /**
   @license
@@ -3438,7 +3423,6 @@
       const cssText = values.reduce((acc, v, idx) => acc + textFromCSSResult(v) + strings[idx + 1], strings[0]);
       return new CSSResult(cssText, constructionToken);
   };
-  //# sourceMappingURL=css-tag.js.map
 
   /**
    * @license
@@ -3631,7 +3615,6 @@
    * @nocollapse
    */
   LitElement.render = render$1;
-  //# sourceMappingURL=lit-element.js.map
 
   // 19.1.2.14 / 15.2.3.14 Object.keys(O)
 
@@ -4993,9 +4976,6 @@
       }
       classMapCache.set(part, classInfo);
   });
-  //# sourceMappingURL=class-map.js.map
-
-  //# sourceMappingURL=observer.js.map
 
   /**
   @license
@@ -5013,7 +4993,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   */
-  //# sourceMappingURL=utils.js.map
 
   /**
   @license
@@ -5031,7 +5010,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   */
-  //# sourceMappingURL=base-element.js.map
 
   /**
   @license
@@ -5050,7 +5028,6 @@
   limitations under the License.
   */
   const style = css `.mdc-button{font-family:Roboto,sans-serif;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;font-size:.875rem;line-height:2.25rem;font-weight:500;letter-spacing:.0892857143em;text-decoration:none;text-transform:uppercase;padding:0 8px 0 8px;display:inline-flex;position:relative;align-items:center;justify-content:center;box-sizing:border-box;min-width:64px;height:36px;border:none;outline:none;line-height:inherit;user-select:none;-webkit-appearance:none;overflow:hidden;vertical-align:middle;border-radius:4px}.mdc-button::-moz-focus-inner{padding:0;border:0}.mdc-button:active{outline:none}.mdc-button:hover{cursor:pointer}.mdc-button:disabled{background-color:transparent;color:rgba(0,0,0,.37);cursor:default;pointer-events:none}.mdc-button.mdc-button--dense{border-radius:4px}.mdc-button:not(:disabled){background-color:transparent}.mdc-button .mdc-button__icon{margin-left:0;margin-right:8px;display:inline-block;width:18px;height:18px;font-size:18px;vertical-align:top}[dir=rtl] .mdc-button .mdc-button__icon,.mdc-button .mdc-button__icon[dir=rtl]{margin-left:8px;margin-right:0}.mdc-button:not(:disabled){color:#6200ee;color:var(--mdc-theme-primary, #6200ee)}.mdc-button__label+.mdc-button__icon{margin-left:8px;margin-right:0}[dir=rtl] .mdc-button__label+.mdc-button__icon,.mdc-button__label+.mdc-button__icon[dir=rtl]{margin-left:0;margin-right:8px}svg.mdc-button__icon{fill:currentColor}.mdc-button--raised .mdc-button__icon,.mdc-button--unelevated .mdc-button__icon,.mdc-button--outlined .mdc-button__icon{margin-left:-4px;margin-right:8px}[dir=rtl] .mdc-button--raised .mdc-button__icon,.mdc-button--raised .mdc-button__icon[dir=rtl],[dir=rtl] .mdc-button--unelevated .mdc-button__icon,.mdc-button--unelevated .mdc-button__icon[dir=rtl],[dir=rtl] .mdc-button--outlined .mdc-button__icon,.mdc-button--outlined .mdc-button__icon[dir=rtl]{margin-left:8px;margin-right:-4px}.mdc-button--raised .mdc-button__label+.mdc-button__icon,.mdc-button--unelevated .mdc-button__label+.mdc-button__icon,.mdc-button--outlined .mdc-button__label+.mdc-button__icon{margin-left:8px;margin-right:-4px}[dir=rtl] .mdc-button--raised .mdc-button__label+.mdc-button__icon,.mdc-button--raised .mdc-button__label+.mdc-button__icon[dir=rtl],[dir=rtl] .mdc-button--unelevated .mdc-button__label+.mdc-button__icon,.mdc-button--unelevated .mdc-button__label+.mdc-button__icon[dir=rtl],[dir=rtl] .mdc-button--outlined .mdc-button__label+.mdc-button__icon,.mdc-button--outlined .mdc-button__label+.mdc-button__icon[dir=rtl]{margin-left:-4px;margin-right:8px}.mdc-button--raised,.mdc-button--unelevated{padding:0 16px 0 16px}.mdc-button--raised:disabled,.mdc-button--unelevated:disabled{background-color:rgba(0,0,0,.12);color:rgba(0,0,0,.37)}.mdc-button--raised:not(:disabled),.mdc-button--unelevated:not(:disabled){background-color:#6200ee}@supports not (-ms-ime-align: auto){.mdc-button--raised:not(:disabled),.mdc-button--unelevated:not(:disabled){background-color:var(--mdc-theme-primary, #6200ee)}}.mdc-button--raised:not(:disabled),.mdc-button--unelevated:not(:disabled){color:#fff;color:var(--mdc-theme-on-primary, #fff)}.mdc-button--raised{box-shadow:0px 3px 1px -2px rgba(0, 0, 0, 0.2),0px 2px 2px 0px rgba(0, 0, 0, 0.14),0px 1px 5px 0px rgba(0,0,0,.12);transition:box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1)}.mdc-button--raised:hover,.mdc-button--raised:focus{box-shadow:0px 2px 4px -1px rgba(0, 0, 0, 0.2),0px 4px 5px 0px rgba(0, 0, 0, 0.14),0px 1px 10px 0px rgba(0,0,0,.12)}.mdc-button--raised:active{box-shadow:0px 5px 5px -3px rgba(0, 0, 0, 0.2),0px 8px 10px 1px rgba(0, 0, 0, 0.14),0px 3px 14px 2px rgba(0,0,0,.12)}.mdc-button--raised:disabled{box-shadow:0px 0px 0px 0px rgba(0, 0, 0, 0.2),0px 0px 0px 0px rgba(0, 0, 0, 0.14),0px 0px 0px 0px rgba(0,0,0,.12)}.mdc-button--outlined{border-style:solid;padding:0 14px 0 14px;border-width:2px}.mdc-button--outlined:disabled{border-color:rgba(0,0,0,.37)}.mdc-button--outlined:not(:disabled){border-color:#6200ee;border-color:var(--mdc-theme-primary, #6200ee)}.mdc-button--dense{height:32px;font-size:.8125rem}@keyframes mdc-ripple-fg-radius-in{from{animation-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transform:translate(var(--mdc-ripple-fg-translate-start, 0)) scale(1)}to{transform:translate(var(--mdc-ripple-fg-translate-end, 0)) scale(var(--mdc-ripple-fg-scale, 1))}}@keyframes mdc-ripple-fg-opacity-in{from{animation-timing-function:linear;opacity:0}to{opacity:var(--mdc-ripple-fg-opacity, 0)}}@keyframes mdc-ripple-fg-opacity-out{from{animation-timing-function:linear;opacity:var(--mdc-ripple-fg-opacity, 0)}to{opacity:0}}.mdc-ripple-surface--test-edge-var-bug{--mdc-ripple-surface-test-edge-var: 1px solid #000;visibility:hidden}.mdc-ripple-surface--test-edge-var-bug::before{border:var(--mdc-ripple-surface-test-edge-var)}.mdc-button{--mdc-ripple-fg-size: 0;--mdc-ripple-left: 0;--mdc-ripple-top: 0;--mdc-ripple-fg-scale: 1;--mdc-ripple-fg-translate-end: 0;--mdc-ripple-fg-translate-start: 0;-webkit-tap-highlight-color:rgba(0,0,0,0);will-change:transform,opacity}.mdc-button::before,.mdc-button::after{position:absolute;border-radius:50%;opacity:0;pointer-events:none;content:""}.mdc-button::before{transition:opacity 15ms linear,background-color 15ms linear;z-index:1}.mdc-button.mdc-ripple-upgraded::before{transform:scale(var(--mdc-ripple-fg-scale, 1))}.mdc-button.mdc-ripple-upgraded::after{top:0;left:0;transform:scale(0);transform-origin:center center}.mdc-button.mdc-ripple-upgraded--unbounded::after{top:var(--mdc-ripple-top, 0);left:var(--mdc-ripple-left, 0)}.mdc-button.mdc-ripple-upgraded--foreground-activation::after{animation:mdc-ripple-fg-radius-in 225ms forwards,mdc-ripple-fg-opacity-in 75ms forwards}.mdc-button.mdc-ripple-upgraded--foreground-deactivation::after{animation:mdc-ripple-fg-opacity-out 150ms;transform:translate(var(--mdc-ripple-fg-translate-end, 0)) scale(var(--mdc-ripple-fg-scale, 1))}.mdc-button::before,.mdc-button::after{top:calc(50% - 100%);left:calc(50% - 100%);width:200%;height:200%}.mdc-button.mdc-ripple-upgraded::after{width:var(--mdc-ripple-fg-size, 100%);height:var(--mdc-ripple-fg-size, 100%)}.mdc-button::before,.mdc-button::after{background-color:#6200ee}@supports not (-ms-ime-align: auto){.mdc-button::before,.mdc-button::after{background-color:var(--mdc-theme-primary, #6200ee)}}.mdc-button:hover::before{opacity:.04}.mdc-button:not(.mdc-ripple-upgraded):focus::before,.mdc-button.mdc-ripple-upgraded--background-focused::before{transition-duration:75ms;opacity:.12}.mdc-button:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-button:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:.12}.mdc-button.mdc-ripple-upgraded{--mdc-ripple-fg-opacity: 0.12}.mdc-button--raised::before,.mdc-button--raised::after,.mdc-button--unelevated::before,.mdc-button--unelevated::after{background-color:#fff}@supports not (-ms-ime-align: auto){.mdc-button--raised::before,.mdc-button--raised::after,.mdc-button--unelevated::before,.mdc-button--unelevated::after{background-color:var(--mdc-theme-on-primary, #fff)}}.mdc-button--raised:hover::before,.mdc-button--unelevated:hover::before{opacity:.08}.mdc-button--raised:not(.mdc-ripple-upgraded):focus::before,.mdc-button--raised.mdc-ripple-upgraded--background-focused::before,.mdc-button--unelevated:not(.mdc-ripple-upgraded):focus::before,.mdc-button--unelevated.mdc-ripple-upgraded--background-focused::before{transition-duration:75ms;opacity:.24}.mdc-button--raised:not(.mdc-ripple-upgraded)::after,.mdc-button--unelevated:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-button--raised:not(.mdc-ripple-upgraded):active::after,.mdc-button--unelevated:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:.24}.mdc-button--raised.mdc-ripple-upgraded,.mdc-button--unelevated.mdc-ripple-upgraded{--mdc-ripple-fg-opacity: 0.24}.material-icons{font-family:var(--mdc-icon-font, "Material Icons");font-weight:normal;font-style:normal;font-size:var(--mdc-icon-size, 24px);line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-feature-settings:"liga";-webkit-font-smoothing:antialiased}:host{display:inline-flex;outline:none}:host([disabled]){pointer-events:none}.mdc-button{flex:1}`;
-  //# sourceMappingURL=mwc-button-css.js.map
 
   /*! *****************************************************************************
   Copyright (c) Microsoft Corporation. All rights reserved.
@@ -5164,7 +5141,6 @@
       };
       return MDCFoundation;
   }());
-  //# sourceMappingURL=foundation.js.map
 
   /**
    * @license
@@ -5213,7 +5189,6 @@
       PADDING: 10,
       TAP_DELAY_MS: 300,
   };
-  //# sourceMappingURL=constants.js.map
 
   /**
    * Stores result from supportsCssVariables to avoid redundant processing to
@@ -5313,7 +5288,6 @@
       }
       return { x: normalizedX, y: normalizedY };
   }
-  //# sourceMappingURL=util.js.map
 
   /**
    * @license
@@ -5768,7 +5742,6 @@
       };
       return MDCRippleFoundation;
   }(MDCFoundation));
-  //# sourceMappingURL=foundation.js.map
 
   /**
   @license
@@ -5787,7 +5760,6 @@
   limitations under the License.
   */
   const style$1 = css `@keyframes mdc-ripple-fg-radius-in{from{animation-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transform:translate(var(--mdc-ripple-fg-translate-start, 0)) scale(1)}to{transform:translate(var(--mdc-ripple-fg-translate-end, 0)) scale(var(--mdc-ripple-fg-scale, 1))}}@keyframes mdc-ripple-fg-opacity-in{from{animation-timing-function:linear;opacity:0}to{opacity:var(--mdc-ripple-fg-opacity, 0)}}@keyframes mdc-ripple-fg-opacity-out{from{animation-timing-function:linear;opacity:var(--mdc-ripple-fg-opacity, 0)}to{opacity:0}}`;
-  //# sourceMappingURL=mwc-ripple-global-css.js.map
 
   /**
    * @license
@@ -5817,7 +5789,6 @@
           || element.msMatchesSelector;
       return nativeMatches.call(element, selector);
   }
-  //# sourceMappingURL=ponyfill.js.map
 
   /**
   @license
@@ -5927,7 +5898,6 @@
           rippleFoundation.deactivate();
       }
   });
-  //# sourceMappingURL=ripple-directive.js.map
 
   /**
   @license
@@ -5950,7 +5920,6 @@
   fontEl.rel = 'stylesheet';
   fontEl.href = 'https://fonts.googleapis.com/icon?family=Material+Icons';
   document.head.appendChild(fontEl);
-  //# sourceMappingURL=mwc-icon-font.js.map
 
   var __decorate = (window && window.__decorate) || function (decorators, target, key, desc) {
       var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -6022,7 +5991,6 @@
   Button = __decorate([
       customElement('mwc-button')
   ], Button);
-  //# sourceMappingURL=mwc-button.js.map
 
   /**
   @license
@@ -25295,6 +25263,13 @@
           if (!this.addressInfoStreams[addr]) {
             console.log('AND DIDN\'T FIND AN EXISTING ADDRESS STREAM');
             this.addressInfoStreams[addr] = coreEpml.subscribe(`address/${addr}`, addrInfo => {
+              console.log('HELLLLLLOOOOOOOOO');
+              console.log('HELLLLLLOOOOOOOOO');
+              console.log('HELLLLLLOOOOOOOOO');
+              console.log('HELLLLLLOOOOOOOOO');
+              console.log('HELLLLLLOOOOOOOOO');
+              console.log('HELLLLLLOOOOOOOOO');
+              console.log('HELLLLLLOOOOOOOOO');
               addrInfo = JSON.parse(addrInfo);
               console.log('FINALLY RECEIVE ADDR INFO DUMB CUNTS', addrInfo);
               this.loading = false;

@@ -5,6 +5,10 @@ export class UnconfirmedTransactionWatcher {
     constructor () {
         this._unconfirmedTransactionStreams = {}
         this.reset() // Sets defaults
+
+        setInterval(() => {
+            Object.entries(this._addresses).forEach((addr) => this._addressTransactionCheck(addr[0]))
+        }, 10 * 1000)
     }
 
     reset () {
@@ -43,7 +47,8 @@ export class UnconfirmedTransactionWatcher {
                 type: 'api',
                 url: `transactions/unconfirmedof/${addr}`
             }).then(unconfirmedTransactions => {
-                unconfirmedTransactions = JSON.parse(unconfirmedTransactions.data)
+                unconfirmedTransactions = JSON.parse(unconfirmedTransactions)
+                console.log(unconfirmedTransactions)
                 // console.log(unconfirmedTransactions, unconfirmedTransactions.length)
                 // if(unconfirmedTransactions.length === 0) {
                 //     return

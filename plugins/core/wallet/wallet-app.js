@@ -111,13 +111,29 @@ class WalletApp extends LitElement {
                 color: var(--white-divider)
             }
 
+            table {
+                border:none;
+            }
             table td, th{
-                padding:10px;
+                white-space:nowrap;
+                /* padding:10px; */
                 text-align:left;
                 font-size:14px;
+                padding:0 12px;
+                font-family: "Roboto", sans-serif;
             }
-            table th{
-                /* color:var(--menu-link-color); */
+            table tr {
+                height:48px;
+            }
+            table tr:hover td{
+                background:#eee;
+            }
+            table tr th {
+                color: #666;
+                font-size:12px;
+            }
+            table tr td {
+                margin:0;
             }
             .white-bg {
                 height:100vh;
@@ -210,7 +226,7 @@ class WalletApp extends LitElement {
                 
                                 <div id="tableContainer" style="max-width:100vw; overflow-x: auto;" ?hidden=${this.selectedAddressInfo.transactions.length < 1}>
                                     <h3 style="padding-left:12px;" class="mono weight-100">Recent transactions</h3>
-                                    <table>
+                                    <table cellspacing="0" cellpadding="0">
                                         <tr>
                                             <th>Time</th>
                                             <th>Type</th>
@@ -239,7 +255,8 @@ class WalletApp extends LitElement {
                                                 </td>
                                                 <td>
                                                     <span class="${this._unconfirmedClass(transaction.transaction.unconfirmed)}}">
-                                                        ${!transaction.unconfirmed ? this.getConfirmations(transaction.transaction.blockHeight, this.lastBlock.height) : '0'}
+                                                    <!-- this.lastBlock.height -->
+                                                        ${!transaction.unconfirmed ? this.getConfirmations(transaction.transaction.blockHeight, this.selectedAddressInfo.lastBlock.height) : '0'}
                                                     </span>
                                                 </td>
                                                 <td>
@@ -397,6 +414,7 @@ class WalletApp extends LitElement {
 
                     this.unconfirmedTransactionStreams[addr] = coreEpml.subscribe(`unconfirmedOfAddress/${addr}`, unconfirmedTransactions => {
                         unconfirmedTransactions = JSON.parse(unconfirmedTransactions)
+                        console.log(unconfirmedTransactions)
                         unconfirmedTransactions = unconfirmedTransactions.map(tx => {
                             return {
                                 transaction: tx,
