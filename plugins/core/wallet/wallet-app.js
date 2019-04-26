@@ -3,7 +3,7 @@ import { Epml } from '../../../src/epml.js'
 
 import '@material/mwc-icon'
 import '@polymer/paper-spinner/paper-spinner-lite.js'
-import 'time-elements'
+// import * as thing from 'time-elements'
 import '@vaadin/vaadin-grid/vaadin-grid.js'
 import '@vaadin/vaadin-grid/theme/material/all-imports.js'
 
@@ -151,6 +151,11 @@ class WalletApp extends LitElement {
     }
 
     /*
+    <time-ago .datetime=${new Date(transaction.transaction.timestamp).toISOString()}>
+
+                                                    </time-ago>
+                                                    */
+    /*
 
                         <div>
                             <span class="mono weight-100" style="font-size: 70px;">${this.floor(this.selectedAddressInfo.nativeBalance.total[1])}<span
@@ -197,7 +202,7 @@ class WalletApp extends LitElement {
                 
                                 <!-- <div class="card-content"  hidden$="{{!isEmptyArray(address.transactions)}}"> -->
                                 <!--!this.isEmptyArray(this.selectedAddressTransactions)-->
-                                <div class="card-content" ?hidden="${this.selectedAddressInfo.transactions.length > 0}">
+                                <div class="card-content" ?hidden="${[...this.selectedAddressInfo.transactions].length > 0}">
                                     Address has no transactions yet. Start by sending some KMX to <b>${this.selectedAddress.address}</b>
                                     or
                                     by claiming KEX from the airdrop.
@@ -216,9 +221,8 @@ class WalletApp extends LitElement {
                                         ${this.selectedAddressInfo.transactions.map(transaction => html`
                                             <tr>
                                                 <td>
-                                                    <time-ago .datetime=${new Date(transaction.transaction.timestamp).toISOString()}>
-                                                        ${transaction.transaction.dateTime}
-                                                    </time-ago>
+                                                    
+                                                     ${transaction.transaction.dateTime}
                                                 </td>
                                                 <td>
                                                     <span class="${this._unconfirmedClass(transaction.transaction.unconfirmed)}}">

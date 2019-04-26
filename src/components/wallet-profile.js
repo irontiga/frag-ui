@@ -151,7 +151,7 @@ class WalletProfile extends connect(store)(LitElement) {
                     <br>
                     <div><span class="">${this.wallet.addresses[0].address}</span></div>
                     <br>
-                    <div id="nameDiv" style="position:relative;" @mouseup=${() => this.downloadBackup()}>
+                    <div id="nameDiv" style="position:relative;" @click=${() => this.downloadBackup()}>
                         <span class="title">Backup</span>
                         <br>
                         <span class="">Download wallet backup <mwc-icon style="float:right; margin-top:-6px;">save_alt</mwc-icon></span>
@@ -223,9 +223,12 @@ class WalletProfile extends connect(store)(LitElement) {
     }
 
     downloadBackup () {
+        console.log('DOWNLAOD BITCH')
         const state = store.getState()
         const data = state.user.storedWallets[state.app.selectedAddress.address]
-        return download(JSON.stringify(data), 'karam_backup.json', 'application/json')
+        // 'application/json' - omit...
+        const dataString = JSON.stringify(data)
+        return download(dataString, 'karma_backup.json')
     }
 
     stateChanged (state) {

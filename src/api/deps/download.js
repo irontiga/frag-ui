@@ -10,6 +10,7 @@
 export default download
 
 function download (data, strFileName, strMimeType) {
+    // console.log(data, strFileName, strMimeType)
     var self = window // this script is only for browsers anyway...
     var defaultMime = 'application/octet-stream' // this default mime also triggers iframe downloads
     var mimeType = strMimeType || defaultMime
