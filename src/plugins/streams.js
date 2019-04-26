@@ -45,6 +45,7 @@ store.subscribe(() => {
         clearInterval(pingInterval)
         const fn = () => {
             console.log('PINGING DHCP')
+            if (!state.app.selectedAddress.address) return
             const node = store.getState().config.coin.node.airdrop
             const url = node.protocol + '://' + node.domain + ':' + node.port + node.dhcpUrl
             console.log(url)
