@@ -45,14 +45,15 @@ export class AddressWatcher {
 
         // })
         // transactionTests.forEach(fn => {
-
         block.transactions.forEach(transaction => {
             console.log(this)
             // fn(transaction, Object.keys(this._addresses))
+            // Guess the block needs transactions
             for (const addr of Object.keys(this._addresses)) {
                 // const addrChanged = transactionTests.some(fn => {
                 //     return fn(transaction, addr)
                 // })
+                console.log('checking ' + addr)
                 const addrChanged = true // Just update it every block...for now
                 if (!addrChanged) return
 
@@ -64,7 +65,6 @@ export class AddressWatcher {
                  */
             }
         })
-        
         pendingUpdateAddresses.forEach(addr => this.updateAddress(addr))
     }
 
@@ -77,9 +77,9 @@ export class AddressWatcher {
                 txOnPage: 10
             }
         })
-        addressRequest = JSON.parse(addressRequest)
-        console.log(addressRequest, 'AAADDDREESS REQQUEESTT')
-        // console.log('response: ', addressRequest)
+        // addressRequest = JSON.parse(addressRequest)
+        // console.log(addressRequest, 'AAADDDREESS REQQUEESTT')
+        console.log('response: ', addressRequest)
 
         const addressInfo = addressRequest.success ? addressRequest.data : DEFAULT_ADDRESS_INFO
         // const addressInfo = addressRequest.success ? addressRequest.data : DEFAULT_ADDRESS_INFO
@@ -90,10 +90,10 @@ export class AddressWatcher {
             delete addressInfo[i]
         }
         console.log('ADDRESS INFO MUTHA FUCKA', addressInfo)
-        if (!this._addresses[addr]) return
+        if (!(addr in this._addresses)) return
 
         this._addresses[addr] = addressInfo
-        console.log('--------------------------------------------------------', this._addresses, this._addressStreams)
+        console.log('---------------------------Emitting-----------------------------', this._addresses[addr], this._addressStreams[addr])
         this._addressStreams[addr].emit(addressInfo)
     }
 }

@@ -37,8 +37,8 @@ export const routes = {
     'apiCall': async req => {
         // console.log(req.data)
         // console.log(api.request)
-        console.log(req)
-        return api.request[req.data.type](req.data).catch(err=> err)
+        // console.log(req)
+        return api.request[req.data.type](req.data)
     },
 
     'addresses': async req => {
@@ -59,6 +59,6 @@ export const routes = {
 
     'transaction': async req => {
         // One moment please...this requires templates in the transaction classes
-        return createTransaction(req.data.type, store.getState().app.wallet._addresses[req.data.nonce], req.data.params)
+        return createTransaction(req.data.type, store.getState().app.wallet._addresses[req.data.nonce].keyPair, req.data.params)
     }
 }

@@ -1678,8 +1678,13 @@
 
       block.transactions.forEach(transaction => {
         console.log(this); // fn(transaction, Object.keys(this._addresses))
+        // Guess the block needs transactions
 
         for (const addr of Object.keys(this._addresses)) {
+          // const addrChanged = transactionTests.some(fn => {
+          //     return fn(transaction, addr)
+          // })
+          console.log('checking ' + addr);
           if (!(addr in pendingUpdateAddresses)) pendingUpdateAddresses.push(addr);
           /**
            * In the future transactions are potentially stored from here...and address is updated excluding transactions...and also somehow manage tx pages...
@@ -1699,10 +1704,10 @@
           addr: addr,
           txOnPage: 10
         }
-      });
-      addressRequest = JSON.parse(addressRequest);
-      console.log(addressRequest, 'AAADDDREESS REQQUEESTT'); // console.log('response: ', addressRequest)
+      }); // addressRequest = JSON.parse(addressRequest)
+      // console.log(addressRequest, 'AAADDDREESS REQQUEESTT')
 
+      console.log('response: ', addressRequest);
       const addressInfo = addressRequest.success ? addressRequest.data : DEFAULT_ADDRESS_INFO; // const addressInfo = addressRequest.success ? addressRequest.data : DEFAULT_ADDRESS_INFO
 
       addressInfo.transactions = [];
@@ -1713,9 +1718,9 @@
       }
 
       console.log('ADDRESS INFO MUTHA FUCKA', addressInfo);
-      if (!this._addresses[addr]) return;
+      if (!(addr in this._addresses)) return;
       this._addresses[addr] = addressInfo;
-      console.log('--------------------------------------------------------', this._addresses, this._addressStreams);
+      console.log('---------------------------Emitting-----------------------------', this._addresses[addr], this._addressStreams[addr]);
 
       this._addressStreams[addr].emit(addressInfo);
     }
@@ -1878,11 +1883,10 @@
       url: 'blocks/last'
     });
     clearTimeout(timeout);
-    const parsedBlock = JSON.parse(JSON.parse(block)); // Dang that's weird lol
-    // console.log(parsedBlock, mostRecentBlock)
+    const parsedBlock = JSON.parse(block); // console.log(parsedBlock, mostRecentBlock)
 
     if (parsedBlock.height > mostRecentBlock.height) {
-      console.log('NNEEEWWW BLLOOCCCKKK');
+      // console.log('NNEEEWWW BLLOOCCCKKK')
       mostRecentBlock = parsedBlock;
       onNewBlockFunctions.forEach(fn => fn(mostRecentBlock));
     }
@@ -1901,12 +1905,14 @@
     if (isLoggedIn === 'true') {
       // console.log('"logged_in stream" in core/main.js', isLoggedIn)
       const addresses = await parentEpml.request('addresses');
-      const parsedAddress = JSON.parse(addresses); // console.log(parsedAddress)
+      const parsedAddresses = addresses; // JSON.parse(addresses)
+
+      console.log(parsedAddresses); // console.log(parsedAddress)
 
       addrWatcher.reset();
-      parsedAddress.forEach(addr => addrWatcher.addAddress(addr));
+      parsedAddresses.forEach(addr => addrWatcher.addAddress(addr));
       txWatcher.reset();
-      parsedAddress.forEach(addr => txWatcher.addAddress(addr));
+      parsedAddresses.forEach(addr => txWatcher.addAddress(addr));
     }
   });
   onNewBlock(block => {

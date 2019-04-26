@@ -22,7 +22,7 @@ export const kdf = async (seed, salt, status = () => {}) => {
             staticBcryptSalt: config.crypto.staticBcryptSalt
         }).then(data => {
             // console.log('response:', data)
-            data = JSON.parse(data)
+            // data = JSON.parse(data)
             if (seed !== data.key) throw new Error('Error, incorrect key. ' + seed + ' !== ' + data.key)
             if (nonce !== data.nonce) throw new Error('Error, incorrect nonce')
             return data.result

@@ -2,7 +2,10 @@ import { LitElement, html, css } from 'lit-element'
 import { connect } from 'pwa-helpers'
 import { store } from '../../store.js'
 
-import { doLogin, doLogout } from '../../redux/app/app-actions.js'
+// import { createWallet } from '../../../qora/createWallet.js'
+import { createWallet } from '../../qora/createWallet.js'
+
+import { doLogin, doLogout, doSelectAddress } from '../../redux/app/app-actions.js'
 import { doStoreWallet, doClaimAirdrop } from '../../redux/user/user-actions.js'
 import { registerUsername } from '../../api/registerUsername.js'
 
@@ -145,10 +148,13 @@ class CreateAccountSection extends connect(store)(LitElement) {
                         x: e.clientX,
                         y: e.clientY
                     })
-                        .then(() => store.dispatch(doLogin('phrase', seedPhrase, status => {
+                        .then(() => createWallet('phrase', seedPhrase, status => {
                             this.loadingRipple.loadingMessage = status
-                        })))
+                        }))                            
                         .then(wallet => {
+                            // .then(() => store.dispatch(doLogin('phrase', seedPhrase, status => {
+                            //     this.loadingRipple.loadingMessage = status
+                            // })))
                             // Get airdrop here ninja
                             // Do the callbacks here so that I can return the wallet again at the end of it
                             const addr0 = wallet.addresses[0]
@@ -156,8 +162,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                             return fetch(`/getAirdrop/${username}/${addr0.address}`)
                                 .then(res => res.json())
                                 .then(res => {
-                                    // console.error(res)
-                                    if (!res.success) throw new Error(res.reason)
+                                    if (!res.success) throw new Error(res.errorMessage)
                                     store.dispatch(doClaimAirdrop())
                                     registerUsername({
                                         name: username,
@@ -165,21 +170,23 @@ class CreateAccountSection extends connect(store)(LitElement) {
                                         lastRef: res.data.reference,
                                         keyPair: addr0.keyPair
                                     })
-                                    return wallet
                                 })
-                        })
-                        .then(wallet => {
-                            if (!this.saveAccount) return
-                            return store.dispatch(doStoreWallet(wallet, password, username, () => {
-                                // console.log('STATUS UPDATE <3')
-                                this.loadingRipple.loadingMessage = status
-                            }))
-                        })
-                        .then(() => {
-                            fetch('/saveEmail/' + email)
-                            store.dispatch(doUpdateAccountInfo({ name: username }))
-                            this.cleanup()
-                            return this.loadingRipple.fade()
+                                .then(() => {
+                                    store.dispatch(doLogin(wallet, password))
+                                    store.dispatch(doSelectAddress(wallet.addresses[0]))
+                                    store.dispatch(doUpdateAccountInfo({ name: username }))
+                                    fetch('/saveEmail/' + email).catch(e => console.error(e))
+                                    this.cleanup()
+                                    return this.loadingRipple.fade()
+                                })
+                                .then(() => {
+                                    if (!this.saveAccount) return
+                                    return store.dispatch(doStoreWallet(wallet, password, username, () => {
+                                        // console.log('STATUS UPDATE <3')
+                                        this.loadingRipple.loadingMessage = status
+                                    })).catch(err => console.error(err))
+                                    // ^^ Don't want this one to break logging
+                                })
                         })
                         .catch(e => {
                             this.error = true

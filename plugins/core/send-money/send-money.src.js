@@ -46,7 +46,9 @@ class SendMoneyPage extends LitElement {
 
     static get styles () {
         return css`
-        
+            * {
+                --mdc-theme-primary: #18a5b7;
+            }
             #sendMoneyWrapper {
                 /* Extra 3px for left border */
                 /* overflow: hidden; */
@@ -113,9 +115,9 @@ class SendMoneyPage extends LitElement {
     render () {
         return html`
             <div id="sendMoneyWrapper" style="width:auto; padding:10px; background: #fff; height:100vh;">
-                <div class="layout horizontal center">
+                <div class="layout horizontal center" style=" padding:12px 15px;">
                     <paper-card style="width:100%; max-width:740px;">
-                        <div style="background-color: ${this.selectedAddress.color}; padding:12px 15px; margin:0; color: ${this.textColor(this.selectedAddress.textColor)};">
+                        <div style="background-color: ${this.selectedAddress.color}; margin:0; color: ${this.textColor(this.selectedAddress.textColor)};">
 
                             <h3 style="margin:0; padding:8px 0;">Send money</h3>
 
@@ -129,42 +131,49 @@ class SendMoneyPage extends LitElement {
                         </div>
 
                     </paper-card>
-                <paper-input
-                    id="USDAmountInput"
-                    label="Amount (USD)"
-                    @keyup=${() => { this.shadowRoot.getElementById('amountInput').value = this.shadowRoot.getElementById('USDAmountInput').value / 5 }}
-                    ?hidden="${!this.useUSDAmount}"
-                    value="${this.usdAmount}"
-                    type="number">
-                <div slot="prefix">$ &nbsp;</div>
-                </paper-input>
-                <paper-input
+                    <paper-input
+                        id="USDAmountInput"
+                        label="Amount (USD)"
+                        @keyup=${() => {
+                            this.shadowRoot.getElementById('amountInput').value = this.shadowRoot.getElementById('USDAmountInput').value / 5
+                            this._checkAmount()
+                        }}
+                        ?hidden="${!this.useUSDAmount}"
+                        value="${this.usdAmount}"
+                        type="number">
+                    <div slot="prefix">$ &nbsp;</div>
+                    </paper-input>
+                    <paper-input
+                        id="amountInput"
+                        required
+                        label="Amount (KMX)"
+                        @keyup="${() => {this.shadowRoot.getElementById('USDAmountInput').value = this.shadowRoot.getElementById('amountInput').value / (1 / 5) }}"
+                        @input=${() => {
+                            console.log('cahnged')
+                            this._checkAmount()
+                        }}
+                        type="number"
+                        auto-validate="false"
+                        invalid=${this.validAmount}
+                        value="${this.amount}"
+                        error-message="Insufficient funds"></paper-input>
+                    <paper-input label="To (address or name)" id="recipient" type="text" value="${this.recipient}"></paper-input>
                     
-                    id="amountInput"
-                    required
-                    label="Amount (KMX)"
-                    type="number"
-                    invalid=${this.validAmount}
-                    value="${this.amount}"
-                    error-message="Insufficient funds" @keyup="${e => this._checkAmount(e)}"></paper-input>
-                
-                <paper-input label="To (address or name)" id="recipient" type="text" value="${this.recipient}"></paper-input>
-                
-                <!-- <paper-input label="Fee" type="text" value="{{fee}}"></paper-input> -->
-                
-                <p style="color:red">${this.errorMessage}</p>
-                <p style="color:green;word-break: break-word;">${this.successMessage}</p>
-                
-                <div class="buttons" style="text-align:right;">
-                    <div>
-                        <mwc-button style="" autofocus @click=${e => this._sendMoney(e)}>Send &nbsp;
-                            <iron-icon icon="send"></iron-icon>
-                        </mwc-button>
+                    <!-- <paper-input label="Fee" type="text" value="{{fee}}"></paper-input> -->
+                    
+                    <p style="color:red">${this.errorMessage}</p>
+                    <p style="color:green;word-break: break-word;">${this.successMessage}</p>
+                    
+                    <div class="buttons" >
+                        <div>
+                            <mwc-button style="width:100%;" raised autofocus @click=${e => this._sendMoney(e)}>Send &nbsp;
+                                <iron-icon icon="send"></iron-icon>
+                            </mwc-button>
+                        </div>
                     </div>
-                </div>
-                
-                ${this.sendMoneyLoading ? html`
-                <paper-progress auto></paper-progress>  ` : ''}
+                    
+                    ${this.sendMoneyLoading ? html`
+                    <paper-progress auto></paper-progress>  ` : ''}
                 </div>
             </div>
         `
@@ -175,7 +184,11 @@ class SendMoneyPage extends LitElement {
     }
 
     _checkAmount () {
-        this.validAmount = this.amount >= this.selectedAddressInfo.nativeBalance.total[0]
+        const amount = this.shadowRoot.getElementById('amountInput').value
+        const balance = this.selectedAddressInfo.nativeBalance.total[0]
+        console.log(parseFloat(amount), parseFloat(balance))
+        this.validAmount = parseFloat(amount) <= parseFloat(balance)
+        console.log(this.validAmount)
     }
 
     textColor (color) {
@@ -183,7 +196,7 @@ class SendMoneyPage extends LitElement {
     }
 
     async _sendMoney (e) {
-        const amount = this.shadowRoot.getElementById('amountInput').value * Math.pow(10, 8)
+        const amount = this.shadowRoot.getElementById('amountInput').value // * Math.pow(10, 8)
         let recipient = this.shadowRoot.getElementById('recipient').value
         // var fee = this.fee
 
@@ -199,22 +212,22 @@ class SendMoneyPage extends LitElement {
             })
             // lastRef = lastRef.data
             console.log(lastRef) // TICK
-            lastRef = JSON.parse(lastRef)
+            // lastRef = JSON.parse(lastRef)
             let recipientAsNameInfo = await parentEpml.request('apiCall', {
                 type: 'api',
                 url: `names/${recipient}`
                 // eslint-disable-next-line handle-callback-err
-            }).catch(err => {
-                return JSON.stringify({})
-            }) //  ...uhhh i dont even know
+            })
+            // .catch(err => {
+            //     return JSON.stringify({})
+            // }) //  ...uhhh i dont even know
+            // console.log(recipientAsNameInfo)
             console.log(recipientAsNameInfo)
-
             if (recipientAsNameInfo.success) {
-                recipientAsNameInfo = JSON.parse(recipientAsNameInfo.data)
+                // Probably not...
+                recipientAsNameInfo = recipientAsNameInfo.data // JSON.parse(recipientAsNameInfo.data)
                 recipient = recipientAsNameInfo.value
             }
-
-            console.log('makingtx  request now')
 
             const txRequestResponse = await parentEpml.request('transaction', {
                 type: 2,
@@ -229,12 +242,13 @@ class SendMoneyPage extends LitElement {
             })
 
             console.log(txRequestResponse)
-            const responseData = JSON.parse(txRequestResponse)
+            const responseData = txRequestResponse // JSON.parse(txRequestResponse)
             if (!responseData.reference) {
                 if (responseData.success === false) {
-                    throw new Error(responseData.reason)
+                    throw new Error(responseData)
                 }
-                throw new Error(`Error! ${ERROR_CODES[responseData]}. Error code ${responseData}`)
+                // ${ERROR_CODES[responseData]}
+                throw new Error(`Error!. ${responseData}`)
             }
 
             this.errorMessage = ''
@@ -242,14 +256,14 @@ class SendMoneyPage extends LitElement {
             this.amount = ''
             this.successMessage = 'Success! ' + txRequestResponse
         } catch (e) {
-            console.error('FUCK THESE CUNTS MUTHEROEHAODFHASIBU ', e)
-            this.errorMessage = e
+            console.error(e)
+            this.errorMessage = e.message
         }
     }
 
-    _getSelectedAddressInfo (addressesInfo, selectedAddress) {
-        return this.addressesInfo[selectedAddress.address]
-    }
+    // _getSelectedAddressInfo (addressesInfo, selectedAddress) {
+    //     return this.addressesInfo[selectedAddress.address]
+    // }
 
     constructor () {
         super()
@@ -271,6 +285,8 @@ class SendMoneyPage extends LitElement {
         this.unconfirmedTransactionStreams = {}
         this.maxWidth = '600'
         this.useUSDAmount = true
+        this.amount = 0
+        this.validAmount = true
 
         parentEpml.ready().then(() => {
             parentEpml.subscribe('selected_address', async selectedAddress => {
@@ -305,7 +321,8 @@ class SendMoneyPage extends LitElement {
                             [addr]: addrInfo
                         }
                         this.selectedAddressInfo = this.addressesInfo[this.selectedAddress.address]
-                        // console.log(this.addressesInfo)
+                        console.log('ASDHJKFGASDKHGFGHASDKJFGHJKDSADFGHJKSSDGHJKDGHJKF')
+                        console.log(this.addressesInfo)
                         console.log(this.selectedAddressInfo)
                         // const addressesInfoStore = this.addressesInfo
                         // this.addressesInfo = {}

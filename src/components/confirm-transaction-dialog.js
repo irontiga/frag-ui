@@ -17,7 +17,21 @@ class ConfirmTransactionDialog extends connect(store)(LitElement) {
 
     static get styles () {
         return css`
-            
+            .decline {
+                --mdc-theme-primary: var(--mdc-theme-error)
+            }
+            #txInfo {
+                text-align:left
+            }
+
+            .buttons {
+                text-align:right;
+            }
+            table td, th{
+                padding:4px;
+                text-align:left;
+                font-size:14px;
+            }
         `
     }
 
@@ -38,9 +52,10 @@ class ConfirmTransactionDialog extends connect(store)(LitElement) {
                 <h2>Transaction request</h2>
                 <div id="txInfo">
                     ${this.txInfo}
+                </div>
                 <div class="buttons">
-                    <mwc-button @click=${e => this.decline(e)} dialog-dismiss>Decline</mwc-button>
-                    <mwc-button @click=${e => this.confirm(e)} dialog-confirm autofocus>Confirm</mwc-button>
+                    <mwc-button class='decline' @click=${e => this.decline(e)} dialog-dismiss>Decline</mwc-button>
+                    <mwc-button class='confirm' @click=${e => this.confirm(e)} dialog-confirm autofocus>Confirm</mwc-button>
                 </div>
             </paper-dialog>
         `

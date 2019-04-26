@@ -18,12 +18,13 @@ parentEpml.subscribe('logged_in', async isLoggedIn => {
     if (isLoggedIn === 'true') {
         // console.log('"logged_in stream" in core/main.js', isLoggedIn)
         const addresses = await parentEpml.request('addresses')
-        const parsedAddress = JSON.parse(addresses)
+        const parsedAddresses = addresses // JSON.parse(addresses)
+        console.log(parsedAddresses)
         // console.log(parsedAddress)
         addrWatcher.reset()
-        parsedAddress.forEach(addr => addrWatcher.addAddress(addr))
+        parsedAddresses.forEach(addr => addrWatcher.addAddress(addr))
         txWatcher.reset()
-        parsedAddress.forEach(addr => txWatcher.addAddress(addr))
+        parsedAddresses.forEach(addr => txWatcher.addAddress(addr))
     }
 })
 

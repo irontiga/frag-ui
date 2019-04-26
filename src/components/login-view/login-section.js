@@ -14,8 +14,9 @@ import '@polymer/paper-ripple'
 // import '@polymer/paper-spinner/paper-spinner-lite.js'
 // import '@polymer/iron-flex-layout/iron-flex-layout-classes.js'
 
-import { doLogin } from '../../redux/app/app-actions.js'
+import { doLogin, doSelectAddress } from '../../redux/app/app-actions.js'
 import { doUpdateAccountInfo } from '../../redux/user/actions/update-account-info.js'
+import { createWallet } from '../../qora/createWallet.js';
 
 // import '@polymer/iron-pages'
 // import '@polymer/paper-icon-button/paper-icon-button.js'
@@ -231,18 +232,27 @@ class LoginSection extends connect(store)(LitElement) {
         const wallet = this.selectedWallet
         const birthMonth = this.shadowRoot.querySelector('#birthMonth').value
         const pin = this.shadowRoot.querySelector('#pin').value
-
+        const password = pin + '' + birthMonth
         // First decrypt...
         this.loadingRipple.open({
             x: e.clientX,
             y: e.clientY
         })
-            .then(() => store.dispatch(doLogin('storedWallet', {
+            .then(() => createWallet('storedWallet', {
                 wallet,
-                password: pin + '' + birthMonth
-            }, status => { this.loadingRipple.loadingMessage = status })))
-            .then(() => {
-                store.dispatch(doUpdateAccountInfo({ name: wallet.name }))
+                password
+            }, status => {
+                this.loadingRipple.loadingMessage = status
+            }))
+            // .then(() => store.dispatch(doLogin('storedWallet', {
+            //     wallet,
+            //     password: pin + '' + birthMonth
+            // }, status => { this.loadingRipple.loadingMessage = status })))
+            .then(wallet => {
+                store.dispatch(doLogin(wallet, password))
+                console.log(wallet)
+                store.dispatch(doSelectAddress(wallet.addresses[0]))
+                store.dispatch(doUpdateAccountInfo({ name: store.getState().user.storedWallets[wallet.addresses[0].address].name }))
                 this.cleanup()
                 return this.loadingRipple.fade()
             })

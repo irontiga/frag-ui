@@ -1,6 +1,6 @@
 // import { doSelectAddress } from '../app-actions.js'
 
-import { createWallet } from '../../../qora/createWallet.js'
+// import { createWallet } from '../../../qora/createWallet.js'
 import { LOG_IN, LOG_OUT, SELECT_ADDRESS } from '../app-action-types.js'
 // export const doLogin = (wallet, pin) => {
 /*
@@ -24,22 +24,39 @@ const selectAddress = address => {
     }
 }
 
-export const doLogin = (sourceType, source, statusUpdateFn) => {
-    return async (dispatch, getState) => {
-        dispatch(login())
-        return createWallet(sourceType, source, statusUpdateFn)
-            .then(wallet => {
-                dispatch(login('success', {
-                    wallet,
-                    pin: source.pin
-                }))
-                dispatch(selectAddress(wallet._addresses[0]))
-                return wallet
-            })
-            .catch(err => {
-                dispatch(login('error', err))
-                throw err // Throw it again so that it bubbles
-            })
+// export const doLogin = (sourceType, source, statusUpdateFn) => {
+//     return async (dispatch, getState) => {
+//         dispatch(login())
+//         return createWallet(sourceType, source, statusUpdateFn)
+//             .then(wallet => {
+//                 dispatch(login('success', {
+//                     wallet,
+//                     pin: source.pin
+//                 }))
+//                 dispatch(selectAddress(wallet._addresses[0]))
+//                 return wallet
+//             })
+//             .catch(err => {
+//                 dispatch(login('error', err))
+//                 throw err // Throw it again so that it bubbles
+//             })
+//     }
+// }
+
+// const login = (status, payload) => {
+//     return {
+//         type: LOG_IN,
+//         status,
+//         payload
+//     }
+// }
+
+export const doLogin = (wallet, pin) => {
+    return (dispatch, getState) => {
+        dispatch(login('success', {
+            wallet,
+            pin
+        }))
     }
 }
 

@@ -203,9 +203,8 @@ class WalletApp extends LitElement {
                                     by claiming KEX from the airdrop.
                                 </div>
                 
-                                <h3 style="padding-left:12px;" class="mono weight-100">Recent transactions</h3>
-                
-                                <div id="tableContainer" style="max-width:100vw; overflow-x: auto;">
+                                <div id="tableContainer" style="max-width:100vw; overflow-x: auto;" ?hidden=${this.selectedAddressInfo.transactions.length < 1}>
+                                    <h3 style="padding-left:12px;" class="mono weight-100">Recent transactions</h3>
                                     <table>
                                         <tr>
                                             <th>Time</th>
@@ -215,34 +214,35 @@ class WalletApp extends LitElement {
                                             <th>Sender/Recipient</th>
                                         </tr>
                                         ${this.selectedAddressInfo.transactions.map(transaction => html`
-                                        <tr>
-                                            <td>
-                                                <time-ago .datetime=${new Date(transaction.transaction.timestamp).toISOString()}>
-                                                    ${transaction.transaction.dateTime}
-                                                </time-ago>
-                                            </td>
-                                            <td>
-                                                <span class="${this._unconfirmedClass(transaction.transaction.unconfirmed)}}">
-                                                    ${this.getTxType(transaction.transaction.type)}
-                                                </span>
-                                            </td>
-                                            <td style="min-width:60px;">
-                                                <span class="mono ${this.txColor(transaction.transaction)} ${this._unconfirmedClass(transaction.transaction.unconfirmed)}}">
-                                                    <!-- Ugly to avoid the space -->
-                                                    <mwc-icon style="height:16px; font-size:16px;">${this.sendOrRecieve(transaction.transaction) ? 'add_circle' : 'remove_circle'}</mwc-icon>
-                                                    <span>${this.floor(transaction.transaction.amount)}</span>
-                                                    <span style="font-size:12px; vertical-align:top; line-height:16px;">${this.decimals(transaction.transaction.amount)}</span>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span class="${this._unconfirmedClass(transaction.transaction.unconfirmed)}}">
-                                                    ${!transaction.unconfirmed ? this.getConfirmations(transaction.transaction.blockHeight, this.lastBlock.height) : '0'}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <span class="${this._unconfirmedClass(transaction.unconfirmed)}">${this.senderOrRecipient(transaction.transaction)}</span>
-                                            </td>
-                                        </tr> `)}
+                                            <tr>
+                                                <td>
+                                                    <time-ago .datetime=${new Date(transaction.transaction.timestamp).toISOString()}>
+                                                        ${transaction.transaction.dateTime}
+                                                    </time-ago>
+                                                </td>
+                                                <td>
+                                                    <span class="${this._unconfirmedClass(transaction.transaction.unconfirmed)}}">
+                                                        ${this.getTxType(transaction.transaction.type)}
+                                                    </span>
+                                                </td>
+                                                <td style="min-width:60px;">
+                                                    <span class="mono ${this.txColor(transaction.transaction)} ${this._unconfirmedClass(transaction.transaction.unconfirmed)}}">
+                                                        <!-- Ugly to avoid the space -->
+                                                        <mwc-icon style="height:16px; font-size:16px;">${this.sendOrRecieve(transaction.transaction) ? 'add_circle' : 'remove_circle'}</mwc-icon>
+                                                        <span>${this.floor(transaction.transaction.amount)}</span>
+                                                        <span style="font-size:12px; vertical-align:top; line-height:16px;">${this.decimals(transaction.transaction.amount)}</span>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="${this._unconfirmedClass(transaction.transaction.unconfirmed)}}">
+                                                        ${!transaction.unconfirmed ? this.getConfirmations(transaction.transaction.blockHeight, this.lastBlock.height) : '0'}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class="${this._unconfirmedClass(transaction.unconfirmed)}">${this.senderOrRecipient(transaction.transaction)}</span>
+                                                </td>
+                                            </tr> 
+                                        `)}
                                     </table>
                                 </div>
                 
@@ -348,6 +348,7 @@ class WalletApp extends LitElement {
         parentEpml.ready().then(() => {
             // Guess this is our version of state management...should make a plugin for it...proxied redux or whatever lol
             parentEpml.subscribe('selected_address', async selectedAddress => {
+                console.log(selectedAddress)
                 this.selectedAddress = {}
                 selectedAddress = JSON.parse(selectedAddress)
                 // console.log('==========================SELECTED ADDRESS',selectedAddress)

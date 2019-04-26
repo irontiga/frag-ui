@@ -41,7 +41,7 @@ const config = {
                 tail: '/'
             },
             airdrop: {
-                domain: 'home.crowetic.com',
+                domain: '127.0.0.1',
                 port: 4999,
                 url: '/airdrop/',
                 dhcpUrl: '/airdrop/ping/'

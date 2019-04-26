@@ -11,12 +11,14 @@ export const createTransaction = (type, keyPair, params) => {
     tx.keyPair = keyPair
     return requestTransaction(tx)
         .then(response => {
-            if (!response.confirmed) {
+            console.log(response)
+            if (!response.success) {
                 return {
                     success: false,
                     reason: response.reason
                 }
             }
+            console.log(tx)
             const signedBytes = tx.signedBytes
             return processTransaction(signedBytes)
         })

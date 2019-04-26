@@ -29,6 +29,7 @@ export default class PaymentTransaction extends TransactionBase {
         this._recipient = recipient instanceof Uint8Array ? recipient : this.constructor.Base58.decode(recipient)
     }
     set amount (amount) {
+        console.log('=====AOUMNTNT ',amount, store.getState().config.coin.decimals)
         this._amount = amount * store.getState().config.coin.decimals
         this._amountBytes = this.constructor.utils.int64ToBytes(amount)
     }
@@ -43,15 +44,18 @@ export default class PaymentTransaction extends TransactionBase {
     }
 
     render () {
+        const conf = store.getState().config
+        console.log(conf.coin)
+        console.log(this)
         return html`
             <table>
                 <tr>
                     <th>To</th>
-                    <td>${this._recipient}</td>
+                    <td>${Base58.encode(this._recipient)}</td>
                 </tr>
                 <tr>
                     <th>Amount</th>
-                    <td>${this._amount / store.getState().config.coin.decimals}</td>
+                    <td>${this._amount / conf.coin.decimals} ${conf.coin.symbol}</td>
                 </tr>
             </table>
         `

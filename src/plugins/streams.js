@@ -43,10 +43,15 @@ store.subscribe(() => {
         })
 
         clearInterval(pingInterval)
-        pingInterval = setInterval(() => {
+        const fn = () => {
+            console.log('PINGING DHCP')
             const node = store.getState().config.coin.node.airdrop
-            fetch(node.protocol + '://' + node.domain + ':' + node.port + node.dhcpUrl).then(res => console.log('Ping resonse', res)).catch(err => console.error('Ping error', err))
-        }, INTERVAL)
+            const url = node.protocol + '://' + node.domain + ':' + node.port + node.dhcpUrl
+            console.log(url)
+            fetch(url).then(res => console.log('Ping resonse', res)).catch(err => console.error('Ping error', err))
+        }
+        pingInterval = setInterval(fn, INTERVAL)
+        fn()
     }
     oldState = state
 })

@@ -9,7 +9,8 @@ class SidenavMenu extends connect(store)(LitElement) {
     static get properties () {
         return {
             config: { type: Object },
-            urls: { type: Object }
+            urls: { type: Object },
+            menuItemClick: { type: Function }
         }
     }
 
@@ -54,7 +55,7 @@ class SidenavMenu extends connect(store)(LitElement) {
                 <ul id="sideNavMenu">
                     ${Object.entries(this.urls).map(([url, urlInfo]) => html`
                         <!-- Now to make the router interpret this url to meaning iframe src = url.page -->
-                        <li>
+                        <li @click=${() => this.menuItemClick()}>
                             <paper-ripple></paper-ripple>
                             <a href="/${this.config.coin.baseUrl}/${url}">
                                 <mwc-icon>${urlInfo.icon}</mwc-icon>
@@ -66,6 +67,10 @@ class SidenavMenu extends connect(store)(LitElement) {
             </div>
 
         `
+    }
+
+    menuItemClick () {
+        //
     }
 
     stateChanged (state) {
