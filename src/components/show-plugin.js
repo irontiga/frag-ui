@@ -29,7 +29,7 @@ class ShowPlugin extends connect(store)(LitElement) {
     render () {
         return html`
             <iframe src="${this.app.registeredUrls[this.url] ? `
-                ${window.location.protocol}//${window.location.host}:${this.pluginConfig.port}/plugins/${this.app.registeredUrls[this.url].page}
+                ${window.location.protocol}//${window.location.hostname}:${this.pluginConfig.port}/plugins/${this.app.registeredUrls[this.url].page}
             ` : `about:blank`}" id="showPluginFrame"></iframe>
         `
     }
