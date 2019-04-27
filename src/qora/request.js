@@ -43,7 +43,7 @@ export const request = (options) => {
                     if (options.type === 'explorer') {
                         response = JSON.parse(response)
                         // console.log('JSONIFIED', response)
-                        // console.log('FUCK', response)
+                        // console.log('UGH', response)
                         if (response.error) { return resolve(response) }
 
                         response = {

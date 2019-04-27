@@ -38,7 +38,7 @@ export class AddressWatcher {
     }
 
     testBlock (block) {
-        // console.log('TESTING BLOCK BITCH')
+        // console.log('TESTING BLOCK')
         const pendingUpdateAddresses = []
 
         // blockTests.forEach(fn => {
@@ -89,7 +89,7 @@ export class AddressWatcher {
             addressInfo.transactions.push(addressInfo[i])
             delete addressInfo[i]
         }
-        console.log('ADDRESS INFO MUTHA FUCKA', addressInfo)
+        console.log('ADDRESS INFO', addressInfo)
         if (!(addr in this._addresses)) return
 
         this._addresses[addr] = addressInfo

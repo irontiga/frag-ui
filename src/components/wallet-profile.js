@@ -223,7 +223,7 @@ class WalletProfile extends connect(store)(LitElement) {
     }
 
     downloadBackup () {
-        console.log('DOWNLAOD BITCH')
+        console.log('DOWNLAOD')
         const state = store.getState()
         const data = state.user.storedWallets[state.app.selectedAddress.address]
         // 'application/json' - omit...

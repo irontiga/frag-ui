@@ -25792,10 +25792,10 @@
               console.log('HELLLLLLOOOOOOOOO');
               console.log('HELLLLLLOOOOOOOOO');
               addrInfo = JSON.parse(addrInfo);
-              console.log('FINALLY RECEIVE ADDR INFO DUMB CUNTS', addrInfo);
+              console.log('FINALLY RECEIVE ADDR INFO..', addrInfo);
               this.loading = false;
               addrInfo.nativeBalance = addrInfo.nativeBalance || {
-                total: {} // console.log('NATIVE FUCKING BITCH',addrInfo)
+                total: {} // console.log('NATIVE',addrInfo)
                 // addrInfo.nativeBalance.total['0'] = addrInfo.nativeBalance.total['0'] || 0
                 // addrInfo.nativeBalance.total['1'] = addrInfo.nativeBalance.total['1'] || 0
 
@@ -25831,7 +25831,7 @@
           //     if (!selectedAddress) return
           //     const addr = selectedAddress.address
           //     // await coreEpml.ready()
-          //     // console.log('STULE FUCK YEA')
+          //     // console.log('STULE YEA')
           //     if (!this.addressInfoStreams[addr]) {
           //         this.addressInfoStreams[addr] = coreEpml.subscribe(`address/${addr}`, addrInfo => {
           //             console.log('Send money page received', addrInfo)

@@ -388,11 +388,11 @@ class WalletApp extends LitElement {
                     console.log('AND DIDN\'T FIND AN EXISTING ADDRESS STREAM')
                     this.addressInfoStreams[addr] = coreEpml.subscribe(`address/${addr}`, addrInfo => {
                         addrInfo = JSON.parse(addrInfo)
-                        console.log('FINALLY RECEIVE ADDR INFO DUMB CUNTS', addrInfo)
+                        console.log('FINALLY RECEIVE ADDR INFO DUMB', addrInfo)
                         this.loading = false
 
                         addrInfo.nativeBalance = addrInfo.nativeBalance || { total: {} }
-                        // console.log('NATIVE FUCKING BITCH',addrInfo)
+                        // console.log('NATIVE',addrInfo)
                         // addrInfo.nativeBalance.total['0'] = addrInfo.nativeBalance.total['0'] || 0
                         // addrInfo.nativeBalance.total['1'] = addrInfo.nativeBalance.total['1'] || 0
                         console.log(addrInfo.nativeBalance)

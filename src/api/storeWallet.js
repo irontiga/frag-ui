@@ -6,7 +6,7 @@ const getRandomValues = window.crypto ? window.crypto.getRandomValues.bind(windo
 
 // export const generateSaveSeedData = async (seed, version, name, password) => {
 export const generateSaveWalletData = async (wallet, password, kdfThreads, statusUpdateFn) => {
-    console.log('SAVING WALLET BITCH')
+    console.log('SAVING WALLET')
     statusUpdateFn('Generating random values')
     let iv = new Uint8Array(16)
     getRandomValues(iv)

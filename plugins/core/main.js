@@ -1671,7 +1671,7 @@
     }
 
     testBlock(block) {
-      // console.log('TESTING BLOCK BITCH')
+      // console.log('TESTING BLOCK')
       const pendingUpdateAddresses = []; // blockTests.forEach(fn => {
       // })
       // transactionTests.forEach(fn => {
@@ -1717,7 +1717,7 @@
         delete addressInfo[i];
       }
 
-      console.log('ADDRESS INFO MUTHA FUCKA', addressInfo);
+      console.log('ADDRESS INFO', addressInfo);
       if (!(addr in this._addresses)) return;
       this._addresses[addr] = addressInfo;
       console.log('---------------------------Emitting-----------------------------', this._addresses[addr], this._addressStreams[addr]);
