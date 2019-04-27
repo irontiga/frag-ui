@@ -1310,6 +1310,7 @@
   const isDirective = (o) => {
       return typeof o === 'function' && directives.has(o);
   };
+  //# sourceMappingURL=directive.js.map
 
   /**
    * @license
@@ -1342,6 +1343,7 @@
           node = n;
       }
   };
+  //# sourceMappingURL=dom.js.map
 
   /**
    * @license
@@ -1365,6 +1367,7 @@
    * A sentinel value that signals a NodePart to fully clear its content.
    */
   const nothing = {};
+  //# sourceMappingURL=part.js.map
 
   /**
    * @license
@@ -1554,6 +1557,7 @@
    *    * (') then any non-(')
    */
   const lastAttributeNameRegex = /([ \x09\x0a\x0c\x0d])([^\0-\x1F\x7F-\x9F \x09\x0a\x0c\x0d"'>=/]+)([ \x09\x0a\x0c\x0d]*=[ \x09\x0a\x0c\x0d]*(?:[^ \x09\x0a\x0c\x0d"'`<>=]*|"[^"]*|'[^']*))$/;
+  //# sourceMappingURL=template.js.map
 
   /**
    * @license
@@ -1651,6 +1655,7 @@
           return fragment;
       }
   }
+  //# sourceMappingURL=template-instance.js.map
 
   /**
    * @license
@@ -1715,6 +1720,7 @@
           return template;
       }
   }
+  //# sourceMappingURL=template-result.js.map
 
   /**
    * @license
@@ -2139,6 +2145,7 @@
       (eventOptionsSupported ?
           { capture: o.capture, passive: o.passive, once: o.once } :
           o.capture);
+  //# sourceMappingURL=parts.js.map
 
   /**
    * @license
@@ -2190,6 +2197,7 @@
       }
   }
   const defaultTemplateProcessor = new DefaultTemplateProcessor();
+  //# sourceMappingURL=default-template-processor.js.map
 
   /**
    * @license
@@ -2237,6 +2245,7 @@
       return template;
   }
   const templateCaches = new Map();
+  //# sourceMappingURL=template-factory.js.map
 
   /**
    * @license
@@ -2277,6 +2286,7 @@
       part.setValue(result);
       part.commit();
   };
+  //# sourceMappingURL=render.js.map
 
   /**
    * @license
@@ -2300,6 +2310,7 @@
    * render to and update a container.
    */
   const html$1 = (strings, ...values) => new TemplateResult(strings, values, 'html', defaultTemplateProcessor);
+  //# sourceMappingURL=lit-html.js.map
 
   /**
    * @license
@@ -2424,6 +2435,7 @@
           }
       }
   }
+  //# sourceMappingURL=modify-template.js.map
 
   /**
    * @license
@@ -2663,6 +2675,7 @@
           window.ShadyCSS.styleElement(container.host);
       }
   };
+  //# sourceMappingURL=shady-render.js.map
 
   /**
    * @license
@@ -3263,6 +3276,7 @@
    * Marks class as having finished creating properties.
    */
   UpdatingElement.finalized = true;
+  //# sourceMappingURL=updating-element.js.map
 
   /**
    * @license
@@ -3363,6 +3377,7 @@
           legacyProperty(options, protoOrDescriptor, name) :
           standardProperty(options, protoOrDescriptor);
   }
+  //# sourceMappingURL=decorators.js.map
 
   /**
   @license
@@ -3423,6 +3438,7 @@
       const cssText = values.reduce((acc, v, idx) => acc + textFromCSSResult(v) + strings[idx + 1], strings[0]);
       return new CSSResult(cssText, constructionToken);
   };
+  //# sourceMappingURL=css-tag.js.map
 
   /**
    * @license
@@ -3615,6 +3631,7 @@
    * @nocollapse
    */
   LitElement.render = render$1;
+  //# sourceMappingURL=lit-element.js.map
 
   // 19.1.2.14 / 15.2.3.14 Object.keys(O)
 
@@ -3922,6 +3939,54 @@
   addToUnscopables('values');
   addToUnscopables('entries');
 
+  const ERROR_CODES = {
+    1: "Valid OK",
+    2: "Invalid address",
+    3: "Negative amount",
+    4: "Nagative fee",
+    5: "No balance",
+    6: "Invalid reference",
+    7: "Invalid time length",
+    8: "Invalid value length",
+    9: "Name already registered",
+    10: "Name does not exist",
+    11: "Invalid name owner",
+    12: "Name already for sale",
+    13: "Name not for sale",
+    14: "Name buyer already owner",
+    15: "Invalid amount",
+    16: "Invalid seller",
+    17: "Name not lowercase",
+    18: "Invalid description length",
+    19: "Invalid options length",
+    20: "Invalid option length",
+    21: "Duplicate option",
+    22: "Poll already created",
+    23: "Poll already has votes",
+    24: "Poll does not exist",
+    25: "Option does not exist",
+    26: "Already voted for that option",
+    27: "Invalid data length",
+    28: "Invalid quantity",
+    29: "Asset does not exist",
+    30: "Invalid return",
+    31: "Have equals want",
+    32: "Order does not exist",
+    33: "Invalid order creator",
+    34: "Invalid payments length",
+    35: "Negative price",
+    36: "Invalid creation bytes",
+    37: "Invalid tags length",
+    38: "Invalid type length",
+    40: "Fee less required",
+    41: "Invalid raw data",
+    42: "Delegation already exists",
+    43: "Supernode invalid",
+    44: "Super node already exists",
+    45: "Spending disallowed",
+    10000: "AT_ERROR",
+    1000: "Not yet released.."
+  };
   //    GENESIS_TRANSACTION: 1,
   //    PAYMENT_TRANSACTION: 2,
   //
@@ -4976,6 +5041,9 @@
       }
       classMapCache.set(part, classInfo);
   });
+  //# sourceMappingURL=class-map.js.map
+
+  //# sourceMappingURL=observer.js.map
 
   /**
   @license
@@ -4993,6 +5061,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   */
+  //# sourceMappingURL=utils.js.map
 
   /**
   @license
@@ -5010,6 +5079,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
   */
+  //# sourceMappingURL=base-element.js.map
 
   /**
   @license
@@ -5028,6 +5098,7 @@
   limitations under the License.
   */
   const style = css `.mdc-button{font-family:Roboto,sans-serif;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased;font-size:.875rem;line-height:2.25rem;font-weight:500;letter-spacing:.0892857143em;text-decoration:none;text-transform:uppercase;padding:0 8px 0 8px;display:inline-flex;position:relative;align-items:center;justify-content:center;box-sizing:border-box;min-width:64px;height:36px;border:none;outline:none;line-height:inherit;user-select:none;-webkit-appearance:none;overflow:hidden;vertical-align:middle;border-radius:4px}.mdc-button::-moz-focus-inner{padding:0;border:0}.mdc-button:active{outline:none}.mdc-button:hover{cursor:pointer}.mdc-button:disabled{background-color:transparent;color:rgba(0,0,0,.37);cursor:default;pointer-events:none}.mdc-button.mdc-button--dense{border-radius:4px}.mdc-button:not(:disabled){background-color:transparent}.mdc-button .mdc-button__icon{margin-left:0;margin-right:8px;display:inline-block;width:18px;height:18px;font-size:18px;vertical-align:top}[dir=rtl] .mdc-button .mdc-button__icon,.mdc-button .mdc-button__icon[dir=rtl]{margin-left:8px;margin-right:0}.mdc-button:not(:disabled){color:#6200ee;color:var(--mdc-theme-primary, #6200ee)}.mdc-button__label+.mdc-button__icon{margin-left:8px;margin-right:0}[dir=rtl] .mdc-button__label+.mdc-button__icon,.mdc-button__label+.mdc-button__icon[dir=rtl]{margin-left:0;margin-right:8px}svg.mdc-button__icon{fill:currentColor}.mdc-button--raised .mdc-button__icon,.mdc-button--unelevated .mdc-button__icon,.mdc-button--outlined .mdc-button__icon{margin-left:-4px;margin-right:8px}[dir=rtl] .mdc-button--raised .mdc-button__icon,.mdc-button--raised .mdc-button__icon[dir=rtl],[dir=rtl] .mdc-button--unelevated .mdc-button__icon,.mdc-button--unelevated .mdc-button__icon[dir=rtl],[dir=rtl] .mdc-button--outlined .mdc-button__icon,.mdc-button--outlined .mdc-button__icon[dir=rtl]{margin-left:8px;margin-right:-4px}.mdc-button--raised .mdc-button__label+.mdc-button__icon,.mdc-button--unelevated .mdc-button__label+.mdc-button__icon,.mdc-button--outlined .mdc-button__label+.mdc-button__icon{margin-left:8px;margin-right:-4px}[dir=rtl] .mdc-button--raised .mdc-button__label+.mdc-button__icon,.mdc-button--raised .mdc-button__label+.mdc-button__icon[dir=rtl],[dir=rtl] .mdc-button--unelevated .mdc-button__label+.mdc-button__icon,.mdc-button--unelevated .mdc-button__label+.mdc-button__icon[dir=rtl],[dir=rtl] .mdc-button--outlined .mdc-button__label+.mdc-button__icon,.mdc-button--outlined .mdc-button__label+.mdc-button__icon[dir=rtl]{margin-left:-4px;margin-right:8px}.mdc-button--raised,.mdc-button--unelevated{padding:0 16px 0 16px}.mdc-button--raised:disabled,.mdc-button--unelevated:disabled{background-color:rgba(0,0,0,.12);color:rgba(0,0,0,.37)}.mdc-button--raised:not(:disabled),.mdc-button--unelevated:not(:disabled){background-color:#6200ee}@supports not (-ms-ime-align: auto){.mdc-button--raised:not(:disabled),.mdc-button--unelevated:not(:disabled){background-color:var(--mdc-theme-primary, #6200ee)}}.mdc-button--raised:not(:disabled),.mdc-button--unelevated:not(:disabled){color:#fff;color:var(--mdc-theme-on-primary, #fff)}.mdc-button--raised{box-shadow:0px 3px 1px -2px rgba(0, 0, 0, 0.2),0px 2px 2px 0px rgba(0, 0, 0, 0.14),0px 1px 5px 0px rgba(0,0,0,.12);transition:box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1)}.mdc-button--raised:hover,.mdc-button--raised:focus{box-shadow:0px 2px 4px -1px rgba(0, 0, 0, 0.2),0px 4px 5px 0px rgba(0, 0, 0, 0.14),0px 1px 10px 0px rgba(0,0,0,.12)}.mdc-button--raised:active{box-shadow:0px 5px 5px -3px rgba(0, 0, 0, 0.2),0px 8px 10px 1px rgba(0, 0, 0, 0.14),0px 3px 14px 2px rgba(0,0,0,.12)}.mdc-button--raised:disabled{box-shadow:0px 0px 0px 0px rgba(0, 0, 0, 0.2),0px 0px 0px 0px rgba(0, 0, 0, 0.14),0px 0px 0px 0px rgba(0,0,0,.12)}.mdc-button--outlined{border-style:solid;padding:0 14px 0 14px;border-width:2px}.mdc-button--outlined:disabled{border-color:rgba(0,0,0,.37)}.mdc-button--outlined:not(:disabled){border-color:#6200ee;border-color:var(--mdc-theme-primary, #6200ee)}.mdc-button--dense{height:32px;font-size:.8125rem}@keyframes mdc-ripple-fg-radius-in{from{animation-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transform:translate(var(--mdc-ripple-fg-translate-start, 0)) scale(1)}to{transform:translate(var(--mdc-ripple-fg-translate-end, 0)) scale(var(--mdc-ripple-fg-scale, 1))}}@keyframes mdc-ripple-fg-opacity-in{from{animation-timing-function:linear;opacity:0}to{opacity:var(--mdc-ripple-fg-opacity, 0)}}@keyframes mdc-ripple-fg-opacity-out{from{animation-timing-function:linear;opacity:var(--mdc-ripple-fg-opacity, 0)}to{opacity:0}}.mdc-ripple-surface--test-edge-var-bug{--mdc-ripple-surface-test-edge-var: 1px solid #000;visibility:hidden}.mdc-ripple-surface--test-edge-var-bug::before{border:var(--mdc-ripple-surface-test-edge-var)}.mdc-button{--mdc-ripple-fg-size: 0;--mdc-ripple-left: 0;--mdc-ripple-top: 0;--mdc-ripple-fg-scale: 1;--mdc-ripple-fg-translate-end: 0;--mdc-ripple-fg-translate-start: 0;-webkit-tap-highlight-color:rgba(0,0,0,0);will-change:transform,opacity}.mdc-button::before,.mdc-button::after{position:absolute;border-radius:50%;opacity:0;pointer-events:none;content:""}.mdc-button::before{transition:opacity 15ms linear,background-color 15ms linear;z-index:1}.mdc-button.mdc-ripple-upgraded::before{transform:scale(var(--mdc-ripple-fg-scale, 1))}.mdc-button.mdc-ripple-upgraded::after{top:0;left:0;transform:scale(0);transform-origin:center center}.mdc-button.mdc-ripple-upgraded--unbounded::after{top:var(--mdc-ripple-top, 0);left:var(--mdc-ripple-left, 0)}.mdc-button.mdc-ripple-upgraded--foreground-activation::after{animation:mdc-ripple-fg-radius-in 225ms forwards,mdc-ripple-fg-opacity-in 75ms forwards}.mdc-button.mdc-ripple-upgraded--foreground-deactivation::after{animation:mdc-ripple-fg-opacity-out 150ms;transform:translate(var(--mdc-ripple-fg-translate-end, 0)) scale(var(--mdc-ripple-fg-scale, 1))}.mdc-button::before,.mdc-button::after{top:calc(50% - 100%);left:calc(50% - 100%);width:200%;height:200%}.mdc-button.mdc-ripple-upgraded::after{width:var(--mdc-ripple-fg-size, 100%);height:var(--mdc-ripple-fg-size, 100%)}.mdc-button::before,.mdc-button::after{background-color:#6200ee}@supports not (-ms-ime-align: auto){.mdc-button::before,.mdc-button::after{background-color:var(--mdc-theme-primary, #6200ee)}}.mdc-button:hover::before{opacity:.04}.mdc-button:not(.mdc-ripple-upgraded):focus::before,.mdc-button.mdc-ripple-upgraded--background-focused::before{transition-duration:75ms;opacity:.12}.mdc-button:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-button:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:.12}.mdc-button.mdc-ripple-upgraded{--mdc-ripple-fg-opacity: 0.12}.mdc-button--raised::before,.mdc-button--raised::after,.mdc-button--unelevated::before,.mdc-button--unelevated::after{background-color:#fff}@supports not (-ms-ime-align: auto){.mdc-button--raised::before,.mdc-button--raised::after,.mdc-button--unelevated::before,.mdc-button--unelevated::after{background-color:var(--mdc-theme-on-primary, #fff)}}.mdc-button--raised:hover::before,.mdc-button--unelevated:hover::before{opacity:.08}.mdc-button--raised:not(.mdc-ripple-upgraded):focus::before,.mdc-button--raised.mdc-ripple-upgraded--background-focused::before,.mdc-button--unelevated:not(.mdc-ripple-upgraded):focus::before,.mdc-button--unelevated.mdc-ripple-upgraded--background-focused::before{transition-duration:75ms;opacity:.24}.mdc-button--raised:not(.mdc-ripple-upgraded)::after,.mdc-button--unelevated:not(.mdc-ripple-upgraded)::after{transition:opacity 150ms linear}.mdc-button--raised:not(.mdc-ripple-upgraded):active::after,.mdc-button--unelevated:not(.mdc-ripple-upgraded):active::after{transition-duration:75ms;opacity:.24}.mdc-button--raised.mdc-ripple-upgraded,.mdc-button--unelevated.mdc-ripple-upgraded{--mdc-ripple-fg-opacity: 0.24}.material-icons{font-family:var(--mdc-icon-font, "Material Icons");font-weight:normal;font-style:normal;font-size:var(--mdc-icon-size, 24px);line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;word-wrap:normal;direction:ltr;-webkit-font-feature-settings:"liga";-webkit-font-smoothing:antialiased}:host{display:inline-flex;outline:none}:host([disabled]){pointer-events:none}.mdc-button{flex:1}`;
+  //# sourceMappingURL=mwc-button-css.js.map
 
   /*! *****************************************************************************
   Copyright (c) Microsoft Corporation. All rights reserved.
@@ -5141,6 +5212,7 @@
       };
       return MDCFoundation;
   }());
+  //# sourceMappingURL=foundation.js.map
 
   /**
    * @license
@@ -5189,6 +5261,7 @@
       PADDING: 10,
       TAP_DELAY_MS: 300,
   };
+  //# sourceMappingURL=constants.js.map
 
   /**
    * Stores result from supportsCssVariables to avoid redundant processing to
@@ -5288,6 +5361,7 @@
       }
       return { x: normalizedX, y: normalizedY };
   }
+  //# sourceMappingURL=util.js.map
 
   /**
    * @license
@@ -5742,6 +5816,7 @@
       };
       return MDCRippleFoundation;
   }(MDCFoundation));
+  //# sourceMappingURL=foundation.js.map
 
   /**
   @license
@@ -5760,6 +5835,7 @@
   limitations under the License.
   */
   const style$1 = css `@keyframes mdc-ripple-fg-radius-in{from{animation-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transform:translate(var(--mdc-ripple-fg-translate-start, 0)) scale(1)}to{transform:translate(var(--mdc-ripple-fg-translate-end, 0)) scale(var(--mdc-ripple-fg-scale, 1))}}@keyframes mdc-ripple-fg-opacity-in{from{animation-timing-function:linear;opacity:0}to{opacity:var(--mdc-ripple-fg-opacity, 0)}}@keyframes mdc-ripple-fg-opacity-out{from{animation-timing-function:linear;opacity:var(--mdc-ripple-fg-opacity, 0)}to{opacity:0}}`;
+  //# sourceMappingURL=mwc-ripple-global-css.js.map
 
   /**
    * @license
@@ -5789,6 +5865,7 @@
           || element.msMatchesSelector;
       return nativeMatches.call(element, selector);
   }
+  //# sourceMappingURL=ponyfill.js.map
 
   /**
   @license
@@ -5898,6 +5975,7 @@
           rippleFoundation.deactivate();
       }
   });
+  //# sourceMappingURL=ripple-directive.js.map
 
   /**
   @license
@@ -5920,6 +5998,7 @@
   fontEl.rel = 'stylesheet';
   fontEl.href = 'https://fonts.googleapis.com/icon?family=Material+Icons';
   document.head.appendChild(fontEl);
+  //# sourceMappingURL=mwc-icon-font.js.map
 
   var __decorate = (window && window.__decorate) || function (decorators, target, key, desc) {
       var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -5991,6 +6070,7 @@
   Button = __decorate([
       customElement('mwc-button')
   ], Button);
+  //# sourceMappingURL=mwc-button.js.map
 
   /**
   @license
@@ -24930,6 +25010,437 @@
     },
   });
 
+  /**
+  @license
+  Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+  This code may only be used under the BSD style license found at
+  http://polymer.github.io/LICENSE.txt The complete set of authors may be found at
+  http://polymer.github.io/AUTHORS.txt The complete set of contributors may be
+  found at http://polymer.github.io/CONTRIBUTORS.txt Code distributed by Google as
+  part of the polymer project is also subject to an additional IP rights grant
+  found at http://polymer.github.io/PATENTS.txt
+  */
+
+  /**
+   * `iron-range-behavior` provides the behavior for something with a minimum to
+   * maximum range.
+   *
+   * @demo demo/index.html
+   * @polymerBehavior
+   */
+  const IronRangeBehavior = {
+
+    properties: {
+
+      /**
+       * The number that represents the current value.
+       */
+      value: {type: Number, value: 0, notify: true, reflectToAttribute: true},
+
+      /**
+       * The number that indicates the minimum value of the range.
+       */
+      min: {type: Number, value: 0, notify: true},
+
+      /**
+       * The number that indicates the maximum value of the range.
+       */
+      max: {type: Number, value: 100, notify: true},
+
+      /**
+       * Specifies the value granularity of the range's value.
+       */
+      step: {type: Number, value: 1, notify: true},
+
+      /**
+       * Returns the ratio of the value.
+       */
+      ratio: {type: Number, value: 0, readOnly: true, notify: true},
+    },
+
+    observers: ['_update(value, min, max, step)'],
+
+    _calcRatio: function(value) {
+      return (this._clampValue(value) - this.min) / (this.max - this.min);
+    },
+
+    _clampValue: function(value) {
+      return Math.min(this.max, Math.max(this.min, this._calcStep(value)));
+    },
+
+    _calcStep: function(value) {
+      // polymer/issues/2493
+      value = parseFloat(value);
+
+      if (!this.step) {
+        return value;
+      }
+
+      var numSteps = Math.round((value - this.min) / this.step);
+      if (this.step < 1) {
+        /**
+         * For small values of this.step, if we calculate the step using
+         * `Math.round(value / step) * step` we may hit a precision point issue
+         * eg. 0.1 * 0.2 =  0.020000000000000004
+         * http://docs.oracle.com/cd/E19957-01/806-3568/ncg_goldberg.html
+         *
+         * as a work around we can divide by the reciprocal of `step`
+         */
+        return numSteps / (1 / this.step) + this.min;
+      } else {
+        return numSteps * this.step + this.min;
+      }
+    },
+
+    _validateValue: function() {
+      var v = this._clampValue(this.value);
+      this.value = this.oldValue = isNaN(v) ? this.oldValue : v;
+      return this.value !== v;
+    },
+
+    _update: function() {
+      this._validateValue();
+      this._setRatio(this._calcRatio(this.value) * 100);
+    }
+
+  };
+
+  /**
+  @license
+  Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+  This code may only be used under the BSD style license found at
+  http://polymer.github.io/LICENSE.txt The complete set of authors may be found at
+  http://polymer.github.io/AUTHORS.txt The complete set of contributors may be
+  found at http://polymer.github.io/CONTRIBUTORS.txt Code distributed by Google as
+  part of the polymer project is also subject to an additional IP rights grant
+  found at http://polymer.github.io/PATENTS.txt
+  */
+
+  /**
+  Material design: [Progress &
+  activity](https://www.google.com/design/spec/components/progress-activity.html)
+
+  The progress bars are for situations where the percentage completed can be
+  determined. They give users a quick sense of how much longer an operation
+  will take.
+
+  Example:
+
+      <paper-progress value="10"></paper-progress>
+
+  There is also a secondary progress which is useful for displaying intermediate
+  progress, such as the buffer level during a streaming playback progress bar.
+
+  Example:
+
+      <paper-progress value="10" secondary-progress="30"></paper-progress>
+
+  ### Styling progress bar:
+
+  To change the active progress bar color:
+
+      paper-progress {
+         --paper-progress-active-color: #e91e63;
+      }
+
+  To change the secondary progress bar color:
+
+      paper-progress {
+        --paper-progress-secondary-color: #f8bbd0;
+      }
+
+  To change the progress bar background color:
+
+      paper-progress {
+        --paper-progress-container-color: #64ffda;
+      }
+
+  Add the class `transiting` to a paper-progress to animate the progress bar when
+  the value changed. You can also customize the transition:
+
+      paper-progress {
+        --paper-progress-transition-duration: 0.08s;
+        --paper-progress-transition-timing-function: ease;
+        --paper-progress-transition-delay: 0s;
+      }
+
+  To change the duration of the indeterminate cycle:
+
+      paper-progress {
+        --paper-progress-indeterminate-cycle-duration: 2s;
+      }
+
+  The following mixins are available for styling:
+
+  Custom property | Description | Default
+  ----------------|-------------|---------
+  `--paper-progress-container` | Mixin applied to container | `{}`
+  `--paper-progress-transition-duration` | Duration of the transition | `0.08s`
+  `--paper-progress-transition-timing-function` | The timing function for the transition | `ease`
+  `--paper-progress-transition-delay` | delay for the transition | `0s`
+  `--paper-progress-container-color` | Color of the container | `--google-grey-300`
+  `--paper-progress-active-color` | The color of the active bar | `--google-green-500`
+  `--paper-progress-secondary-color` | The color of the secondary bar | `--google-green-100`
+  `--paper-progress-disabled-active-color` | The color of the active bar if disabled | `--google-grey-500`
+  `--paper-progress-disabled-secondary-color` | The color of the secondary bar if disabled  | `--google-grey-300`
+  `--paper-progress-height` | The height of the progress bar | `4px`
+  `--paper-progress-indeterminate-cycle-duration` | Duration of an indeterminate cycle | `2s`
+
+  @group Paper Elements
+  @element paper-progress
+  @demo demo/index.html
+  */
+  Polymer({
+    _template: html$2`
+    <style>
+      :host {
+        display: block;
+        width: 200px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      :host([hidden]), [hidden] {
+        display: none !important;
+      }
+
+      #progressContainer {
+        @apply --paper-progress-container;
+        position: relative;
+      }
+
+      #progressContainer,
+      /* the stripe for the indeterminate animation*/
+      .indeterminate::after {
+        height: var(--paper-progress-height, 4px);
+      }
+
+      #primaryProgress,
+      #secondaryProgress,
+      .indeterminate::after {
+        @apply --layout-fit;
+      }
+
+      #progressContainer,
+      .indeterminate::after {
+        background: var(--paper-progress-container-color, var(--google-grey-300));
+      }
+
+      :host(.transiting) #primaryProgress,
+      :host(.transiting) #secondaryProgress {
+        -webkit-transition-property: -webkit-transform;
+        transition-property: transform;
+
+        /* Duration */
+        -webkit-transition-duration: var(--paper-progress-transition-duration, 0.08s);
+        transition-duration: var(--paper-progress-transition-duration, 0.08s);
+
+        /* Timing function */
+        -webkit-transition-timing-function: var(--paper-progress-transition-timing-function, ease);
+        transition-timing-function: var(--paper-progress-transition-timing-function, ease);
+
+        /* Delay */
+        -webkit-transition-delay: var(--paper-progress-transition-delay, 0s);
+        transition-delay: var(--paper-progress-transition-delay, 0s);
+      }
+
+      #primaryProgress,
+      #secondaryProgress {
+        @apply --layout-fit;
+        -webkit-transform-origin: left center;
+        transform-origin: left center;
+        -webkit-transform: scaleX(0);
+        transform: scaleX(0);
+        will-change: transform;
+      }
+
+      #primaryProgress {
+        background: var(--paper-progress-active-color, var(--google-green-500));
+      }
+
+      #secondaryProgress {
+        background: var(--paper-progress-secondary-color, var(--google-green-100));
+      }
+
+      :host([disabled]) #primaryProgress {
+        background: var(--paper-progress-disabled-active-color, var(--google-grey-500));
+      }
+
+      :host([disabled]) #secondaryProgress {
+        background: var(--paper-progress-disabled-secondary-color, var(--google-grey-300));
+      }
+
+      :host(:not([disabled])) #primaryProgress.indeterminate {
+        -webkit-transform-origin: right center;
+        transform-origin: right center;
+        -webkit-animation: indeterminate-bar var(--paper-progress-indeterminate-cycle-duration, 2s) linear infinite;
+        animation: indeterminate-bar var(--paper-progress-indeterminate-cycle-duration, 2s) linear infinite;
+      }
+
+      :host(:not([disabled])) #primaryProgress.indeterminate::after {
+        content: "";
+        -webkit-transform-origin: center center;
+        transform-origin: center center;
+
+        -webkit-animation: indeterminate-splitter var(--paper-progress-indeterminate-cycle-duration, 2s) linear infinite;
+        animation: indeterminate-splitter var(--paper-progress-indeterminate-cycle-duration, 2s) linear infinite;
+      }
+
+      @-webkit-keyframes indeterminate-bar {
+        0% {
+          -webkit-transform: scaleX(1) translateX(-100%);
+        }
+        50% {
+          -webkit-transform: scaleX(1) translateX(0%);
+        }
+        75% {
+          -webkit-transform: scaleX(1) translateX(0%);
+          -webkit-animation-timing-function: cubic-bezier(.28,.62,.37,.91);
+        }
+        100% {
+          -webkit-transform: scaleX(0) translateX(0%);
+        }
+      }
+
+      @-webkit-keyframes indeterminate-splitter {
+        0% {
+          -webkit-transform: scaleX(.75) translateX(-125%);
+        }
+        30% {
+          -webkit-transform: scaleX(.75) translateX(-125%);
+          -webkit-animation-timing-function: cubic-bezier(.42,0,.6,.8);
+        }
+        90% {
+          -webkit-transform: scaleX(.75) translateX(125%);
+        }
+        100% {
+          -webkit-transform: scaleX(.75) translateX(125%);
+        }
+      }
+
+      @keyframes indeterminate-bar {
+        0% {
+          transform: scaleX(1) translateX(-100%);
+        }
+        50% {
+          transform: scaleX(1) translateX(0%);
+        }
+        75% {
+          transform: scaleX(1) translateX(0%);
+          animation-timing-function: cubic-bezier(.28,.62,.37,.91);
+        }
+        100% {
+          transform: scaleX(0) translateX(0%);
+        }
+      }
+
+      @keyframes indeterminate-splitter {
+        0% {
+          transform: scaleX(.75) translateX(-125%);
+        }
+        30% {
+          transform: scaleX(.75) translateX(-125%);
+          animation-timing-function: cubic-bezier(.42,0,.6,.8);
+        }
+        90% {
+          transform: scaleX(.75) translateX(125%);
+        }
+        100% {
+          transform: scaleX(.75) translateX(125%);
+        }
+      }
+    </style>
+
+    <div id="progressContainer">
+      <div id="secondaryProgress" hidden\$="[[_hideSecondaryProgress(secondaryRatio)]]"></div>
+      <div id="primaryProgress"></div>
+    </div>
+`,
+
+    is: 'paper-progress',
+    behaviors: [IronRangeBehavior],
+
+    properties: {
+      /**
+       * The number that represents the current secondary progress.
+       */
+      secondaryProgress: {type: Number, value: 0},
+
+      /**
+       * The secondary ratio
+       */
+      secondaryRatio: {type: Number, value: 0, readOnly: true},
+
+      /**
+       * Use an indeterminate progress indicator.
+       */
+      indeterminate:
+          {type: Boolean, value: false, observer: '_toggleIndeterminate'},
+
+      /**
+       * True if the progress is disabled.
+       */
+      disabled: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true,
+        observer: '_disabledChanged'
+      }
+    },
+
+    observers:
+        ['_progressChanged(secondaryProgress, value, min, max, indeterminate)'],
+
+    hostAttributes: {role: 'progressbar'},
+
+    _toggleIndeterminate: function(indeterminate) {
+      // If we use attribute/class binding, the animation sometimes doesn't
+      // translate properly on Safari 7.1. So instead, we toggle the class here in
+      // the update method.
+      this.toggleClass('indeterminate', indeterminate, this.$.primaryProgress);
+    },
+
+    _transformProgress: function(progress, ratio) {
+      var transform = 'scaleX(' + (ratio / 100) + ')';
+      progress.style.transform = progress.style.webkitTransform = transform;
+    },
+
+    _mainRatioChanged: function(ratio) {
+      this._transformProgress(this.$.primaryProgress, ratio);
+    },
+
+    _progressChanged: function(
+        secondaryProgress, value, min, max, indeterminate) {
+      secondaryProgress = this._clampValue(secondaryProgress);
+      value = this._clampValue(value);
+
+      var secondaryRatio = this._calcRatio(secondaryProgress) * 100;
+      var mainRatio = this._calcRatio(value) * 100;
+
+      this._setSecondaryRatio(secondaryRatio);
+      this._transformProgress(this.$.secondaryProgress, secondaryRatio);
+      this._transformProgress(this.$.primaryProgress, mainRatio);
+
+      this.secondaryProgress = secondaryProgress;
+
+      if (indeterminate) {
+        this.removeAttribute('aria-valuenow');
+      } else {
+        this.setAttribute('aria-valuenow', value);
+      }
+      this.setAttribute('aria-valuemin', min);
+      this.setAttribute('aria-valuemax', max);
+    },
+
+    _disabledChanged: function(disabled) {
+      this.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+    },
+
+    _hideSecondaryProgress: function(secondaryRatio) {
+      return secondaryRatio === 0;
+    }
+  });
+
   const KMX_IN_USD = 5; // 1 KMX - 5 USD
 
   const parentEpml = new Epml({
@@ -25060,6 +25571,9 @@
                 font-size: 22px;
                 font-weight: 100;
             }
+            paper-progress {
+                --paper-progress-active-color: var(--mdc-theme-primary)
+            }
         `;
     } // @keyup=${() => {this.shadowRoot.getElementById('USDAmountInput').value = this.shadowRoot.getElementById('amountInput').value / 0.2 }}
 
@@ -25120,16 +25634,20 @@
                     <p style="color:red">${this.errorMessage}</p>
                     <p style="color:green;word-break: break-word;">${this.successMessage}</p>
                     
+                    ${this.sendMoneyLoading ? html$1`
+                        <paper-progress indeterminate style="width:100%; margin:4px;"></paper-progress>
+                        <!-- <paper-spinner-lite></paper-spinner-lite> -->
+                    ` : ''}
+
                     <div class="buttons" >
                         <div>
-                            <mwc-button style="width:100%;" raised autofocus @click=${e => this._sendMoney(e)}>Send &nbsp;
+                            <mwc-button ?disabled=${this.sendMoneyLoading} style="width:100%;" raised autofocus @click=${e => this._sendMoney(e)}>Send &nbsp;
                                 <iron-icon icon="send"></iron-icon>
                             </mwc-button>
                         </div>
                     </div>
                     
-                    ${this.sendMoneyLoading ? html$1`
-                    <paper-progress auto></paper-progress>  ` : ''}
+                    
                 </div>
             </div>
         `;
@@ -25207,6 +25725,7 @@
           } // ${ERROR_CODES[responseData]}
 
 
+          if (ERROR_CODES[responseData]) throw new Error(`Error!. Code ${responseData}: ${ERROR_CODES[responseData]}`);
           throw new Error(`Error!. ${responseData}`);
         }
 
@@ -25218,6 +25737,8 @@
         console.error(e);
         this.errorMessage = e.message;
       }
+
+      this.sendMoneyLoading = false;
     } // _getSelectedAddressInfo (addressesInfo, selectedAddress) {
     //     return this.addressesInfo[selectedAddress.address]
     // }

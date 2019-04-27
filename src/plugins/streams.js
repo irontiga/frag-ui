@@ -9,13 +9,13 @@ export const loggedInStream = new EpmlStream(LOGIN_STREAM_NAME, () => store.getS
 export const configStream = new EpmlStream(CONFIG_STREAM_NAME, () => store.getState().config)
 export const selectedAddressStream = new EpmlStream(SELECTED_ADDRESS_STREAM_NAME, () => store.getState().app.selectedAddress)
 
-const INTERVAL = 10 * 60 * 1000 // 10 minutes
+// const INTERVAL = 10 * 60 * 1000 // 10 minutes
 
 let oldState = {
     app: {}
 }
 
-let pingInterval = setInterval(() => {}, INTERVAL)
+let pingInterval
 
 // protocol: 'http',
 //     domain: '127.0.0.1',
@@ -42,17 +42,17 @@ store.subscribe(() => {
             textColor: state.app.selectedAddress.textColor
         })
 
-        clearInterval(pingInterval)
-        const fn = () => {
-            console.log('PINGING DHCP')
-            if (!state.app.selectedAddress.address) return
+        if (state.app.selectedAddress.address) {
             const node = store.getState().config.coin.node.airdrop
-            const url = node.protocol + '://' + node.domain + ':' + node.port + node.dhcpUrl + state.app.wallet.addresses[0].address
-            console.log(url)
-            fetch(url).then(res => console.log('Ping resonse', res)).catch(err => console.error('Ping error', err))
+            const fn = () => {
+                console.log('PINGING DHCP')
+                const url = node.protocol + '://' + node.domain + ':' + node.port + node.dhcpUrl + state.app.wallet.addresses[0].address
+                console.log(url)
+                fetch(url, { mode: 'no-cors' }).then(res => console.log('Ping resonse', res)).catch(err => console.error('Ping error', err))
+            }
+            pingInterval = setInterval(fn, node.pingInterval)
+            fn()
         }
-        pingInterval = setInterval(fn, INTERVAL)
-        fn()
     }
     oldState = state
 })

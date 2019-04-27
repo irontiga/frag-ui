@@ -3,6 +3,8 @@ import { ERROR_CODES } from '../../../src/qora/constants.js'
 import { Epml } from '../../../src/epml.js'
 import '@material/mwc-button'
 import '@polymer/paper-input/paper-input.js'
+import '@polymer/paper-progress/paper-progress.js'
+// import '@polymer/paper-spinner/paper-spinner-lite.js'
 
 const KMX_IN_USD = 5 // 1 KMX - 5 USD
 
@@ -109,6 +111,9 @@ class SendMoneyPage extends LitElement {
                 font-size: 22px;
                 font-weight: 100;
             }
+            paper-progress {
+                --paper-progress-active-color: var(--mdc-theme-primary)
+            }
         `
     }
     // @keyup=${() => {this.shadowRoot.getElementById('USDAmountInput').value = this.shadowRoot.getElementById('amountInput').value / 0.2 }}
@@ -164,16 +169,20 @@ class SendMoneyPage extends LitElement {
                     <p style="color:red">${this.errorMessage}</p>
                     <p style="color:green;word-break: break-word;">${this.successMessage}</p>
                     
+                    ${this.sendMoneyLoading ? html`
+                        <paper-progress indeterminate style="width:100%; margin:4px;"></paper-progress>
+                        <!-- <paper-spinner-lite></paper-spinner-lite> -->
+                    ` : ''}
+
                     <div class="buttons" >
                         <div>
-                            <mwc-button style="width:100%;" raised autofocus @click=${e => this._sendMoney(e)}>Send &nbsp;
+                            <mwc-button ?disabled=${this.sendMoneyLoading} style="width:100%;" raised autofocus @click=${e => this._sendMoney(e)}>Send &nbsp;
                                 <iron-icon icon="send"></iron-icon>
                             </mwc-button>
                         </div>
                     </div>
                     
-                    ${this.sendMoneyLoading ? html`
-                    <paper-progress auto></paper-progress>  ` : ''}
+                    
                 </div>
             </div>
         `
@@ -248,6 +257,7 @@ class SendMoneyPage extends LitElement {
                     throw new Error(responseData)
                 }
                 // ${ERROR_CODES[responseData]}
+                if (ERROR_CODES[responseData]) throw new Error(`Error!. Code ${responseData}: ${ERROR_CODES[responseData]}`)
                 throw new Error(`Error!. ${responseData}`)
             }
 
@@ -259,6 +269,7 @@ class SendMoneyPage extends LitElement {
             console.error(e)
             this.errorMessage = e.message
         }
+        this.sendMoneyLoading = false
     }
 
     // _getSelectedAddressInfo (addressesInfo, selectedAddress) {

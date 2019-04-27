@@ -180,6 +180,7 @@ class CreateAccountSection extends connect(store)(LitElement) {
                                     return this.loadingRipple.fade()
                                 })
                                 .then(() => {
+                                    console.log(this.saveAccount)
                                     if (!this.saveAccount) return
                                     return store.dispatch(doStoreWallet(wallet, password, username, () => {
                                         // console.log('STATUS UPDATE <3')

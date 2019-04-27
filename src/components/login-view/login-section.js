@@ -156,7 +156,9 @@ class LoginSection extends connect(store)(LitElement) {
                             `)}
                         </div>
                         <div style="text-align: right; padding:24px;">
-                            <a @click=${() => { this.selectedPage = 'existingSeed' }} style="color: var(--mdc-theme-secondary); text-decoration: underline; cursor: pointer;">I want sign in with my seedphrase</a>
+                            <a @click=${() => { this.selectedPage = 'existingSeed' }} style="color: var(--mdc-theme-secondary); text-decoration: underline; cursor: pointer;">
+                                <!-- I want sign in with my seedphrase -->
+                            </a>
                         </div>
                     </div>
                     <div page="existingSeed" id="existingSeedPage" style=" padding:24px;">

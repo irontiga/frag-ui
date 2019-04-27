@@ -25,10 +25,11 @@ class ShowPlugin extends connect(store)(LitElement) {
         `
     }
 
+    // ${window.location.protocol}//${this.pluginConfig.domain}:${this.pluginConfig.port}/plugins/${this.app.registeredUrls[this.url].page}
     render () {
         return html`
             <iframe src="${this.app.registeredUrls[this.url] ? `
-                ${window.location.protocol}//${this.pluginConfig.domain}:${this.pluginConfig.port}/plugins/${this.app.registeredUrls[this.url].page}
+                ${window.location.protocol}//${window.location.host}:${this.pluginConfig.port}/plugins/${this.app.registeredUrls[this.url].page}
             ` : `about:blank`}" id="showPluginFrame"></iframe>
         `
     }

@@ -22,7 +22,8 @@ const config = {
                 domain: '127.0.0.1',
                 port: 4999,
                 url: '/airdrop/',
-                dhcpUrl: '/airdrop/ping/'
+                dhcpUrl: '/airdrop/ping/',
+                pingInterval: 10 * 60 * 1000
             }
         },
         decimals: 100000000
