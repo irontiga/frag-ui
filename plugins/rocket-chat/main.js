@@ -7,13 +7,12 @@ parentEpml.ready().then(() => {
         console.log('"logged_in stream" in wallet plugin', data)
     })
 
-    parentEpml.request('registerUrl', {
-        url: 'chat',
-        page: 'rocket-chat/index.html',
-        title: 'Chat',
-        // icon: 'credit_card',
-        icon: 'message',
-        menus: [],
-        parent: false
-    })
+    // parentEpml.request('registerUrl', {
+    //     url: 'chat',
+    //     page: 'rocket-chat/index.html',
+    //     title: 'Chat',
+    //     icon: 'message',
+    //     menus: [],
+    //     parent: false
+    // })
 })

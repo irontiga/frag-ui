@@ -16,6 +16,11 @@
         </style>
     </head>
     <body>
-        <iframe src="http://karmanode:3000/"></iframe>
+        <iframe id="rocketFrame" src="http://karmanode:3000/"></iframe>
+
+        <script>
+            const rocketFrame = document.getElementById('rocketFrame')
+            rocketFrame.src = window.location.protocol + '://' + window.location.hostname + ':3000'
+        </script>
     </body>
 </html>

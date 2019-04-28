@@ -162,5 +162,18 @@ export default [
         plugins: plugins.concat([
             babel(babelOptions)
         ])
+    },
+    {
+        context: 'window',
+        input: 'plugins/chat/chat-app.src.js',
+        output: [
+            {
+                file: 'plugins/chat/chat-app.js',
+                format: 'iife'
+            }
+        ],
+        plugins: plugins.concat([
+            babel(babelOptions)
+        ])
     }
 ]

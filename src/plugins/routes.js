@@ -60,5 +60,13 @@ export const routes = {
     'transaction': async req => {
         // One moment please...this requires templates in the transaction classes
         return createTransaction(req.data.type, store.getState().app.wallet._addresses[req.data.nonce].keyPair, req.data.params)
+    },
+
+    'username': async req => {
+        const state = store.getState()
+        console.log(state.app.wallet.addresses[0].address, state.user.storedWallets)
+        const username = state.user.storedWallets[state.app.wallet.addresses[0].address].name
+        console.log(username)
+        return username
     }
 }
