@@ -1,7 +1,7 @@
 import { LitElement, html, css } from 'lit-element'
 import { connect } from 'pwa-helpers'
 import { store } from '../store.js'
-import download from '../api/deps/download.js'
+// import download from '../api/deps/download.js'
 
 // import '@material/mwc-icon'
 import '@polymer/paper-icon-button/paper-icon-button.js'
@@ -228,7 +228,7 @@ class WalletProfile extends connect(store)(LitElement) {
         const data = state.user.storedWallets[state.app.selectedAddress.address]
         // 'application/json' - omit...
         const dataString = JSON.stringify(data)
-        return download(dataString, 'karma_backup.json')
+        // return download(dataString, 'karma_backup.json')
     }
 
     stateChanged (state) {

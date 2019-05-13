@@ -21,26 +21,34 @@ const sassOptions = {
 }
 
 const babelOptions = {
-    exclude: 'node_modules/**',
+    // exclude: 'node_modules/**',
+    exclude: ['node_modules/babel-runtime/**', /[\/\\]core-js/, 'node_modules/@babel/runtime-corejs3/**', 'node_modules/@webcomponentsjs/**'],
     // exclude: 'node_modules/core-js/**',
-    ignore: [/[\/\\]core-js/],
+    ignore: [/[\/\\]core-js/, 'node_modules/@babel/runtime-corejs3/**', 'node_modules/@webcomponentsjs/**'],
+    runtimeHelpers: true,
     presets: [
         [
             '@babel/preset-env',
             {
-                'targets': 'Chrome 60, Firefox 66',
+                // 'targets': 'Chrome 60, Firefox 66',
                 // debug: true,
                 // modules: 'false',
                 // targets: {
                 //     browsers: 'Edge 16, Firefox 60, Chrome 61, Safari 11, Android 67, ChromeAndroid 73, FirefoxAndroid 66'
                 // },
-                useBuiltIns: 'usage',
+                // useBuiltIns: 'usage',
+                useBuiltIns: 'entry',
                 corejs: '3'
             }
         ]
     ],
     plugins: [
-        '@babel/plugin-syntax-dynamic-import'
+        '@babel/plugin-syntax-dynamic-import',
+        [
+            '@babel/transform-runtime', {
+                corejs: 3
+            }
+        ]
     ]
 }
 
@@ -111,17 +119,17 @@ export default [
             }
         ],
         plugins: plugins.concat([babel({
-            ...babelOptions,
-            presets: [
-                [
-                    '@babel/preset-env',
-                    {
-                        useBuiltIns: 'usage',
-                        targets: 'IE 10',
-                        corejs: '3'
-                    }
-                ]
-            ]
+            ...babelOptions//,
+            // presets: [
+            //     [
+            //         '@babel/preset-env',
+            //         {
+            //             useBuiltIns: 'usage',
+            //             targets: 'IE 10',
+            //             corejs: '3'
+            //         }
+            //     ]
+            // ]
         })])
     },
     {

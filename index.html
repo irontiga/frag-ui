@@ -44,7 +44,12 @@
         </main>
 
         <!-- Polyfill stuff -->
-        <script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+        <script>
+            /* https://github.com/webcomponents/webcomponentsjs#using-webcomponents-loaderjs */
+            window.WebComponents = window.WebComponents || {}
+            window.WebComponents.root = '/node_modules/@webcomponents/webcomponentsjs/'
+        </script>
+        <!-- <script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script> -->
 
         <!-- Dynamic import polyfill, for lazy loading -->
         <!-- <script type="module" src="https://unpkg.com/dimport?module" data-main="/build/es6/main.js"></script> -->

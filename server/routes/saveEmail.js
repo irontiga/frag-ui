@@ -1,6 +1,6 @@
 const loki = require('lokijs')
 
-var db = new loki('../../emails.db', {
+var db = new loki('../databases/emails.db', {
     autoload: true,
     autoloadCallback: databaseInitialize,
     autosave: true,

@@ -47,7 +47,7 @@ class AppView extends connect(store)(LitElement) {
                 --app-drawer-width: 240px;;
             }
 
-            app-drawer-layout:not([narrow]) [drawer-toggle] {
+            app-drawer-layout:not([narrow]) [.menu-toggle-button] {
                 display: none;
             }
 
@@ -77,7 +77,7 @@ class AppView extends connect(store)(LitElement) {
 
                     <wallet-profile></wallet-profile>
 
-                    <sidenav-menu></sidenav-menu>
+                    <sidenav-menu drawer-toggle></sidenav-menu>
 
                 </app-header-layout>
             </app-drawer>

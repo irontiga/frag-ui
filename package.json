@@ -14,7 +14,9 @@
   },
   "dependencies": {
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-    "@babel/polyfill": "^7.4.3",
+    "@babel/polyfill": "^7.4.4",
+    "@babel/runtime": "^7.4.4",
+    "@babel/runtime-corejs3": "^7.4.4",
     "@material/layout-grid": "^0.41.0",
     "@material/mwc-button": "^0.5.0",
     "@material/mwc-checkbox": "^0.5.0",
@@ -59,6 +61,8 @@
     "random-sentence-generator": "^0.0.8",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
+    "regenerator-runtime": "^0.13.2",
+    "socket.io": "^2.2.0",
     "systemjs": "^3.1.2",
     "time-elements": "^2.0.0",
     "whatwg-fetch": "^3.0.0",
@@ -67,6 +71,7 @@
   "devDependencies": {
     "@babel/core": "^7.4.3",
     "@babel/plugin-external-helpers": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.4.4",
     "@babel/preset-env": "^7.4.3",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.14.1",

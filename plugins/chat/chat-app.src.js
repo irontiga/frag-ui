@@ -1,3 +1,7 @@
+import '@webcomponents/webcomponentsjs/webcomponents-loader.js'
+/* Es6 browser but transpi;led code */
+import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js'
+
 /* Just a copy paste for setting up elements :) */
 import { LitElement, html, css } from 'lit-element'
 import { Epml } from '../../src/epml.js'
@@ -10,7 +14,8 @@ import '@polymer/iron-icon/iron-icon.js'
 
 // const serverUrl = '127.0.0.1:3000'
 // const serverUrl = '192.168.43.19:3000'
-const serverPort = '3000'
+// const serverPort = '3000'
+const serverPort = window.location.port
 
 const parentEpml = new Epml({ type: 'WINDOW', source: window.parent })
 
@@ -146,7 +151,7 @@ class ChatApp extends LitElement {
                 setTimeout(() => this.scrollBottom(), 1)
             })
 
-            fetch('http://' + window.location.hostname + ':' + serverPort + '/messages')
+            fetch('http://' + window.location.hostname + ':' + serverPort + '/chat/messages')
                 .then(res => res.json())
                 .then(messages => {
                     this.messages = messages
@@ -160,7 +165,7 @@ class ChatApp extends LitElement {
         const message = messageElement.value.trim()
         if (message.length === 0) return
         this.sending = true
-        fetch('http://' + window.location.hostname + ':' + serverPort + '/messages', {
+        fetch('http://' + window.location.hostname + ':' + serverPort + '/chat/messages', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -172,7 +177,7 @@ class ChatApp extends LitElement {
             // eslint-disable-next-line no-throw-literal
             if (!res.ok) throw 'Unexpected response'
             messageElement.value = ''
-            messageElement.focus()
+            setTimeout(() => messageElement.focus(), 1)
         }).catch(err => {
             this.sending = false
             alert(err)

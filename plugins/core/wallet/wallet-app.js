@@ -1,3 +1,8 @@
+/* Webcomponents polyfill... https://github.com/webcomponents/webcomponentsjs#using-webcomponents-loaderjs */
+import '@webcomponents/webcomponentsjs/webcomponents-loader.js'
+/* Es6 browser but transpi;led code */
+import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js'
+
 import { LitElement, html, css } from 'lit-element'
 import { Epml } from '../../../src/epml.js'
 
@@ -63,12 +68,6 @@ class WalletApp extends LitElement {
             addressInfoStreams: { type: Object },
             unconfirmedTransactionStreams: { type: Object }
         }
-    }
-    static get observers () {
-        return [
-            // "_addressObserver(selectedAddress.address)"
-            '_getSelectedAddressInfo(addressesInfo, selectedAddress)'
-        ]
     }
 
     static get styles () {
@@ -356,13 +355,6 @@ class WalletApp extends LitElement {
         // console.log(transactions, unconfirmedTransactions)
         if (!(transactions && unconfirmedTransactions)) return []
         return [].concat(unconfirmedTransactions, transactions)
-    }
-
-    _getSelectedAddressInfo (addressesInfo, selectedAddress) {
-        console.log('========SETTING SELECTED ADDR INFO', addressesInfo[selectedAddress.address])
-        // return addressesInfo[selectedAddress.address]
-        this.selectedAddressInfo = addressesInfo[selectedAddress.address]
-        this.loading = false
     }
 
     firstUpdated () {
