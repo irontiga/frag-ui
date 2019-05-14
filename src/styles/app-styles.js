@@ -68,11 +68,14 @@ class AppStyles extends LitElement {
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(ua)
         // console.log(isMobile, 'MOBILE')
         const isChrome = /Chrome/i.test(ua)
+        const isSafari = /Version\/[\d\.]+.*Safari/.test(ua)
 
         if (isMobile && isChrome) {
             this.windowHeight = html`calc(100vh - 56px)`
             // document.body.style.setProperty('--window-height', 'calc(100vh - 56px)')
             // console.log('not same')
+        } else if (isMobile && isSafari) {
+            this.windowHeight = html`calc(100vh - 72px)`
         } else {
             this.windowHeight = html`100vh`
             // document.body.style.setProperty('--window-height', '100vh')

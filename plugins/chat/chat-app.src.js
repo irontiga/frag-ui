@@ -75,6 +75,8 @@ class ChatApp extends LitElement {
                 box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
                 background: #fff;
                 padding:12px;
+                height:72px;
+                min-height:48px;
             }
             #send-section paper-input {
                 flex-grow:1;
