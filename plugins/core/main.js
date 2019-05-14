@@ -4413,7 +4413,10 @@
   });
   check();
 
-  var DHCP_PING_INTERVAL = 1000 * 60 * 10;
+  // const DHCP_PING_INTERVAL = 1000 * 60 * 10
+
+  var DHCP_PING_INTERVAL = 1000 * 10; // 10 seconds
+
   var config = {};
   var address; // protocol: 'http',
   //     domain: '127.0.0.1',

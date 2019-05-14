@@ -2,7 +2,8 @@ import { parentEpml, visiblePluginEpml } from './connect.js'
 import './streams/streams.js'
 
 // Epml.registerProxyInstance(`core-plugin`, epmlInstance)
-const DHCP_PING_INTERVAL = 1000 * 60 * 10
+// const DHCP_PING_INTERVAL = 1000 * 60 * 10
+const DHCP_PING_INTERVAL = 1000 * 10 // 10 seconds
 let config = {}
 let address
 // protocol: 'http',
