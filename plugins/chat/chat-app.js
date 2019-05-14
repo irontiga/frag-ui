@@ -8584,7 +8584,8 @@
         // if (typeof source !== 'object') return false
         // console.log('FOCUS FNS', source.focus === window.focus)
         // return (source === source.window && source.focus === window.focus) // <- Cause cors is a beach
-        return _typeof_1(source) === 'object' && source.focus === window.focus;
+        // return (typeof source === 'object' && source.focus === window.focus)
+        return _typeof_1(source) === 'object' && source === source.self;
       }
     }, {
       key: "sources",
