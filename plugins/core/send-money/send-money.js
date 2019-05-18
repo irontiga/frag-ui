@@ -3754,6 +3754,341 @@
 
   var inherits = _inherits;
 
+  // `Array.from` method
+  // https://tc39.github.io/ecma262/#sec-array.from
+  var arrayFrom = function from(arrayLike /* , mapfn = undefined, thisArg = undefined */) {
+    var O = toObject(arrayLike);
+    var C = typeof this == 'function' ? this : Array;
+    var argumentsLength = arguments.length;
+    var mapfn = argumentsLength > 1 ? arguments[1] : undefined;
+    var mapping = mapfn !== undefined;
+    var index = 0;
+    var iteratorMethod = getIteratorMethod(O);
+    var length, result, step, iterator;
+    if (mapping) mapfn = bindContext(mapfn, argumentsLength > 2 ? arguments[2] : undefined, 2);
+    // if the target is not iterable or it's an array with the default iterator - use a simple case
+    if (iteratorMethod != undefined && !(C == Array && isArrayIteratorMethod(iteratorMethod))) {
+      iterator = iteratorMethod.call(O);
+      result = new C();
+      for (;!(step = iterator.next()).done; index++) {
+        createProperty(result, index, mapping
+          ? callWithSafeIterationClosing(iterator, mapfn, [step.value, index], true)
+          : step.value
+        );
+      }
+    } else {
+      length = toLength(O.length);
+      result = new C(length);
+      for (;length > index; index++) {
+        createProperty(result, index, mapping ? mapfn(O[index], index) : O[index]);
+      }
+    }
+    result.length = index;
+    return result;
+  };
+
+  var INCORRECT_ITERATION$1 = !checkCorrectnessOfIteration(function (iterable) {
+  });
+
+  // `Array.from` method
+  // https://tc39.github.io/ecma262/#sec-array.from
+  _export({ target: 'Array', stat: true, forced: INCORRECT_ITERATION$1 }, {
+    from: arrayFrom
+  });
+
+  var from_1 = path.Array.from;
+
+  var from_1$1 = from_1;
+
+  var from_1$2 = from_1$1;
+
+  /**
+   * @license
+   * Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
+   * This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+   * The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+   * The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+   * Code distributed by Google as part of the polymer project is also
+   * subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+   */
+  (function () {
+    /**
+     * Basic flow of the loader process
+     *
+     * There are 4 flows the loader can take when booting up
+     *
+     * - Synchronous script, no polyfills needed
+     *   - wait for `DOMContentLoaded`
+     *   - fire WCR event, as there could not be any callbacks passed to `waitFor`
+     *
+     * - Synchronous script, polyfills needed
+     *   - document.write the polyfill bundle
+     *   - wait on the `load` event of the bundle to batch Custom Element upgrades
+     *   - wait for `DOMContentLoaded`
+     *   - run callbacks passed to `waitFor`
+     *   - fire WCR event
+     *
+     * - Asynchronous script, no polyfills needed
+     *   - wait for `DOMContentLoaded`
+     *   - run callbacks passed to `waitFor`
+     *   - fire WCR event
+     *
+     * - Asynchronous script, polyfills needed
+     *   - Append the polyfill bundle script
+     *   - wait for `load` event of the bundle
+     *   - batch Custom Element Upgrades
+     *   - run callbacks pass to `waitFor`
+     *   - fire WCR event
+     */
+
+    var polyfillsLoaded = false;
+    var whenLoadedFns = [];
+    var allowUpgrades = false;
+    var flushFn;
+
+    function fireEvent() {
+      window.WebComponents.ready = true;
+      document.dispatchEvent(new CustomEvent('WebComponentsReady', {
+        bubbles: true
+      }));
+    }
+
+    function batchCustomElements() {
+      if (window.customElements && customElements.polyfillWrapFlushCallback) {
+        customElements.polyfillWrapFlushCallback(function (flushCallback) {
+          flushFn = flushCallback;
+
+          if (allowUpgrades) {
+            flushFn();
+          }
+        });
+      }
+    }
+
+    function asyncReady() {
+      batchCustomElements();
+      ready();
+    }
+
+    function ready() {
+      // bootstrap <template> elements before custom elements
+      if (window.HTMLTemplateElement && HTMLTemplateElement.bootstrap) {
+        HTMLTemplateElement.bootstrap(window.document);
+      }
+
+      polyfillsLoaded = true;
+      runWhenLoadedFns().then(fireEvent);
+    }
+
+    function runWhenLoadedFns() {
+      allowUpgrades = false;
+
+      var fnsMap = map$2(whenLoadedFns).call(whenLoadedFns, function (fn) {
+        return fn instanceof Function ? fn() : fn;
+      });
+
+      whenLoadedFns = [];
+      return promise$3.all(fnsMap).then(function () {
+        allowUpgrades = true;
+        flushFn && flushFn();
+      }).catch(function (err) {
+        console.error(err);
+      });
+    }
+
+    window.WebComponents = window.WebComponents || {};
+    window.WebComponents.ready = window.WebComponents.ready || false;
+
+    window.WebComponents.waitFor = window.WebComponents.waitFor || function (waitFn) {
+      if (!waitFn) {
+        return;
+      }
+
+      whenLoadedFns.push(waitFn);
+
+      if (polyfillsLoaded) {
+        runWhenLoadedFns();
+      }
+    };
+
+    window.WebComponents._batchCustomElements = batchCustomElements;
+    var name = 'webcomponents-loader.js'; // Feature detect which polyfill needs to be imported.
+
+    var polyfills = [];
+
+    if (!('attachShadow' in Element.prototype && 'getRootNode' in Element.prototype) || window.ShadyDOM && window.ShadyDOM.force) {
+      polyfills.push('sd');
+    }
+
+    if (!window.customElements || window.customElements.forcePolyfill) {
+      polyfills.push('ce');
+    }
+
+    var needsTemplate = function () {
+      // no real <template> because no `content` property (IE and older browsers)
+      var t = document.createElement('template');
+
+      if (!('content' in t)) {
+        return true;
+      } // broken doc fragment (older Edge)
+
+
+      if (!(t.content.cloneNode() instanceof DocumentFragment)) {
+        return true;
+      } // broken <template> cloning (Edge up to at least version 17)
+
+
+      var t2 = document.createElement('template');
+      t2.content.appendChild(document.createElement('div'));
+      t.content.appendChild(t2);
+      var clone = t.cloneNode(true);
+      return clone.content.childNodes.length === 0 || clone.content.firstChild.content.childNodes.length === 0;
+    }(); // NOTE: any browser that does not have template or ES6 features
+    // must load the full suite of polyfills.
+
+
+    if (!window.Promise || !from_1$2 || !window.URL || !window.Symbol || needsTemplate) {
+      polyfills = ['sd-ce-pf'];
+    }
+
+    if (polyfills.length) {
+      var url;
+      var polyfillFile = 'bundles/webcomponents-' + polyfills.join('-') + '.js'; // Load it from the right place.
+
+      if (window.WebComponents.root) {
+        url = window.WebComponents.root + polyfillFile;
+      } else {
+        var script = document.querySelector('script[src*="' + name + '"]'); // Load it from the right place.
+
+        url = script.src.replace(name, polyfillFile);
+      }
+
+      var newScript = document.createElement('script');
+      newScript.src = url; // if readyState is 'loading', this script is synchronous
+
+      if (document.readyState === 'loading') {
+        // make sure custom elements are batched whenever parser gets to the injected script
+        newScript.setAttribute('onload', 'window.WebComponents._batchCustomElements()');
+        document.write(newScript.outerHTML);
+        document.addEventListener('DOMContentLoaded', ready);
+      } else {
+        newScript.addEventListener('load', function () {
+          asyncReady();
+        });
+        newScript.addEventListener('error', function () {
+          throw new Error('Could not load polyfill bundle' + url);
+        });
+        document.head.appendChild(newScript);
+      }
+    } else {
+      // if readyState is 'complete', script is loaded imperatively on a spec-compliant browser, so just fire WCR
+      if (document.readyState === 'complete') {
+        polyfillsLoaded = true;
+        fireEvent();
+      } else {
+        // this script may come between DCL and load, so listen for both, and cancel load listener if DCL fires
+        window.addEventListener('load', ready);
+        window.addEventListener('DOMContentLoaded', function () {
+          window.removeEventListener('load', ready);
+          ready();
+        });
+      }
+    }
+  })();
+
+  var arraySlice = [].slice;
+  var factories = {};
+
+  var construct = function (C, argsLength, args) {
+    if (!(argsLength in factories)) {
+      for (var list = [], i = 0; i < argsLength; i++) list[i] = 'a[' + i + ']';
+      // eslint-disable-next-line no-new-func
+      factories[argsLength] = Function('C,a', 'return new C(' + list.join(',') + ')');
+    } return factories[argsLength](C, args);
+  };
+
+  // `Function.prototype.bind` method implementation
+  // https://tc39.github.io/ecma262/#sec-function.prototype.bind
+  var functionBind = Function.bind || function bind(that /* , ...args */) {
+    var fn = aFunction(this);
+    var partArgs = arraySlice.call(arguments, 1);
+    var boundFunction = function bound(/* args... */) {
+      var args = partArgs.concat(arraySlice.call(arguments));
+      return this instanceof boundFunction ? construct(fn, args.length, args) : fn.apply(that, args);
+    };
+    if (isObject(fn.prototype)) boundFunction.prototype = fn.prototype;
+    return boundFunction;
+  };
+
+  var nativeConstruct = (global.Reflect || {}).construct;
+
+  // `Reflect.construct` method
+  // https://tc39.github.io/ecma262/#sec-reflect.construct
+  // MS Edge supports only 2 arguments and argumentsList argument is optional
+  // FF Nightly sets third argument as `new.target`, but does not create `this` from it
+  var NEW_TARGET_BUG = fails(function () {
+    function F() { /* empty */ }
+    return !(nativeConstruct(function () { /* empty */ }, [], F) instanceof F);
+  });
+  var ARGS_BUG = !fails(function () {
+    nativeConstruct(function () { /* empty */ });
+  });
+  var FORCED$4 = NEW_TARGET_BUG || ARGS_BUG;
+
+  _export({ target: 'Reflect', stat: true, forced: FORCED$4, sham: FORCED$4 }, {
+    construct: function construct(Target, args /* , newTarget */) {
+      aFunction(Target);
+      anObject(args);
+      var newTarget = arguments.length < 3 ? Target : aFunction(arguments[2]);
+      if (ARGS_BUG && !NEW_TARGET_BUG) return nativeConstruct(Target, args, newTarget);
+      if (Target == newTarget) {
+        // w/o altered newTarget, optimization for 0-4 arguments
+        switch (args.length) {
+          case 0: return new Target();
+          case 1: return new Target(args[0]);
+          case 2: return new Target(args[0], args[1]);
+          case 3: return new Target(args[0], args[1], args[2]);
+          case 4: return new Target(args[0], args[1], args[2], args[3]);
+        }
+        // w/o altered newTarget, lot of arguments case
+        var $args = [null];
+        $args.push.apply($args, args);
+        return new (functionBind.apply(Target, $args))();
+      }
+      // with altered newTarget, not support built-in constructors
+      var proto = newTarget.prototype;
+      var instance = objectCreate(isObject(proto) ? proto : Object.prototype);
+      var result = Function.apply.call(Target, instance, args);
+      return isObject(result) ? result : instance;
+    }
+  });
+
+  var construct$1 = path.Reflect.construct;
+
+  var construct$2 = construct$1;
+
+  var construct$3 = construct$2;
+
+  /**
+  @license @nocompile
+  Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
+  This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+  The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+  The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+  Code distributed by Google as part of the polymer project is also
+  subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+  */
+  (function () {
+
+    (function () {
+      if (void 0 === window.Reflect || void 0 === window.customElements || window.customElements.polyfillWrapFlushCallback) return;
+      var a = HTMLElement;
+      window.HTMLElement = function HTMLElement() {
+        return construct$3(a, [], this.constructor);
+      }, HTMLElement.prototype = a.prototype, HTMLElement.prototype.constructor = HTMLElement, setPrototypeOf$2(HTMLElement, a);
+    })();
+  })();
+
   var defineProperty$5 = objectDefineProperty.f;
   var each = arrayMethods(0);
 
@@ -4530,53 +4865,9 @@
 
   var arrayWithoutHoles = _arrayWithoutHoles;
 
-  // `Array.from` method
-  // https://tc39.github.io/ecma262/#sec-array.from
-  var arrayFrom = function from(arrayLike /* , mapfn = undefined, thisArg = undefined */) {
-    var O = toObject(arrayLike);
-    var C = typeof this == 'function' ? this : Array;
-    var argumentsLength = arguments.length;
-    var mapfn = argumentsLength > 1 ? arguments[1] : undefined;
-    var mapping = mapfn !== undefined;
-    var index = 0;
-    var iteratorMethod = getIteratorMethod(O);
-    var length, result, step, iterator;
-    if (mapping) mapfn = bindContext(mapfn, argumentsLength > 2 ? arguments[2] : undefined, 2);
-    // if the target is not iterable or it's an array with the default iterator - use a simple case
-    if (iteratorMethod != undefined && !(C == Array && isArrayIteratorMethod(iteratorMethod))) {
-      iterator = iteratorMethod.call(O);
-      result = new C();
-      for (;!(step = iterator.next()).done; index++) {
-        createProperty(result, index, mapping
-          ? callWithSafeIterationClosing(iterator, mapfn, [step.value, index], true)
-          : step.value
-        );
-      }
-    } else {
-      length = toLength(O.length);
-      result = new C(length);
-      for (;length > index; index++) {
-        createProperty(result, index, mapping ? mapfn(O[index], index) : O[index]);
-      }
-    }
-    result.length = index;
-    return result;
-  };
+  var from_1$3 = from_1;
 
-  var INCORRECT_ITERATION$1 = !checkCorrectnessOfIteration(function (iterable) {
-  });
-
-  // `Array.from` method
-  // https://tc39.github.io/ecma262/#sec-array.from
-  _export({ target: 'Array', stat: true, forced: INCORRECT_ITERATION$1 }, {
-    from: arrayFrom
-  });
-
-  var from_1 = path.Array.from;
-
-  var from_1$1 = from_1;
-
-  var from_1$2 = from_1$1;
+  var from_1$4 = from_1$3;
 
   var ITERATOR$5 = wellKnownSymbol('iterator');
 
@@ -4594,7 +4885,7 @@
   var isIterable$2 = isIterable$1;
 
   function _iterableToArray(iter) {
-    if (isIterable$2(Object(iter)) || Object.prototype.toString.call(iter) === "[object Arguments]") return from_1$2(iter);
+    if (isIterable$2(Object(iter)) || Object.prototype.toString.call(iter) === "[object Arguments]") return from_1$4(iter);
   }
 
   var iterableToArray = _iterableToArray;
@@ -5922,10 +6213,6 @@
     return new TemplateResult(strings, values, 'html', defaultTemplateProcessor);
   };
 
-  var from_1$3 = from_1;
-
-  var from_1$4 = from_1$3;
-
   var walkerNodeFilter = 133
   /* NodeFilter.SHOW_{ELEMENT|COMMENT|TEXT} */
   ;
@@ -6145,7 +6432,7 @@
 
           var styles = new set$4();
 
-          forEach$4(_context3 = from_1$4(content.querySelectorAll('style'))).call(_context3, function (s) {
+          forEach$4(_context3 = from_1$2(content.querySelectorAll('style'))).call(_context3, function (s) {
             styles.add(s);
           });
 
@@ -6673,30 +6960,6 @@
 
   var isNativeFunction = _isNativeFunction;
 
-  var arraySlice = [].slice;
-  var factories = {};
-
-  var construct = function (C, argsLength, args) {
-    if (!(argsLength in factories)) {
-      for (var list = [], i = 0; i < argsLength; i++) list[i] = 'a[' + i + ']';
-      // eslint-disable-next-line no-new-func
-      factories[argsLength] = Function('C,a', 'return new C(' + list.join(',') + ')');
-    } return factories[argsLength](C, args);
-  };
-
-  // `Function.prototype.bind` method implementation
-  // https://tc39.github.io/ecma262/#sec-function.prototype.bind
-  var functionBind = Function.bind || function bind(that /* , ...args */) {
-    var fn = aFunction(this);
-    var partArgs = arraySlice.call(arguments, 1);
-    var boundFunction = function bound(/* args... */) {
-      var args = partArgs.concat(arraySlice.call(arguments));
-      return this instanceof boundFunction ? construct(fn, args.length, args) : fn.apply(that, args);
-    };
-    if (isObject(fn.prototype)) boundFunction.prototype = fn.prototype;
-    return boundFunction;
-  };
-
   // `Function.prototype.bind` method
   // https://tc39.github.io/ecma262/#sec-function.prototype.bind
   _export({ target: 'Function', proto: true }, {
@@ -6716,63 +6979,18 @@
 
   var bind$3 = bind$2;
 
-  var nativeConstruct = (global.Reflect || {}).construct;
+  var construct$4 = construct$1;
 
-  // `Reflect.construct` method
-  // https://tc39.github.io/ecma262/#sec-reflect.construct
-  // MS Edge supports only 2 arguments and argumentsList argument is optional
-  // FF Nightly sets third argument as `new.target`, but does not create `this` from it
-  var NEW_TARGET_BUG = fails(function () {
-    function F() { /* empty */ }
-    return !(nativeConstruct(function () { /* empty */ }, [], F) instanceof F);
-  });
-  var ARGS_BUG = !fails(function () {
-    nativeConstruct(function () { /* empty */ });
-  });
-  var FORCED$4 = NEW_TARGET_BUG || ARGS_BUG;
+  var construct$5 = construct$4;
 
-  _export({ target: 'Reflect', stat: true, forced: FORCED$4, sham: FORCED$4 }, {
-    construct: function construct(Target, args /* , newTarget */) {
-      aFunction(Target);
-      anObject(args);
-      var newTarget = arguments.length < 3 ? Target : aFunction(arguments[2]);
-      if (ARGS_BUG && !NEW_TARGET_BUG) return nativeConstruct(Target, args, newTarget);
-      if (Target == newTarget) {
-        // w/o altered newTarget, optimization for 0-4 arguments
-        switch (args.length) {
-          case 0: return new Target();
-          case 1: return new Target(args[0]);
-          case 2: return new Target(args[0], args[1]);
-          case 3: return new Target(args[0], args[1], args[2]);
-          case 4: return new Target(args[0], args[1], args[2], args[3]);
-        }
-        // w/o altered newTarget, lot of arguments case
-        var $args = [null];
-        $args.push.apply($args, args);
-        return new (functionBind.apply(Target, $args))();
-      }
-      // with altered newTarget, not support built-in constructors
-      var proto = newTarget.prototype;
-      var instance = objectCreate(isObject(proto) ? proto : Object.prototype);
-      var result = Function.apply.call(Target, instance, args);
-      return isObject(result) ? result : instance;
-    }
-  });
-
-  var construct$1 = path.Reflect.construct;
-
-  var construct$2 = construct$1;
-
-  var construct$3 = construct$2;
-
-  var construct$4 = createCommonjsModule(function (module) {
+  var construct$6 = createCommonjsModule(function (module) {
   function isNativeReflectConstruct() {
-    if (typeof Reflect === "undefined" || !construct$3) return false;
-    if (construct$3.sham) return false;
+    if (typeof Reflect === "undefined" || !construct$5) return false;
+    if (construct$5.sham) return false;
     if (typeof Proxy === "function") return true;
 
     try {
-      Date.prototype.toString.call(construct$3(Date, [], function () {}));
+      Date.prototype.toString.call(construct$5(Date, [], function () {}));
       return true;
     } catch (e) {
       return false;
@@ -6781,7 +6999,7 @@
 
   function _construct(Parent, args, Class) {
     if (isNativeReflectConstruct()) {
-      module.exports = _construct = construct$3;
+      module.exports = _construct = construct$5;
     } else {
       module.exports = _construct = function _construct(Parent, args, Class) {
         var a = [null];
@@ -6819,7 +7037,7 @@
       }
 
       function Wrapper() {
-        return construct$4(Class, arguments, getPrototypeOf$5(this).constructor);
+        return construct$6(Class, arguments, getPrototypeOf$5(this).constructor);
       }
 
       Wrapper.prototype = create$4(Class.prototype, {
@@ -8699,12 +8917,12 @@
     }, {
       key: "sources",
       get: function get() {
-        return from_1$4(keys$5(sourceTargetMap).call(sourceTargetMap));
+        return from_1$2(keys$5(sourceTargetMap).call(sourceTargetMap));
       }
     }, {
       key: "targets",
       get: function get() {
-        return from_1$4(values$2(sourceTargetMap).call(sourceTargetMap));
+        return from_1$2(values$2(sourceTargetMap).call(sourceTargetMap));
       }
     }, {
       key: "type",
@@ -9217,10 +9435,10 @@
           }
         }
 
-        map$2(_context = from_1$4(entries$5(proxySources).call(proxySources))).call(_context, function (sourceProxy, valueMap) {
+        map$2(_context = from_1$2(entries$5(proxySources).call(proxySources))).call(_context, function (sourceProxy, valueMap) {
           return {
             proxy: sourceProxy,
-            target: from_1$4(keys$5(valueMap).call(valueMap))[0]
+            target: from_1$2(keys$5(valueMap).call(valueMap))[0]
           };
         });
       } // ==================================================
@@ -9230,7 +9448,7 @@
     }, {
       key: "targets",
       get: function get() {
-        return from_1$4(values$2(proxySources).call(proxySources));
+        return from_1$2(values$2(proxySources).call(proxySources));
       }
     }, {
       key: "type",
@@ -17160,7 +17378,7 @@
           // as attributes are added and removed
           var noted = false;
 
-          var attrs = from_1$4(node.attributes);
+          var attrs = from_1$2(node.attributes);
 
           for (var i = attrs.length - 1, a; a = attrs[i]; i--) {
             noted = this._parseTemplateNodeAttribute(node, templateInfo, nodeInfo, a.name, a.value) || noted;
@@ -23759,7 +23977,7 @@
         } else {
           var _context, _context2;
 
-          return reduce$2(_context = map$2(_context2 = from_1$4(wrapped.childNodes)).call(_context2, function (node) {
+          return reduce$2(_context = map$2(_context2 = from_1$2(wrapped.childNodes)).call(_context2, function (node) {
             if (isSlot(node)) {
               node =
               /** @type {!HTMLSlotElement} */
@@ -32984,7 +33202,7 @@
   }
 
   function _templateObject$e() {
-    var data = taggedTemplateLiteral(["\n            <div id=\"sendMoneyWrapper\" style=\"width:auto; padding:10px; background: #fff; height:100vh;\">\n                <div class=\"layout horizontal center\" style=\" padding:12px 15px;\">\n                    <paper-card style=\"width:100%; max-width:740px;\">\n                        <div style=\"background-color: ", "; margin:0; color: ", ";\">\n\n                            <h3 style=\"margin:0; padding:8px 0;\">Send money</h3>\n\n                            <div class=\"selectedBalance\">\n                                <!--  style$=\"color: {{selectedAddress.color}}\" -->\n                                <span class=\"balance\">", " KMX\n                                    (", " USD)</span> available for\n                                transfer from\n                                <span>", "</span>\n                            </div>\n                        </div>\n\n                    </paper-card>\n                    <paper-input\n                        id=\"USDAmountInput\"\n                        label=\"Amount (USD)\"\n                        @keyup=", "\n                        ?hidden=\"", "\"\n                        value=\"", "\"\n                        type=\"number\">\n                    <div slot=\"prefix\">$ &nbsp;</div>\n                    </paper-input>\n                    <paper-input\n                        id=\"amountInput\"\n                        required\n                        label=\"Amount (KMX)\"\n                        @keyup=\"", "\"\n                        @input=", "\n                        type=\"number\"\n                        auto-validate=\"false\"\n                        invalid=", "\n                        value=\"", "\"\n                        error-message=\"Insufficient funds\"></paper-input>\n                    <paper-input label=\"To (address or name)\" id=\"recipient\" type=\"text\" value=\"", "\"></paper-input>\n                    \n                    <!-- <paper-input label=\"Fee\" type=\"text\" value=\"{{fee}}\"></paper-input> -->\n                    \n                    <p style=\"color:red\">", "</p>\n                    <p style=\"color:green;word-break: break-word;\">", "</p>\n                    \n                    ", "\n\n                    <div class=\"buttons\" >\n                        <div>\n                            <mwc-button ?disabled=", " style=\"width:100%;\" raised autofocus @click=", ">Send &nbsp;\n                                <iron-icon icon=\"send\"></iron-icon>\n                            </mwc-button>\n                        </div>\n                    </div>\n                    \n                    \n                </div>\n            </div>\n        "]);
+    var data = taggedTemplateLiteral(["\n            <div id=\"sendMoneyWrapper\" style=\"width:auto; padding:10px; background: #fff; height:100vh;\">\n                <div class=\"layout horizontal center\" style=\" padding:12px 15px;\">\n                    <paper-card style=\"width:100%; max-width:740px;\">\n                        <div style=\"background-color: ", "; margin:0; color: ", ";\">\n\n                            <h3 style=\"margin:0; padding:8px 0;\">Send money</h3>\n\n                            <div class=\"selectedBalance\">\n                                <!--  style$=\"color: {{selectedAddress.color}}\" -->\n                                <span class=\"balance\">", " KMX\n                                    (", " USD)</span> available for\n                                transfer from\n                                <span>", "</span>\n                            </div>\n                        </div>\n\n                    </paper-card>\n                    <paper-input\n                        id=\"USDAmountInput\"\n                        label=\"Amount (USD)\"\n                        @keyup=", "\n                        ?hidden=\"", "\"\n                        value=\"", "\"\n                        type=\"number\">\n                    <div slot=\"prefix\">$ &nbsp;</div>\n                    </paper-input>\n                    <paper-input\n                        id=\"amountInput\"\n                        required\n                        label=\"Amount (KMX)\"\n                        @keyup=\"", "\"\n                        @input=", "\n                        type=\"number\"\n                        auto-validate=\"false\"\n                        invalid=", "\n                        value=\"", "\"\n                        error-message=\"Insufficient funds\"></paper-input>\n                    <paper-input label=\"To (address or name)\" id=\"recipient\" type=\"text\" value=\"", "\"></paper-input>\n                    <!-- <paper-input label=\"Fee\" type=\"text\" value=\"{{fee}}\"></paper-input> -->\n                    \n                    <p style=\"color:red\">", "</p>\n                    <p style=\"color:green;word-break: break-word;\">", "</p>\n                    \n                    ", "\n\n                    <div class=\"buttons\" >\n                        <div>\n                            <mwc-button ?disabled=", " style=\"width:100%;\" raised autofocus @click=", ">Send &nbsp;\n                                <iron-icon icon=\"send\"></iron-icon>\n                            </mwc-button>\n                        </div>\n                    </div>\n                    \n                    \n                </div>\n            </div>\n        "]);
 
     _templateObject$e = function _templateObject() {
       return data;
@@ -33112,7 +33330,7 @@
                     nonce: this.selectedAddress.nonce,
                     params: {
                       recipient: recipient,
-                      amount: amount,
+                      amount: amount * Math.pow(10, 8),
                       lastReference: lastRef // ,
                       // fee
 
@@ -33122,54 +33340,56 @@
                 case 16:
                   txRequestResponse = _context2.sent;
                   console.log(txRequestResponse);
-                  responseData = txRequestResponse; // JSON.parse(txRequestResponse)
+                  responseData = JSON.parse(txRequestResponse); // JSON.parse(txRequestResponse)
+
+                  console.log(responseData);
 
                   if (responseData.reference) {
-                    _context2.next = 25;
+                    _context2.next = 26;
                     break;
                   }
 
                   if (!(responseData.success === false)) {
-                    _context2.next = 22;
+                    _context2.next = 23;
                     break;
                   }
 
                   throw new Error(responseData);
 
-                case 22:
+                case 23:
                   if (!ERROR_CODES[responseData]) {
-                    _context2.next = 24;
+                    _context2.next = 25;
                     break;
                   }
 
                   throw new Error(concat$4(_context = "Error!. Code ".concat(responseData, ": ")).call(_context, ERROR_CODES[responseData]));
 
-                case 24:
+                case 25:
                   throw new Error("Error!. ".concat(responseData));
 
-                case 25:
+                case 26:
                   this.errorMessage = '';
                   this.recipient = '';
                   this.amount = '';
                   this.successMessage = 'Success! ' + txRequestResponse;
-                  _context2.next = 35;
+                  _context2.next = 36;
                   break;
 
-                case 31:
-                  _context2.prev = 31;
+                case 32:
+                  _context2.prev = 32;
                   _context2.t0 = _context2["catch"](4);
                   console.error(_context2.t0);
                   this.errorMessage = _context2.t0.message;
 
-                case 35:
+                case 36:
                   this.sendMoneyLoading = false;
 
-                case 36:
+                case 37:
                 case "end":
                   return _context2.stop();
               }
             }
-          }, _callee, this, [[4, 31]]);
+          }, _callee, this, [[4, 32]]);
         }));
 
         function _sendMoney(_x) {
@@ -33223,6 +33443,9 @@
           },
           recipient: {
             type: String
+          },
+          validAmount: {
+            type: Boolean
           }
         };
       }

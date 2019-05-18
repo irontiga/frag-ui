@@ -1,3 +1,7 @@
+import '@webcomponents/webcomponentsjs/webcomponents-loader.js'
+/* Es6 browser but transpi;led code */
+import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js'
+
 import { LitElement, html, css } from 'lit-element'
 import { ERROR_CODES } from '../../../src/qora/constants.js'
 import { Epml } from '../../../src/epml.js'
@@ -34,7 +38,8 @@ class SendMoneyPage extends LitElement {
             addressInfoStreams: { type: Object },
             unconfirmedTransactionStreams: { type: Object },
             maxWidth: { type: String },
-            recipient: { type: String }
+            recipient: { type: String },
+            validAmount: { type: Boolean }
         }
     }
 
@@ -163,7 +168,6 @@ class SendMoneyPage extends LitElement {
                         value="${this.amount}"
                         error-message="Insufficient funds"></paper-input>
                     <paper-input label="To (address or name)" id="recipient" type="text" value="${this.recipient}"></paper-input>
-                    
                     <!-- <paper-input label="Fee" type="text" value="{{fee}}"></paper-input> -->
                     
                     <p style="color:red">${this.errorMessage}</p>
@@ -243,7 +247,7 @@ class SendMoneyPage extends LitElement {
                 nonce: this.selectedAddress.nonce,
                 params: {
                     recipient,
-                    amount,
+                    amount: amount * Math.pow(10, 8),
                     lastReference: lastRef
                     // ,
                     // fee
@@ -251,7 +255,8 @@ class SendMoneyPage extends LitElement {
             })
 
             console.log(txRequestResponse)
-            const responseData = txRequestResponse // JSON.parse(txRequestResponse)
+            const responseData = JSON.parse(txRequestResponse) // JSON.parse(txRequestResponse)
+            console.log(responseData)
             if (!responseData.reference) {
                 if (responseData.success === false) {
                     throw new Error(responseData)
