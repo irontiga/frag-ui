@@ -7,7 +7,7 @@ const pendingRegisteredNames = db.addCollection('pendingRegisteredNames')
 
 const apiNode = config.coin.node.api
 
-const timeTillExpire = 10 * 60 * 1000 // 10 minutes 
+const timeTillExpire = 10 * 60 * 1000 // 10 minutes
 
 setInterval(() => {
     const pendingNames = pendingRegisteredNames.find()

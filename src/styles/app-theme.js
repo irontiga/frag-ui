@@ -48,6 +48,10 @@ class AppTheme extends connect(store)(LitElement) {
                     --mdc-theme-error: ${this.theme.colors.error};
                     --mdc-theme-warning: ${this.theme.colors.warning};
                 }
+
+                paper-spinner-lite, paper-spinner {
+                    --paper-spinner-color: var(--mdc-theme-secondary)
+                }
                 
             </style>
         `

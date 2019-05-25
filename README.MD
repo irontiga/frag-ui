@@ -16,3 +16,6 @@ But some aren't...falls back on https://www.webcomponents.org/author/PolymerElem
 Using redux for state management
 
 Uses EpmlJS https://github.com/irontiga/epml which is a "v2" of https://irontiga.github.io/wimp-js/
+
+If out of memory...
+```node --max-old-space-size=8192 node_modules/rollup/bin/rollup -c rollup.config.js --watch```

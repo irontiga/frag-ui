@@ -2,12 +2,14 @@ import { LitElement, html, css } from 'lit-element'
 import { connect } from 'pwa-helpers'
 import { store } from '../store.js'
 // import download from '../api/deps/download.js'
+import { UPDATE_NAME_STATUSES } from '../redux/user/user-actions.js'
 
 // import '@material/mwc-icon'
 import '@polymer/paper-icon-button/paper-icon-button.js'
 import '@polymer/iron-icons/iron-icons.js'
 import '@polymer/paper-dialog'
 import '@polymer/paper-toast'
+import '@polymer/paper-spinner/paper-spinner-lite'
 
 class WalletProfile extends connect(store)(LitElement) {
     static get properties () {
@@ -57,6 +59,8 @@ class WalletProfile extends connect(store)(LitElement) {
                     font-weight:100;
                     display: inline-block;
                     width:100%;
+                    padding-bottom:8px;
+                    ${this.user.accountInfo.nameStatus !== UPDATE_NAME_STATUSES.LOADED ? 'font-style: italic;' : ''}
                 }
                 #address {
                     white-space: nowrap; 
@@ -68,9 +72,14 @@ class WalletProfile extends connect(store)(LitElement) {
                     font-size:12px;
                     /* padding-top:8px; */
                 }
-
-
+                paper-spinner-lite#name-spinner {
+                    top: 8px;
+                    margin-left:8px;
+                    --paper-spinner-stroke-width: 1px;
+                    --paper-spinner-color: var(--mdc-theme-secondary) /* Shouldn't have to do this :( */
+                }
             </style>
+
 
             <div id="profileInMenu">
                 <!-- <paper-ripple></paper-ripple> -->
@@ -78,13 +87,16 @@ class WalletProfile extends connect(store)(LitElement) {
                     <mwc-icon id='accountIcon'>account_circle</mwc-icon>
                 </div>
                 <div style="padding: 8px 0;">
-                    <span id="accountName">
+                    <span id="accountName"
+                        title=${this.user.accountInfo.nameStatus !== UPDATE_NAME_STATUSES.LOADED ? 'Name is not yet registered. Waiting for network confirmation.' : 'Name is registered :)'}
+                    >
                         <!-- No name set  -->
                         ${this.user.accountInfo.name}
+                        <paper-spinner-lite id="name-spinner" ?active=${this.user.accountInfo.nameStatus === UPDATE_NAME_STATUSES.LOADING}></paper-spinner-lite>
                         <!-- <mwc-icon style="float:right; top: -10px;">keyboard_arrow_down</mwc-icon> -->
                         <paper-icon-button
                             @click=${() => this.dialog.open()}
-                            style="float:right; top: -10px;"
+                            style="float:right; top: 0px;"
                             icon="icons:more-vert"></paper-icon-button>
                     </span>
                     <p id="address">${this.wallet.addresses[0].address}</p>
@@ -92,7 +104,7 @@ class WalletProfile extends connect(store)(LitElement) {
             </div>
 
             <paper-dialog id="profileDialog" with-backdrop>
-                <!-- Gets moved to documnet.body so we need to put styles herer -->
+                <!-- Gets moved to documnet.body so we need to put styles here -->
                 <style>
                     /* Dialog styles */
                     #dialogAccountIcon {

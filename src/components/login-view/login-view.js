@@ -153,6 +153,10 @@ class LoginView extends connect(store)(LitElement) {
                         text-align: left;
                         padding-left:12px;
                     }
+                    .section {
+                        height: calc(var(--window-height) - 60px);
+                        display:block;
+                    }
                 }
 
                 @keyframes fade {
@@ -219,7 +223,7 @@ class LoginView extends connect(store)(LitElement) {
                                     ><mwc-icon>keyboard_arrow_left</mwc-icon> Login</mwc-button>
                                 </div>
                                 <br>
-                                <create-account-section id="createAccountSection"></create-account-section>
+                                <create-account-section class="section" id="createAccountSection"></create-account-section>
                             </div>
                             
                             <div page="login">
@@ -233,7 +237,7 @@ class LoginView extends connect(store)(LitElement) {
                                     ><mwc-icon>keyboard_arrow_left</mwc-icon> Create account</mwc-button>
                                 </div>
                                 <br>
-                                <login-section id='loginSection'></login-section>
+                                <login-section class="section" id='loginSection'></login-section>
                             </div>
                         </iron-pages>
                         

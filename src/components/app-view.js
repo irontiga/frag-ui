@@ -44,7 +44,7 @@ class AppView extends connect(store)(LitElement) {
         return [
             css`
             :host {
-                --app-drawer-width: 240px;;
+                --app-drawer-width: 260px;;
             }
 
             app-drawer-layout:not([narrow]) [.menu-toggle-button] {

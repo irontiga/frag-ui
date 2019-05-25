@@ -15,8 +15,9 @@ import '@polymer/paper-ripple'
 // import '@polymer/iron-flex-layout/iron-flex-layout-classes.js'
 
 import { doLogin, doSelectAddress } from '../../redux/app/app-actions.js'
-import { doUpdateAccountInfo } from '../../redux/user/actions/update-account-info.js'
-import { createWallet } from '../../qora/createWallet.js';
+// import { doUpdateAccountInfo } from '../../redux/user/actions/update-account-info.js'
+import { doUpdateAccountName } from '../../redux/user/user-actions.js'
+import { createWallet } from '../../qora/createWallet.js'
 
 // import '@polymer/iron-pages'
 // import '@polymer/paper-icon-button/paper-icon-button.js'
@@ -47,6 +48,23 @@ class LoginSection extends connect(store)(LitElement) {
         this.selectedPage = 'wallets'
         this.selectedWallet = {}
         this.loginErrorMessage = ''
+        this.loginOptions = [
+            {
+                page: 'existingSeed',
+                linkText: 'Sign in with seedphrase',
+                icon: 'vpn_key'
+            },
+            {
+                page: 'wallets',
+                linkText: 'Sign in with saved account',
+                icon: 'save'
+            },
+            {
+                page: 'v1Seed',
+                linkText: 'Sign in with v1 seed',
+                icon: 'lock'
+            }
+        ]
     }
 
     render () {
@@ -86,6 +104,22 @@ class LoginSection extends connect(store)(LitElement) {
                     padding: 6px 0;
                     font-size:16px;
                 }
+                .login-option {
+                    text-transform: uppercase;
+                    max-width: 300px;
+                    position: relative;
+                    padding: 12px 24px;
+                    cursor: pointer;
+                    display: flex;
+                }
+                .loginIcon {
+                    /* font-size:42px; */
+                    padding-right: 12px;
+                    margin-top: -2px;
+                }
+                *[hidden] { 
+                    display:none;
+                }
                 h1 {
                     padding: 24px;
                     padding-top:0;
@@ -108,10 +142,15 @@ class LoginSection extends connect(store)(LitElement) {
                 @media only screen and (max-width: ${getComputedStyle(document.body).getPropertyValue('--layout-breakpoint-tablet')}) {
                     /* Mobile */
                     #wallets {
-                        max-height: calc(var(--window-height) - 130px);
+                        max-height: calc(var(--window-height) - 180px);
+                        min-height: calc(var(--window-height) - 180px);
                         height:100%;
                         overflow-y:auto;
                         overflow-x:hidden;
+                    }
+                    iron-pages div[page] {
+                        max-height: calc(var(--window-height) - 120px);
+                        min-height: calc(var(--window-height) - 120px);
                     }
                     .wallet {
                         max-width: 100%;
@@ -132,16 +171,19 @@ class LoginSection extends connect(store)(LitElement) {
                     padding:14px;
                     text-align:left;
                 }
+                #loginOptions {
+
+                }
             </style>
             
             <div id="loginSection">
                 <iron-pages selected="${this.selectedPage}" attr-for-selected="page" id="createAccountPages">
                     <div page="wallets" id="walletsPage">
                         <h1>Your accounts</h1>
-                        ${(Object.entries(this.wallets || {}).length < 1) ? html`
-                            <p style="padding: 0 24px 12px 24px;">You need to create an account before you can log in!</p>
-                        ` : ''}
                         <div id="wallets">
+                            ${(Object.entries(this.wallets || {}).length < 1) ? html`
+                                <p style="padding: 0 24px 12px 24px;">You need to create or save an account before you can log in!</p>
+                            ` : ''}
                             ${Object.entries(this.wallets || {}).map(wallet => html`
                                 <div class="wallet" @click=${() => this.selectWallet(wallet[1])}>
                                     <paper-ripple></paper-ripple>
@@ -155,22 +197,41 @@ class LoginSection extends connect(store)(LitElement) {
                                 </div>
                             `)}
                         </div>
-                        <div style="text-align: right; padding:24px;">
-                            <a @click=${() => { this.selectedPage = 'existingSeed' }} style="color: var(--mdc-theme-secondary); text-decoration: underline; cursor: pointer;">
-                                <!-- I want sign in with my seedphrase -->
-                            </a>
+                    </div>
+                    <div page="loginOptions">
+                        ${this.loginOptions.map(({ page, linkText, icon }) => html`
+                            <div class="login-option" @click=${() => { this.selectedPage = page }}>
+                                <paper-ripple></paper-ripple>
+                                <div>
+                                    <mwc-icon class='loginIcon'>${icon}</mwc-icon>
+                                </div>
+                                <div>
+                                    ${linkText}
+                                </div>
+                            </div>
+                        `)}
+                    </div>
+                    <div page="existingSeed" id="existingSeedPage">
+                        <div style="padding:24px;">
+                            <div style="display:flex;">
+                                <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
+                                <paper-input style="width:100%;" label="Seedphrase" id="seedphrase" type="password"></paper-input>
+                            </div>
+                            <mwc-button style="margin-top:12px; width:100%;" raised @click=${e => this.login(e)}>Login</mwc-button>
                         </div>
                     </div>
-                    <div page="existingSeed" id="existingSeedPage" style=" padding:24px;">
-                        <div style="display:flex;">
-                            <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
-                            <paper-input style="width:100%;" label="Seedphrase" id="seedphrase" type="password"></paper-input>
-                        </div>
-                        <mwc-button style="margin-top:12px; width:100%;" raised @click=${e => this.login(e)}>Login</mwc-button>
-                        <div style="text-align: right; padding:24px;">
-                            <a @click=${() => { this.selectedPage = 'wallets' }} style="color: var(--mdc-theme-secondary); text-decoration: underline; cursor: pointer;">I want to sign in with a different account</a>
+                    <div page="v1Seed" id="v1SeedPage">
+                        <div style="padding:24px;">
+                            <div style="display:flex;">
+                                <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
+                                <paper-input style="width:100%;" label="Seedphrase" id="seedphrase" type="password"></paper-input>
+                            </div>
+                            <mwc-button style="margin-top:12px; width:100%;" raised @click=${e => this.login(e)}>Login</mwc-button>
                         </div>
                     </div>
+                    ${['v1Seed', 'existingSeed'].includes(this.selectedPage) ? html`
+                        <!-- Remember me checkbox and fields-->
+                    ` : ''}
                     <div page="unlock" id="unlockPage">
                         <div style="text-align:center;">
                             <mwc-icon id='accountIcon' style=" padding-bottom:24px;">account_circle</mwc-icon>
@@ -199,10 +260,6 @@ class LoginSection extends connect(store)(LitElement) {
                         </div>
 
                         <mwc-button style="margin-top:12px; width:100%;" raised @click=${e => this.login(e)}>Login</mwc-button>
-                        
-                        <div style="text-align: right; padding:24px;">
-                            <a @click=${() => { this.selectedPage = 'wallets' }} style="color: var(--mdc-theme-secondary); text-decoration: underline; cursor: pointer;">I want to sign in with a different account</a>
-                        </div>
 
                         <div style="text-align: right; color: var(--mdc-theme-error)">
                             ${this.loginErrorMessage}
@@ -210,7 +267,16 @@ class LoginSection extends connect(store)(LitElement) {
                     </div>
 
                 </iron-pages>
-                
+
+                <div id="nav" style="padding-top:8px;">
+                    <a
+                        href=""
+                        style="color: var(--mdc-theme-secondary); padding-left:18px; line-height:30px;"
+                        ?hidden=${this.selectedPage === 'loginOptions'}
+                        @click=${() => { this.selectedPage = 'loginOptions' }}
+                    >Sign in options</a>
+                </div>
+
                 <loading-ripple id="loadingRipple"></loading-ripple>
             </div>
         `
@@ -254,7 +320,9 @@ class LoginSection extends connect(store)(LitElement) {
                 store.dispatch(doLogin(wallet, password))
                 console.log(wallet)
                 store.dispatch(doSelectAddress(wallet.addresses[0]))
-                store.dispatch(doUpdateAccountInfo({ name: store.getState().user.storedWallets[wallet.addresses[0].address].name }))
+                // store.dispatch(doUpdateAccountInfo({ name: store.getState().user.storedWallets[wallet.addresses[0].address].name }))
+                const expectedName = store.getState().user.storedWallets[wallet.addresses[0].address].name
+                store.dispatch(doUpdateAccountName(wallet.addresses[0].address, expectedName, false))
                 this.cleanup()
                 return this.loadingRipple.fade()
             })

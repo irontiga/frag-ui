@@ -50,6 +50,7 @@ class AppStyles extends LitElement {
                 hr {
                     border-color: var(--theme-on-surface);
                 }
+
             </style>
             <app-theme></app-theme>
         `

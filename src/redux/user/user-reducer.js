@@ -4,7 +4,9 @@ import { STORE_WALLET, CLAIM_AIRDROP, UPDATE_ACCOUNT_INFO } from './user-action-
 const DEFAULT_INITIAL_STATE = {
     storedWallets: {},
     hasClaimedAirdrop: false,
-    accountInfo: {}
+    accountInfo: {
+        // nameStatus: ''
+    }
 }
 
 export default (state = loadStateFromLocalStorage('user') || DEFAULT_INITIAL_STATE, action) => {

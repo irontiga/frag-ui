@@ -6,7 +6,7 @@ export const doUpdateAccountInfo = (accInfo) => {
     }
 }
 
-const updateAccountInfo = (payload) => {
+export const updateAccountInfo = (payload) => {
     return {
         type: UPDATE_ACCOUNT_INFO,
         payload

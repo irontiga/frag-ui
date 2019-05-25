@@ -20,7 +20,8 @@ import '@polymer/paper-input/paper-input.js'
 import 'random-sentence-generator'
 
 import './loading-ripple.js'
-import { doUpdateAccountInfo } from '../../redux/user/actions/update-account-info.js'
+// import { doUpdateAccountInfo } from '../../redux/user/actions/update-account-info.js'
+import { doUpdateAccountName } from '../../redux/user/user-actions.js'
 
 const EMAIL_VALIDATION_REGEX = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
@@ -174,7 +175,9 @@ class CreateAccountSection extends connect(store)(LitElement) {
                                 .then(() => {
                                     store.dispatch(doLogin(wallet, password))
                                     store.dispatch(doSelectAddress(wallet.addresses[0]))
-                                    store.dispatch(doUpdateAccountInfo({ name: username }))
+                                    // store.dispatch(doUpdateAccountInfo({ name: username }))
+                                    const expectedName = username
+                                    store.dispatch(doUpdateAccountName(wallet.addresses[0].address, expectedName, true))
                                     fetch('/saveEmail/' + email).catch(e => console.error(e))
                                     this.cleanup()
                                     return this.loadingRipple.fade()

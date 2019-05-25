@@ -1,3 +1,4 @@
+/* global Epml */
 const parentEpml = new Epml({ type: 'WINDOW', source: window.parent })
 
 parentEpml.ready().then(() => {

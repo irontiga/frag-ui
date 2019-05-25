@@ -20,7 +20,7 @@ const INITIAL_STATE = {
         ]
     },
     plugins: [],
-    registeredUrls: [],
+    registeredUrls: {},
     url: '',
     selectedAddress: {}
 }
