@@ -19,7 +19,8 @@ import '@polymer/paper-input/paper-input-container.js'
 import '@polymer/paper-input/paper-input.js'
 import 'random-sentence-generator'
 
-import './loading-ripple.js'
+// import './loading-ripple.js'
+import ripple from '../loading-ripple.js'
 // import { doUpdateAccountInfo } from '../../redux/user/actions/update-account-info.js'
 import { doUpdateAccountName } from '../../redux/user/user-actions.js'
 
@@ -143,14 +144,17 @@ class CreateAccountSection extends connect(store)(LitElement) {
                     const seedPhrase = this.shadowRoot.getElementById('randSentence').parsedString
                     const password = this.shadowRoot.getElementById('createPin').value + this.shadowRoot.getElementById('birthMonth').value
 
-                    this.loadingRipple.welcomeMessage = welcomeMessage + ', ' + username
+                    // this.loadingRipple.welcomeMessage = welcomeMessage + ', ' + username
+                    ripple.welcomeMessage = welcomeMessage + ', ' + username
 
-                    this.loadingRipple.open({
+                    // this.loadingRipple.open({
+                    ripple.open({
                         x: e.clientX,
                         y: e.clientY
                     })
                         .then(() => createWallet('phrase', seedPhrase, status => {
-                            this.loadingRipple.loadingMessage = status
+                            // this.loadingRipple.loadingMessage = status
+                            ripple.loadingMessage = status
                         }))
                         .then(wallet => {
                             // .then(() => store.dispatch(doLogin('phrase', seedPhrase, status => {
@@ -180,14 +184,16 @@ class CreateAccountSection extends connect(store)(LitElement) {
                                     store.dispatch(doUpdateAccountName(wallet.addresses[0].address, expectedName, true))
                                     fetch('/saveEmail/' + email).catch(e => console.error(e))
                                     this.cleanup()
-                                    return this.loadingRipple.fade()
+                                    // return this.loadingRipple.fade()
+                                    return ripple.fade()
                                 })
                                 .then(() => {
                                     console.log(this.saveAccount)
                                     if (!this.saveAccount) return
                                     return store.dispatch(doStoreWallet(wallet, password, username, () => {
                                         // console.log('STATUS UPDATE <3')
-                                        this.loadingRipple.loadingMessage = status
+                                        // this.loadingRipple.loadingMessage = status
+                                        ripple.loadingMessage = status
                                     })).catch(err => console.error(err))
                                     // ^^ Don't want this one to break logging
                                 })
@@ -195,9 +201,10 @@ class CreateAccountSection extends connect(store)(LitElement) {
                         .catch(e => {
                             this.error = true
                             this.errorMessage = e
-                            console.error('COCK', e)
+                            console.error('== Error == \n', e)
                             store.dispatch(doLogout())
-                            this.loadingRipple.close()
+                            // this.loadingRipple.close()
+                            ripple.close()
                         })
                 },
                 prev: () => {
@@ -486,12 +493,12 @@ class CreateAccountSection extends connect(store)(LitElement) {
                 </div>
             </div>
 
-            <loading-ripple id="loadingRipple" welcome-message="${this.welcomeMessage}"></loading-ripple>
+            <!-- <loading-ripple id="loadingRipple" welcome-message="${this.welcomeMessage}"></loading-ripple> -->
         `
     }
 
     firstUpdated () {
-        this.loadingRipple = this.shadowRoot.getElementById('loadingRipple')
+        // this.loadingRipple = this.shadowRoot.getElementById('loadingRipple')
     }
 
     _pageChange (newPage, oldPage) {

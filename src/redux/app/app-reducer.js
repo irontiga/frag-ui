@@ -1,5 +1,5 @@
 // Loading state, login state, isNavDrawOpen state etc. None of this needs to be saved to localstorage.
-import { LOG_IN, LOG_OUT, INIT_WORKERS, ADD_PLUGIN_URL, ADD_PLUGIN, NAVIGATE, SELECT_ADDRESS } from './app-action-types.js'
+import { LOG_IN, LOG_OUT, NETWORK_CONNECTION_STATUS, INIT_WORKERS, ADD_PLUGIN_URL, ADD_PLUGIN, NAVIGATE, SELECT_ADDRESS } from './app-action-types.js'
 // import { initWorkersReducer } from './initWorkersReducer.js'
 import { initWorkersReducer } from './reducers/init-workers.js'
 import { loginReducer } from './reducers/login-reducer.js'
@@ -64,6 +64,11 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 selectedAddress: action.address
+            }
+        case NETWORK_CONNECTION_STATUS:
+            return {
+                ...state,
+                networkIsConnected: action.payload
             }
         default:
             return state

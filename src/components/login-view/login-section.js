@@ -11,6 +11,7 @@ import '@material/mwc-formfield'
 import '@polymer/paper-input/paper-input-container.js'
 import '@polymer/paper-input/paper-input.js'
 import '@polymer/paper-ripple'
+import '@polymer/iron-collapse'
 // import '@polymer/paper-spinner/paper-spinner-lite.js'
 // import '@polymer/iron-flex-layout/iron-flex-layout-classes.js'
 
@@ -18,6 +19,8 @@ import { doLogin, doSelectAddress } from '../../redux/app/app-actions.js'
 // import { doUpdateAccountInfo } from '../../redux/user/actions/update-account-info.js'
 import { doUpdateAccountName } from '../../redux/user/user-actions.js'
 import { createWallet } from '../../qora/createWallet.js'
+
+import ripple from '../loading-ripple.js'
 
 // import '@polymer/iron-pages'
 // import '@polymer/paper-icon-button/paper-icon-button.js'
@@ -31,7 +34,9 @@ class LoginSection extends connect(store)(LitElement) {
             selectedWallet: { type: Object },
             selectedPage: { type: String },
             wallets: { type: Object },
-            loginErrorMessage: { type: String }
+            loginErrorMessage: { type: String },
+            rememberMe: { type: Boolean },
+            hasStoredWallets: { type: Boolean }
         }
     }
 
@@ -45,23 +50,25 @@ class LoginSection extends connect(store)(LitElement) {
 
     constructor () {
         super()
-        this.selectedPage = 'wallets'
+        this.hasStoredWallets = Object.keys(store.getState().user.storedWallets).length > 0
+        this.selectedPage = this.hasStoredWallets ? 'wallets' : 'loginOptions'
         this.selectedWallet = {}
         this.loginErrorMessage = ''
+        this.rememberMe = false
         this.loginOptions = [
             {
-                page: 'existingSeed',
-                linkText: 'Sign in with seedphrase',
+                page: 'phrase',
+                linkText: 'Seedphrase',
                 icon: 'vpn_key'
             },
             {
-                page: 'wallets',
-                linkText: 'Sign in with saved account',
+                page: 'storedWallet',
+                linkText: 'Saved account',
                 icon: 'save'
             },
             {
-                page: 'v1Seed',
-                linkText: 'Sign in with v1 seed',
+                page: 'seed',
+                linkText: 'V1 seed',
                 icon: 'lock'
             }
         ]
@@ -105,7 +112,6 @@ class LoginSection extends connect(store)(LitElement) {
                     font-size:16px;
                 }
                 .login-option {
-                    text-transform: uppercase;
                     max-width: 300px;
                     position: relative;
                     padding: 12px 24px;
@@ -142,28 +148,24 @@ class LoginSection extends connect(store)(LitElement) {
                 @media only screen and (max-width: ${getComputedStyle(document.body).getPropertyValue('--layout-breakpoint-tablet')}) {
                     /* Mobile */
                     #wallets {
-                        max-height: calc(var(--window-height) - 180px);
-                        min-height: calc(var(--window-height) - 180px);
+                        /* max-height: calc(var(--window-height) - 180px);
+                        min-height: calc(var(--window-height) - 180px); */
                         height:100%;
                         overflow-y:auto;
                         overflow-x:hidden;
-                    }
-                    iron-pages div[page] {
-                        max-height: calc(var(--window-height) - 120px);
-                        min-height: calc(var(--window-height) - 120px);
                     }
                     .wallet {
                         max-width: 100%;
                     }
                 }
 
-                #birthMonthContainer {
+                #birthMonthContainer, #storageBirthMonthContainer {
                     --paper-input-container-underline: {
                         display: none;
                         visibility: hidden;
                     }
                 }
-                #birthMonthContainer select {
+                #birthMonthContainer select, #storageBirthMonthContainer select {
                     padding:8px;
                     width:100%;
                 }
@@ -171,102 +173,145 @@ class LoginSection extends connect(store)(LitElement) {
                     padding:14px;
                     text-align:left;
                 }
-                #loginOptions {
-
+                iron-pages h3{
+                    padding-right: 24px;
+                    padding-left: 24px;
+                    color: #333;
+                    font-family: "Roboto mono", monospace;
+                    font-weight: 300;
+                }
+                #pagesContainer {
+                    max-height: calc(var(--window-height) - 184px);
                 }
             </style>
             
             <div id="loginSection">
-                <iron-pages selected="${this.selectedPage}" attr-for-selected="page" id="createAccountPages">
-                    <div page="wallets" id="walletsPage">
-                        <h1>Your accounts</h1>
-                        <div id="wallets">
-                            ${(Object.entries(this.wallets || {}).length < 1) ? html`
-                                <p style="padding: 0 24px 12px 24px;">You need to create or save an account before you can log in!</p>
-                            ` : ''}
-                            ${Object.entries(this.wallets || {}).map(wallet => html`
-                                <div class="wallet" @click=${() => this.selectWallet(wallet[1])}>
+                <div id="pagesContainer">
+                    <iron-pages selected="${this.selectedPage}" attr-for-selected="page" id="createAccountPages">
+                        <div page="loginOptions">
+                            <h3>How would you like to login?</h3>
+                            ${this.loginOptions.map(({ page, linkText, icon }) => html`
+                                <div class="login-option" @click=${() => { this.selectedPage = page }}>
                                     <paper-ripple></paper-ripple>
                                     <div>
-                                        <mwc-icon class='accountIcon'>account_circle</mwc-icon>
+                                        <mwc-icon class='loginIcon'>${icon}</mwc-icon>
                                     </div>
-                                    <div class="wallet-details">
-                                        <h3>${wallet[1].name || wallet[1].address0.substring(0, 5)}</h3>
-                                        <p class="address">${wallet[1].address0}</p>
+                                    <div>
+                                        ${linkText}
                                     </div>
                                 </div>
                             `)}
                         </div>
-                    </div>
-                    <div page="loginOptions">
-                        ${this.loginOptions.map(({ page, linkText, icon }) => html`
-                            <div class="login-option" @click=${() => { this.selectedPage = page }}>
-                                <paper-ripple></paper-ripple>
-                                <div>
-                                    <mwc-icon class='loginIcon'>${icon}</mwc-icon>
-                                </div>
-                                <div>
-                                    ${linkText}
+
+                        <div page="storedWallet" id="walletsPage">
+                            <h1>Your accounts</h1>
+                            <div id="wallets">
+                                ${(Object.entries(this.wallets || {}).length < 1) ? html`
+                                    <p style="padding: 0 24px 12px 24px;">You need to create or save an account before you can log in!</p>
+                                ` : ''}
+                                ${Object.entries(this.wallets || {}).map(wallet => html`
+                                    <div class="wallet" @click=${() => this.selectWallet(wallet[1])}>
+                                        <paper-ripple></paper-ripple>
+                                        <div>
+                                            <mwc-icon class='accountIcon'>account_circle</mwc-icon>
+                                        </div>
+                                        <div class="wallet-details">
+                                            <h3>${wallet[1].name || wallet[1].address0.substring(0, 5)}</h3>
+                                            <p class="address">${wallet[1].address0}</p>
+                                        </div>
+                                    </div>
+                                `)}
+                            </div>
+                        </div>
+                        <div page="phrase" id="existingSeedPage">
+                            <div style="padding:24px;">
+                                <div style="display:flex;">
+                                    <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
+                                    <paper-input style="width:100%;" label="Seedphrase" id="existingSeedPhraseInput" type="password"></paper-input>
                                 </div>
                             </div>
-                        `)}
-                    </div>
-                    <div page="existingSeed" id="existingSeedPage">
-                        <div style="padding:24px;">
+                        </div>
+                        <div page="seed" id="v1SeedPage">
+                            <div style="padding:24px;">
+                                <div style="display:flex;">
+                                    <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
+                                    <paper-input style="width:100%;" label="V1 Seed" id="v1SeedInput" type="password"></paper-input>
+                                </div>
+                            </div>
+                        </div>
+                        <div page="unlock" id="unlockPage">
+                            <div style="text-align:center;">
+                                <mwc-icon id='accountIcon' style=" padding-bottom:24px;">account_circle</mwc-icon>
+                                <br>
+                                <span style="font-size:14px; font-weight:600;">${this.selectedWallet.address0}</span>
+                            </div>
+                            <hr style="margin: 24px 48px;">
+                            
+                            <div style="display:flex;">
+                                <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">calendar_today</mwc-icon>
+                                <paper-input-container style="width:100%;" always-float-label="true" id="birthMonthContainer">
+                                    <label slot="label">Birth month</label>
+                                    <iron-input slot="input">
+                                        <select id="birthMonth">
+                                            ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(num => html`
+                                                <option value="${num}">${num}</option>
+                                            `)}
+                                        </select>
+                                    </iron-input>
+                                </paper-input-container>
+                            </div>
+                            
                             <div style="display:flex;">
                                 <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
-                                <paper-input style="width:100%;" label="Seedphrase" id="seedphrase" type="password"></paper-input>
+                                <paper-input style="width:100%;" always-float-labell label="Pin" id="pin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input>
                             </div>
-                            <mwc-button style="margin-top:12px; width:100%;" raised @click=${e => this.login(e)}>Login</mwc-button>
+
+                            <div style="text-align: right; color: var(--mdc-theme-error)">
+                                ${this.loginErrorMessage}
+                            </div>
                         </div>
-                    </div>
-                    <div page="v1Seed" id="v1SeedPage">
-                        <div style="padding:24px;">
+
+                    </iron-pages>
+                    <div>
+                        <iron-collapse style="padding-left:24px; padding-right:24px;" ?opened=${this.rememberMe}>
                             <div style="display:flex;">
                                 <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
-                                <paper-input style="width:100%;" label="Seedphrase" id="seedphrase" type="password"></paper-input>
+                                <paper-input style="width:100%;" always-float-labell label="Pin" id="storagePin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input>
                             </div>
-                            <mwc-button style="margin-top:12px; width:100%;" raised @click=${e => this.login(e)}>Login</mwc-button>
-                        </div>
+                            <div style="display:flex;">
+                                <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">calendar_today</mwc-icon>
+                                <paper-input-container style="width:100%;" always-float-label="true" id="storageBirthMonthContainer">
+                                    <label slot="label">Birth month</label>
+                                    <iron-input slot="input">
+                                        <select id="storageBirthMonth">
+                                            ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(num => html`
+                                                <option value="${num}">${num}</option>
+                                            `)}
+                                        </select>
+                                    </iron-input>
+                                </paper-input-container>
+                            </div>
+                        </iron-collapse>
+                        ${['v1Seed', 'existingSeed'].includes(this.selectedPage) ? html`
+                            <!-- Remember me checkbox and fields-->
+                            <div style="text-align:right; padding-right:8px; min-height:40px;">
+                                <p style="vertical-align: top; line-height: 40px; margin:0;">
+                                    <label
+                                    for="storeCheckbox"
+                                    @click=${() => this.shadowRoot.getElementById('storeCheckbox').click()}
+                                    >Save in this browser</label>
+                                    <mwc-checkbox id="storeCheckbox" style="margin-bottom:-12px;" @click=${e => { this.rememberMe = !e.target.checked }} ?checked="${this.rememberMe}"></mwc-checkbox>
+                                </p>
+                            </div>
+                        ` : ''}
                     </div>
-                    ${['v1Seed', 'existingSeed'].includes(this.selectedPage) ? html`
-                        <!-- Remember me checkbox and fields-->
-                    ` : ''}
-                    <div page="unlock" id="unlockPage">
-                        <div style="text-align:center;">
-                            <mwc-icon id='accountIcon' style=" padding-bottom:24px;">account_circle</mwc-icon>
-                            <br>
-                            <span style="font-size:14px; font-weight:600;">${this.selectedWallet.address0}</span>
-                        </div>
-                        <hr style="margin: 24px 48px;">
-                        
-                        <div style="display:flex;">
-                            <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">calendar_today</mwc-icon>
-                            <paper-input-container style="width:100%;" always-float-label="true" id="birthMonthContainer">
-                                <label slot="label">Birth month</label>
-                                <iron-input slot="input">
-                                    <select id="birthMonth">
-                                        ${[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(num => html`
-                                            <option value="${num}">${num}</option>
-                                        `)}
-                                    </select>
-                                </iron-input>
-                            </paper-input-container>
-                        </div>
-                        
-                        <div style="display:flex;">
-                            <mwc-icon style="padding: 20px; font-size:24px; padding-left:0; padding-top: 26px;">lock</mwc-icon>
-                            <paper-input style="width:100%;" always-float-labell label="Pin" id="pin" type="password"  pattern="[0-9]*" inputmode="numeric" maxlength="4"></paper-input>
-                        </div>
+                </div>
 
-                        <mwc-button style="margin-top:12px; width:100%;" raised @click=${e => this.login(e)}>Login</mwc-button>
+                <!-- Passes this.selectedPage to trigger updates -->
+                <div style="margin-left:24px; margin-right:24px;" ?hidden=${!(this.loginOptionIsSelected(this.selectedPage) &&  (this.hasStoredWallets || this.selectedPage !== 'storedWallet'))}>
+                    <mwc-button style="margin-top:12px; width:100%;" raised @click=${e => this.login(e)}>Login</mwc-button>
+                </div>
 
-                        <div style="text-align: right; color: var(--mdc-theme-error)">
-                            ${this.loginErrorMessage}
-                        </div>
-                    </div>
-
-                </iron-pages>
 
                 <div id="nav" style="padding-top:8px;">
                     <a
@@ -277,13 +322,14 @@ class LoginSection extends connect(store)(LitElement) {
                     >Sign in options</a>
                 </div>
 
-                <loading-ripple id="loadingRipple"></loading-ripple>
+                <!-- <loading-ripple id="loadingRipple"></loading-ripple> -->
             </div>
         `
     }
 
     firstUpdated () {
-        this.loadingRipple = this.shadowRoot.getElementById('loadingRipple')
+        // this.loadingRipple = this.shadowRoot.getElementById('loadingRipple')
+        this.loadingRipple = ripple // Just cause I'm lazy...
     }
 
     selectWallet (wallet) {
@@ -294,37 +340,72 @@ class LoginSection extends connect(store)(LitElement) {
     stateChanged (state) {
         this.loggedIn = state.app.loggedIn
         this.wallets = state.user.storedWallets
+        this.hasStoredWallets = this.wallets.length > 0
+    }
+
+    get walletSources () {
+        return {
+            get seed () {
+                const seed = this.shadowRoot.querySelector('#v1SeedInput').value
+                return seed
+            },
+            get storedWallet () {
+                const wallet = this.selectedWallet
+                const birthMonth = this.shadowRoot.querySelector('#birthMonth').value
+                const pin = this.shadowRoot.querySelector('#pin').value
+                const password = pin + '' + birthMonth
+                return {
+                    wallet,
+                    password
+                }
+            },
+            phrase () {
+                const seedPhrase = this.shadowRoot.querySelector('#existingSeedPhraseInput').value
+                return seedPhrase
+            }
+        }
+    }
+
+    loginOptionIsSelected () {
+        return this.loginOptions.map(op => op.page).includes(this.selectedPage)
     }
 
     login (e) {
-        const wallet = this.selectedWallet
-        const birthMonth = this.shadowRoot.querySelector('#birthMonth').value
-        const pin = this.shadowRoot.querySelector('#pin').value
-        const password = pin + '' + birthMonth
+        const type = this.selectedPage
+        if (!this.loginOptionIsSelected()) {
+            throw new Error('Login option not selected page')
+        }
         // First decrypt...
         this.loadingRipple.open({
             x: e.clientX,
             y: e.clientY
         })
-            .then(() => createWallet('storedWallet', {
-                wallet,
-                password
-            }, status => {
-                this.loadingRipple.loadingMessage = status
-            }))
-            // .then(() => store.dispatch(doLogin('storedWallet', {
-            //     wallet,
-            //     password: pin + '' + birthMonth
-            // }, status => { this.loadingRipple.loadingMessage = status })))
+            .then(type => {
+                const source = this.walletSources[type]
+                return createWallet(type, source, status => {
+                    this.loadingRipple.loadingMessage = status
+                })
+            })
             .then(wallet => {
                 store.dispatch(doLogin(wallet, password))
                 console.log(wallet)
                 store.dispatch(doSelectAddress(wallet.addresses[0]))
                 // store.dispatch(doUpdateAccountInfo({ name: store.getState().user.storedWallets[wallet.addresses[0].address].name }))
-                const expectedName = store.getState().user.storedWallets[wallet.addresses[0].address].name
-                store.dispatch(doUpdateAccountName(wallet.addresses[0].address, expectedName, false))
+                const storedWallets = store.getState().user.storedWallets
+                const walletAddress = storedWallets[wallet.addresses[0].address]
+                // STORAGEEEE
+                if (walletAddress) {
+                    const expectedName = storedWallets[wallet.addresses[0].address].name
+                    store.dispatch(doUpdateAccountName(wallet.addresses[0].address, expectedName, false))
+                    if (this.rememberMe && type !== 'storedWallet') {
+                        //
+                    }
+                }
                 this.cleanup()
                 return this.loadingRipple.fade()
+            })
+            .then(() => {
+
             })
             .catch(e => {
                 this.loginErrorMessage = e

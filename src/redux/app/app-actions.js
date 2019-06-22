@@ -1,4 +1,4 @@
-import { NAVIGATE } from './app-action-types.js'
+import { NAVIGATE, NETWORK_CONNECTION_STATUS } from './app-action-types.js'
 
 export * from './actions/login.js'
 export * from './actions/init-worker.js'
@@ -17,6 +17,13 @@ const navigate = loca => {
     return {
         type: NAVIGATE,
         url: loca.pathname
+    }
+}
+
+export const updateNetworkConnectionStatus = status => {
+    return {
+        type: NETWORK_CONNECTION_STATUS,
+        payload: status
     }
 }
 

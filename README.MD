@@ -18,4 +18,10 @@ Using redux for state management
 Uses EpmlJS https://github.com/irontiga/epml which is a "v2" of https://irontiga.github.io/wimp-js/
 
 If out of memory...
-```node --max-old-space-size=8192 node_modules/rollup/bin/rollup -c rollup.config.js --watch```
+```
+node --max-old-space-size=8192 node_modules/rollup/bin/rollup -c rollup.config.js --watch
+```
+If network timeouts of google-material-icons
+```
+yarn install --network-timeout 100000
+```

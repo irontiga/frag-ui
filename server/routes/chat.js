@@ -33,13 +33,13 @@ module.exports = async function (server, socket) {
         }
     })
 
-    server.route({
-        method: 'GET',
-        path: '/chat/messages/{user}',
-        handler: (req, reply) => {
-            // nahhh
-        }
-    })
+    // server.route({
+    //     method: 'GET',
+    //     path: '/chat/messages/{user}',
+    //     handler: (req, reply) => {
+    //         // nahhh
+    //     }
+    // })
 
     server.route({
         method: 'POST',

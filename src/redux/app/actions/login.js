@@ -54,8 +54,7 @@ const selectAddress = address => {
 export const doLogin = (wallet, pin) => {
     return (dispatch, getState) => {
         dispatch(login('success', {
-            wallet,
-            pin
+            wallet
         }))
     }
 }
