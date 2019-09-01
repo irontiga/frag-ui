@@ -8,4 +8,8 @@ const importComponent = component => {
     return import(url)
 }
 
-export default importComponent
+export default (components) => {
+    // components = Array.isArray(components) ? components : [components]
+    components = [].concat(components) // If not an array, make it one
+    return Promise.all(components.map(component => importComponent(component)))
+}
